@@ -1,0 +1,63 @@
+# PROJECTS.md — Project Index
+
+Codex와 Claude는 새 세션을 시작할 때 이 파일을 먼저 읽고, 현재 어떤 Minecraft Bedrock 패키지 프로젝트가 진행 중인지 확인한다.
+
+## Active Projects
+
+### 1. `mine_furniture_01`
+
+- 경로: `projects/mine_furniture_01/`
+- 상태: 진행 중
+- 목적: 여러 가구와 무기를 묶는 Minecraft Bedrock add-on 패키지. 현재 유니콘 테마 가구 라인은 변기(`mine_structure:unicorn_toilet`), 식탁(`mine_structure:unicorn_dining_table`), 의자(`mine_structure:unicorn_chair`)로 구성.
+- 현재 산출물:
+  - Blockbench Bedrock Entity 모델 스펙
+  - 단일 64x64 텍스처 아틀라스 설계
+  - `lid_open`, `lid_close`, `flush` 애니메이션 설계
+  - behavior pack / resource pack 기본 구조
+  - `mine_structure:unicorn_toilet`, `mine_structure:unicorn_dining_table`, `mine_structure:unicorn_chair` behavior/client entity 등록
+  - Blockbench MCP 설정 예시와 `unicorn_toilet` resource map
+- 주요 문서:
+  - `projects/mine_furniture_01/README.md` — 진행 현황과 다음 작업
+  - `projects/mine_furniture_01/PROJECT_CONTEXT.md` — 현재 컨텍스트와 프로젝트별 시작 순서
+  - `projects/mine_furniture_01/content/README.md` — 가구/무기 콘텐츠 레지스트리
+  - `projects/mine_furniture_01/content/furniture/unicorn_toilet.md` — 첫 가구 콘텐츠 등록 문서
+  - `projects/mine_furniture_01/content/furniture/unicorn_toilet.resources.json` — 첫 가구 resource pack 연결 맵
+  - `projects/mine_furniture_01/blockbench/export_unicorn_toilet_to_resource_pack.js` — Blockbench MCP export 대상 경로
+  - `projects/mine_furniture_01/unicorn_toilet_spec.md` — 상세 파츠, 텍스처, 애니메이션 스펙
+- 공통 참고 문서:
+  - `docs/agent-guides/README.md` — Codex/Claude 공통 Bedrock/Blockbench 지침 인덱스
+  - `docs/agent-guides/environment.md` — 작업 환경 / 도구 / 좌표계
+  - `docs/agent-guides/principles.md` — 핵심 원칙
+  - `docs/agent-guides/blockbench-mcp-rules.md` — Blockbench/MCP 작업 시 반드시 지킬 주의점
+  - `docs/agent-guides/blockbench-mcp-setup.md` — Blockbench MCP 등록과 export 절차
+- 다음 작업 요약:
+  1. ~~Blockbench MCP tool 확인~~ — 완료 (2026-05-31)
+  2. ~~`unicorn_toilet` geometry/texture atlas + `.bbmodel` export~~ — 완료 (2026-06-01 기준 파일 존재 확인)
+  3. ~~`flush.ogg` 추가와 `sound_definitions.json` 연결 검증~~ — 완료 (2026-06-01, 기본 합성 효과음. 추후 최종 음원 교체 가능)
+  4. Minecraft에서 `mine_structure:unicorn_toilet`, `mine_structure:unicorn_dining_table`, `mine_structure:unicorn_chair` 엔티티 소환 테스트
+  5. ~~상호작용으로 `flush` 애니메이션/사운드를 트리거하는 behavior 또는 Script API 방식 확정~~ — behavior `minecraft:interact` + `queue_command` 방식으로 구현 (2026-06-01), 인게임 검증 필요
+  6. ~~다음 가구 콘텐츠를 `content/`에 등록~~ — `unicorn_dining_table`, `unicorn_chair` 등록 및 정적 리소스 생성 완료 (2026-06-01)
+  7. ~~식탁 아이템 올리기 / 의자 착석 behavior 구현~~ — 식탁 Script API `spawnItem`, 의자 `minecraft:rideable` 구현 (2026-06-01), 인게임 검증 필요
+
+## 새 프로젝트 추가 규칙
+
+새 패키지를 시작할 때는 아래 형식을 따른다.
+
+```text
+projects/<project_id>/
+├─ README.md
+├─ PROJECT_CONTEXT.md
+└─ docs-or-assets
+```
+
+그리고 이 파일의 `Active Projects` 또는 `Backlog Projects` 섹션에 다음 정보를 추가한다.
+
+- 경로
+- 상태
+- 목적
+- 주요 문서
+- 다음 작업
+
+## Backlog Projects
+
+현재 없음.

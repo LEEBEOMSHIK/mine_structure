@@ -1,0 +1,126 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.unicorn_dining_table",
+        "texture_width": 64,
+        "texture_height": 64,
+        "visible_bounds_width": 4,
+        "visible_bounds_height": 2.5,
+        "visible_bounds_offset": [0, 0.75, 0]
+      },
+      "bones": [
+        {
+          "name": "unicorn_dining_table",
+          "pivot": [0, 0, 0]
+        },
+        {
+          "name": "table_top",
+          "parent": "unicorn_dining_table",
+          "pivot": [0, 0, 0],
+          "cubes": [
+            {
+              "origin": [-12, 10, -8],
+              "size": [24, 2, 16],
+              "uv": [0, 0]
+            },
+            {
+              "origin": [-13, 9, -9],
+              "size": [26, 1, 18],
+              "uv": [16, 0]
+            }
+          ]
+        },
+        {
+          "name": "table_legs",
+          "parent": "unicorn_dining_table",
+          "pivot": [0, 0, 0],
+          "cubes": [
+            {
+              "origin": [-10, 0, -6],
+              "size": [2, 10, 2],
+              "uv": [32, 0]
+            },
+            {
+              "origin": [8, 0, -6],
+              "size": [2, 10, 2],
+              "uv": [32, 0]
+            },
+            {
+              "origin": [-10, 0, 4],
+              "size": [2, 10, 2],
+              "uv": [32, 0]
+            },
+            {
+              "origin": [8, 0, 4],
+              "size": [2, 10, 2],
+              "uv": [32, 0]
+            }
+          ]
+        },
+        {
+          "name": "rainbow_runner",
+          "parent": "unicorn_dining_table",
+          "pivot": [0, 0, 0],
+          "cubes": [
+            {
+              "origin": [-11, 12.05, -1.5],
+              "size": [22, 0.25, 3],
+              "uv": [0, 16]
+            }
+          ]
+        },
+        {
+          "name": "horn_centerpiece",
+          "parent": "unicorn_dining_table",
+          "pivot": [0, 12, 0],
+          "cubes": [
+            {
+              "origin": [-1.5, 12, -1.5],
+              "size": [3, 1.5, 3],
+              "uv": [48, 0]
+            },
+            {
+              "origin": [-1, 13.5, -1],
+              "size": [2, 3, 2],
+              "uv": [16, 16]
+            },
+            {
+              "origin": [-0.5, 16.5, -0.5],
+              "size": [1, 2.5, 1],
+              "uv": [16, 16]
+            }
+          ]
+        },
+        {
+          "name": "sparkle_place_settings",
+          "parent": "unicorn_dining_table",
+          "pivot": [0, 0, 0],
+          "cubes": [
+            {
+              "origin": [-8, 12.1, -6],
+              "size": [4, 0.2, 3],
+              "uv": [32, 16]
+            },
+            {
+              "origin": [4, 12.1, -6],
+              "size": [4, 0.2, 3],
+              "uv": [32, 16]
+            },
+            {
+              "origin": [-8, 12.1, 3],
+              "size": [4, 0.2, 3],
+              "uv": [48, 16]
+            },
+            {
+              "origin": [4, 12.1, 3],
+              "size": [4, 0.2, 3],
+              "uv": [48, 16]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

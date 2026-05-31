@@ -1,0 +1,69 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.unicorn_toilet.lid_open": {
+      "loop": "hold_on_last_frame",
+      "animation_length": 0.55,
+      "bones": {
+        "toilet_lid_open": {
+          "rotation": {
+            "0.0": [0, 0, 0],
+            "0.55": [88, 0, 0]
+          }
+        }
+      }
+    },
+    "animation.unicorn_toilet.lid_close": {
+      "loop": "hold_on_last_frame",
+      "animation_length": 0.55,
+      "bones": {
+        "toilet_lid_open": {
+          "rotation": {
+            "0.0": [88, 0, 0],
+            "0.55": [0, 0, 0]
+          }
+        }
+      }
+    },
+    "animation.unicorn_toilet.flush": {
+      "loop": false,
+      "animation_length": 1.8,
+      "bones": {
+        "flush_button": {
+          "position": {
+            "0.0": [0, 0, 0],
+            "0.1": [0, -0.7, 0],
+            "0.35": [0, 0, 0]
+          }
+        },
+        "tank_water_grp": {
+          "position": {
+            "0.1": [0, 0, 0],
+            "0.5": [0, -3.4, 0],
+            "1.0": [0, -3.4, 0],
+            "1.8": [0, 0, 0]
+          }
+        },
+        "bowl_water_grp": {
+          "position": {
+            "0.2": [0, 0, 0],
+            "0.65": [0, -2.3, 0],
+            "1.1": [0, -2.3, 0],
+            "1.8": [0, 0, 0]
+          },
+          "rotation": {
+            "0.2": [0, 0, 0],
+            "0.65": [0, 200, 0],
+            "1.1": [0, 360, 0],
+            "1.8": [0, 360, 0]
+          }
+        }
+      },
+      "sound_effects": {
+        "0.12": {
+          "effect": "flush"
+        }
+      }
+    }
+  }
+}

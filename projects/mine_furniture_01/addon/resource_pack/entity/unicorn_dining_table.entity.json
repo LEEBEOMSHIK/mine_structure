@@ -1,0 +1,18 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_dining_table",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_dining_table/unicorn_dining_table_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_dining_table"
+      },
+      "render_controllers": ["controller.render.unicorn_dining_table"]
+    }
+  }
+}

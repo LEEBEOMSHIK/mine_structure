@@ -1,0 +1,15 @@
+{
+  "format_version": "1.14.0",
+  "sound_definitions": {
+    "flush": {
+      "category": "block",
+      "sounds": [
+        {
+          "name": "sounds/flush",
+          "volume": 0.8,
+          "pitch": 1.0
+        }
+      ]
+    }
+  }
+}

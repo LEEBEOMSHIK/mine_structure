@@ -1,0 +1,17 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Mine Structure Resource Pack",
+    "description": "Resource pack for the Mine Structure multi-content Minecraft Bedrock add-on.",
+    "uuid": "1eada216-8565-44e4-b816-8b32c17b5590",
+    "version": [0, 1, 0],
+    "min_engine_version": [1, 20, 0]
+  },
+  "modules": [
+    {
+      "type": "resources",
+      "uuid": "d9d106c9-0916-4a0d-ac3c-6ce29382e21d",
+      "version": [0, 1, 0]
+    }
+  ]
+}

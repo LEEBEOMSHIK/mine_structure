@@ -1,0 +1,27 @@
+{
+  "identifier": "mine_structure:unicorn_toilet",
+  "content_type": "furniture_entity",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_toilet.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_toilet.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_toilet.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_toilet/unicorn_toilet_atlas.png",
+    "animations": "../../addon/resource_pack/animations/unicorn_toilet.animation.json",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_toilet.render_controllers.json",
+    "sound_definitions": "../../addon/resource_pack/sounds/sound_definitions.json",
+    "sound": "../../addon/resource_pack/sounds/flush.ogg"
+  },
+  "blockbench": {
+    "source_project": "../../blockbench/furniture.bbmodel",
+    "export_script": "../../blockbench/export_unicorn_toilet_to_resource_pack.js"
+  },
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "sound_added": true,
+    "sound_asset_note": "Temporary synthesized flush.ogg added on 2026-06-01; replace later if a final authored sound is provided."
+  }
+}

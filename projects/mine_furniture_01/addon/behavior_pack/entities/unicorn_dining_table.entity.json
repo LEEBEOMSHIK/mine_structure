@@ -1,0 +1,47 @@
+{
+  "format_version": "1.20.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_dining_table",
+      "is_spawnable": true,
+      "is_summonable": true,
+      "is_experimental": false
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": ["mine_structure_furniture", "unicorn_dining_table"]
+      },
+      "minecraft:collision_box": {
+        "width": 1.5,
+        "height": 0.9
+      },
+      "minecraft:health": {
+        "value": 10,
+        "max": 10
+      },
+      "minecraft:physics": {
+        "has_gravity": false,
+        "has_collision": true
+      },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      },
+      "minecraft:interact": {
+        "interactions": [
+          {
+            "interact_text": "action.interact.place",
+            "swing": true,
+            "on_interact": {
+              "event": "mine_structure:table_interact",
+              "target": "self"
+            }
+          }
+        ]
+      }
+    },
+    "events": {
+      "mine_structure:table_interact": {}
+    }
+  }
+}

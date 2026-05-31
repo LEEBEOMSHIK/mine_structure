@@ -1,0 +1,18 @@
+{
+  "identifier": "mine_structure:unicorn_chair",
+  "content_type": "furniture_entity",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_chair.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_chair.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_chair.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_chair/unicorn_chair_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_chair.render_controllers.json"
+  },
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true
+  }
+}

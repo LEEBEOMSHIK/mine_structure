@@ -1,0 +1,23 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_toilet",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_toilet/unicorn_toilet_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_toilet"
+      },
+      "animations": {
+        "lid_open": "animation.unicorn_toilet.lid_open",
+        "lid_close": "animation.unicorn_toilet.lid_close",
+        "flush": "animation.unicorn_toilet.flush"
+      },
+      "render_controllers": ["controller.render.unicorn_toilet"]
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "format_version": "1.20.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_toilet",
+      "is_spawnable": true,
+      "is_summonable": true,
+      "is_experimental": false
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": ["mine_structure_furniture", "unicorn_toilet"]
+      },
+      "minecraft:collision_box": {
+        "width": 0.9,
+        "height": 1.2
+      },
+      "minecraft:health": {
+        "value": 10,
+        "max": 10
+      },
+      "minecraft:physics": {
+        "has_gravity": false,
+        "has_collision": true
+      },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      },
+      "minecraft:interact": {
+        "interactions": [
+          {
+            "interact_text": "action.interact.flush",
+            "swing": true,
+            "play_sounds": "flush",
+            "on_interact": {
+              "event": "mine_structure:flush",
+              "target": "self"
+            }
+          }
+        ]
+      }
+    },
+    "events": {
+      "mine_structure:flush": {
+        "sequence": [
+          {
+            "trigger": {
+              "event": "mine_structure:play_flush",
+              "target": "self"
+            }
+          }
+        ]
+      },
+      "mine_structure:play_flush": {
+        "add": {
+          "component_groups": ["mine_structure:flush_requested"]
+        },
+        "queue_command": {
+          "target": "self",
+          "command": "playanimation @s animation.unicorn_toilet.flush"
+        }
+      }
+    },
+    "component_groups": {
+      "mine_structure:flush_requested": {}
+    }
+  }
+}
