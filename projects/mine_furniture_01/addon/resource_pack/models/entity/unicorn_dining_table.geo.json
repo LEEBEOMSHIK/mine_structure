@@ -72,28 +72,6 @@
           ]
         },
         {
-          "name": "horn_centerpiece",
-          "parent": "unicorn_dining_table",
-          "pivot": [0, 12, 0],
-          "cubes": [
-            {
-              "origin": [-1.5, 12, -1.5],
-              "size": [3, 1.5, 3],
-              "uv": [48, 0]
-            },
-            {
-              "origin": [-1, 13.5, -1],
-              "size": [2, 3, 2],
-              "uv": [16, 16]
-            },
-            {
-              "origin": [-0.5, 16.5, -0.5],
-              "size": [1, 2.5, 1],
-              "uv": [16, 16]
-            }
-          ]
-        },
-        {
           "name": "sparkle_place_settings",
           "parent": "unicorn_dining_table",
           "pivot": [0, 0, 0],

@@ -1,6 +1,9 @@
-import { EntityComponentTypes, EquipmentSlot, system, world } from "@minecraft/server";
+import { EntityComponentTypes, EquipmentSlot, ItemStack, system, world } from "@minecraft/server";
 
 const TABLE_ID = "mine_structure:unicorn_dining_table";
+const STORAGE_ID = "mine_structure:unicorn_barrel_cabinet";
+const STORAGE_PROPERTY = "barrel_storage_items";
+const STORAGE_MAX_SLOTS = 9;
 
 function getMainhand(player) {
   const equippable = player.getComponent(EntityComponentTypes.Equippable);
@@ -49,13 +52,88 @@ function placeItemOnTable(player, table) {
   setMainhand(player, split.remaining);
 }
 
-world.afterEvents.playerInteractWithEntity.subscribe((event) => {
-  const target = event.target;
-  if (!target || target.typeId !== TABLE_ID) {
+function getStoredItems(storageEntity) {
+  const raw = storageEntity.getDynamicProperty(STORAGE_PROPERTY);
+  if (typeof raw !== "string" || raw.length === 0) {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+    return parsed.filter((item) => {
+      return (
+        item &&
+        typeof item.typeId === "string" &&
+        Number.isInteger(item.amount) &&
+        item.amount > 0
+      );
+    });
+  } catch {
+    return [];
+  }
+}
+
+function setStoredItems(storageEntity, items) {
+  storageEntity.setDynamicProperty(STORAGE_PROPERTY, JSON.stringify(items));
+}
+
+function spawnStoredItem(storageEntity, item) {
+  const location = storageEntity.location;
+  const amount = Math.max(1, Math.min(64, item.amount));
+  const itemStack = new ItemStack(item.typeId, amount);
+  storageEntity.dimension.spawnItem(itemStack, {
+    x: location.x,
+    y: location.y + 1.05,
+    z: location.z,
+  });
+}
+
+function storeOrRetrieveItem(player, storageEntity) {
+  const held = getMainhand(player);
+  const items = getStoredItems(storageEntity);
+
+  if (held) {
+    if (items.length >= STORAGE_MAX_SLOTS) {
+      return;
+    }
+
+    const split = takeOne(held);
+    items.push({
+      typeId: split.placed.typeId,
+      amount: split.placed.amount,
+    });
+    setStoredItems(storageEntity, items);
+    setMainhand(player, split.remaining);
     return;
   }
 
-  system.run(() => {
-    placeItemOnTable(event.player, target);
-  });
+  const item = items.pop();
+  if (!item) {
+    return;
+  }
+
+  setStoredItems(storageEntity, items);
+  spawnStoredItem(storageEntity, item);
+}
+
+world.afterEvents.playerInteractWithEntity.subscribe((event) => {
+  const target = event.target;
+  if (!target) {
+    return;
+  }
+
+  if (target.typeId === TABLE_ID) {
+    system.run(() => {
+      placeItemOnTable(event.player, target);
+    });
+  }
+
+  if (target.typeId === STORAGE_ID) {
+    system.run(() => {
+      storeOrRetrieveItem(event.player, target);
+    });
+  }
 });

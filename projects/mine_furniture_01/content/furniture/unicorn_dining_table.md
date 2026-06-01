@@ -34,7 +34,8 @@ Static unicorn-themed dining table:
 1. Pastel ceramic table top.
 2. Lavender legs and trim.
 3. Rainbow runner across the table.
-4. Small unicorn horn centerpiece.
+
+> 2026-06-01: 유니콘 뿔 센터피스(`horn_centerpiece`)는 제거됨. geo/`.bbmodel`에서 더 이상 사용하지 않는다.
 
 ## Behavior
 

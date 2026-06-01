@@ -6,6 +6,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 RESOURCE_PACK = PROJECT_ROOT / "addon" / "resource_pack"
 BEHAVIOR_PACK = PROJECT_ROOT / "addon" / "behavior_pack"
 FURNITURE_ROOT = PROJECT_ROOT / "content" / "furniture"
+BLOCKBENCH_MODEL = PROJECT_ROOT / "blockbench" / "furniture.bbmodel"
 
 FURNITURE = {
     "unicorn_toilet": {
@@ -21,6 +22,16 @@ FURNITURE = {
         "identifier": "mine_structure:unicorn_chair",
         "requires_flush": False,
         "requires_rideable": True,
+    },
+    "unicorn_barrel_cabinet": {
+        "identifier": "mine_structure:unicorn_barrel_cabinet",
+        "requires_flush": False,
+        "requires_storage_script": True,
+    },
+    "decorative_unicorn_doll": {
+        "identifier": "mine_structure:decorative_unicorn_doll",
+        "requires_flush": False,
+        "requires_static_decoration": True,
     },
 }
 
@@ -117,6 +128,38 @@ def validate_common_furniture(content_id, config, failures):
     if config.get("requires_table_script"):
         validate_table_interaction(content_id, behavior_entity, failures)
 
+    if config.get("requires_storage_script"):
+        validate_storage_interaction(content_id, behavior_entity, failures)
+
+    if config.get("requires_static_decoration"):
+        validate_static_decoration(content_id, behavior_entity, failures)
+
+
+def validate_blockbench_source(failures):
+    if not BLOCKBENCH_MODEL.is_file():
+        failures.append(f"missing Blockbench source: {BLOCKBENCH_MODEL.relative_to(PROJECT_ROOT)}")
+        return
+
+    source = load_json(BLOCKBENCH_MODEL)
+    groups_by_uuid = {
+        item.get("uuid"): item.get("name")
+        for item in source.get("groups", [])
+        if isinstance(item, dict)
+    }
+    roots = source.get("outliner", [])
+    root_names = {
+        groups_by_uuid.get(item.get("uuid"))
+        for item in roots
+        if isinstance(item, dict)
+    }
+
+    for content_id in FURNITURE:
+        if content_id not in root_names:
+            failures.append(f"blockbench source is missing root group {content_id}")
+
+    if "horn_centerpiece" in json.dumps(source):
+        failures.append("blockbench source still contains horn_centerpiece")
+
 
 def validate_chair_rideable(content_id, behavior_entity, failures):
     components = behavior_entity.get("minecraft:entity", {}).get("components", {})
@@ -187,6 +230,47 @@ def validate_table_interaction(content_id, behavior_entity, failures):
             failures.append(f"scripts/main.js is missing {snippet}")
 
 
+def validate_storage_interaction(content_id, behavior_entity, failures):
+    components = behavior_entity.get("minecraft:entity", {}).get("components", {})
+    interact = components.get("minecraft:interact")
+    if not interact:
+        failures.append(f"{content_id} behavior entity is missing minecraft:interact")
+    else:
+        interactions = interact.get("interactions", [])
+        has_storage_interaction = any(
+            isinstance(item, dict)
+            and item.get("on_interact", {}).get("event") == "mine_structure:storage_interact"
+            for item in interactions
+        )
+        if not has_storage_interaction:
+            failures.append(f"{content_id} interact does not trigger mine_structure:storage_interact")
+
+    script_path = BEHAVIOR_PACK / "scripts" / "main.js"
+    if not script_path.is_file():
+        failures.append("behavior pack is missing scripts/main.js")
+        return
+
+    script = script_path.read_text(encoding="utf-8")
+    required_snippets = [
+        "mine_structure:unicorn_barrel_cabinet",
+        "barrel_storage_items",
+        "getDynamicProperty",
+        "setDynamicProperty",
+        "ItemStack",
+    ]
+    for snippet in required_snippets:
+        if snippet not in script:
+            failures.append(f"scripts/main.js is missing {snippet}")
+
+
+def validate_static_decoration(content_id, behavior_entity, failures):
+    components = behavior_entity.get("minecraft:entity", {}).get("components", {})
+    if "minecraft:interact" in components:
+        failures.append(f"{content_id} should be static decoration without minecraft:interact")
+    if "minecraft:rideable" in components:
+        failures.append(f"{content_id} should be static decoration without minecraft:rideable")
+
+
 def validate_flush_behavior(resource_map, behavior_entity, failures):
     sound_definitions_path = RESOURCE_PACK / "sounds" / "sound_definitions.json"
     sound_path = RESOURCE_PACK / "sounds" / "flush.ogg"
@@ -243,6 +327,8 @@ def main():
 
     for content_id, config in FURNITURE.items():
         validate_common_furniture(content_id, config, failures)
+
+    validate_blockbench_source(failures)
 
     if failures:
         for failure in failures:

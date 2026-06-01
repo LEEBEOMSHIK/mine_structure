@@ -1,0 +1,18 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:decorative_unicorn_doll",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/decorative_unicorn_doll/decorative_unicorn_doll_atlas"
+      },
+      "geometry": {
+        "default": "geometry.decorative_unicorn_doll"
+      },
+      "render_controllers": ["controller.render.decorative_unicorn_doll"]
+    }
+  }
+}

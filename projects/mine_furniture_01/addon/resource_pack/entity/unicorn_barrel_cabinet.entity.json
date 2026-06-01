@@ -1,0 +1,18 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_barrel_cabinet",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_barrel_cabinet/unicorn_barrel_cabinet_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_barrel_cabinet"
+      },
+      "render_controllers": ["controller.render.unicorn_barrel_cabinet"]
+    }
+  }
+}

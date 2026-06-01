@@ -1,0 +1,18 @@
+{
+  "identifier": "mine_structure:decorative_unicorn_doll",
+  "content_type": "furniture_entity",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/decorative_unicorn_doll.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/decorative_unicorn_doll.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/decorative_unicorn_doll.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/decorative_unicorn_doll/decorative_unicorn_doll_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/decorative_unicorn_doll.render_controllers.json"
+  },
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true
+  }
+}

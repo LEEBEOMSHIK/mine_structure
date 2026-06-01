@@ -1,0 +1,10 @@
+# IDE
+.idea/
+.vscode/
+
+# Build / packaging output
+dist/
+
+# OS
+Thumbs.db
+.DS_Store
