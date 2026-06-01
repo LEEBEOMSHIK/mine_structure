@@ -45,6 +45,7 @@
 - 의자 behavior는 `minecraft:rideable` 방식이다. 플레이어 1명이 `[0, 0.55, 0]` 좌석에 앉는다.
 - barrel 수납장 behavior는 Script API 간이 수납 방식이다. 아이템을 들고 상호작용하면 1개 저장, 빈 손으로 상호작용하면 가장 최근 저장 아이템 1개를 꺼낸다.
 - 장식용 유니콘 인형은 순수 정적 장식이다. `minecraft:interact`, Script API 핸들러, `minecraft:rideable`을 사용하지 않는다.
+- (2026-06-01) `decorative_unicorn_doll`을 직립 박스 인형 → 네 발로 선 조랑말(포니) 체형으로 재설계했다. 가로형 배럴 몸통 + 들린 목 + 주둥이 + 3단 뿔/앞머리/갈기/꼬리. `geometry.decorative_unicorn_doll` 6 bones / 27 cubes. `furniture.bbmodel`과 `decorative_unicorn_doll.geo.json` 갱신. 전용 텍스처는 아직 플레이스홀더다. 상세는 `README.md` 4.8절.
 - 현재 실행 환경에는 Bedrock 기본 `com.mojang` 경로가 없어 Minecraft 앱 기반 소환 테스트는 직접 수행하지 못했다.
 
 ## 공통 세부 지침
