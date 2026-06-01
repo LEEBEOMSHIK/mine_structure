@@ -1,6 +1,10 @@
 # Weapon Content
 
-무기 콘텐츠는 아직 등록된 항목이 없다.
+## 등록 상태
+
+| ID | Type | Status | Docs |
+|----|------|--------|------|
+| `mine_structure:unicorn_horn_blade` | weapon item (sword) | 2D icon + 3D attachable ready, in-hand pose needs in-game tuning | `unicorn_horn_blade.md` |
 
 ## Planned Structure
 

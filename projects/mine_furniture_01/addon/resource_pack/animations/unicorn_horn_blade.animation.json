@@ -1,0 +1,45 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.unicorn_horn_blade.third_person_main_hand": {
+      "loop": true,
+      "bones": {
+        "unicorn_horn_blade": {
+          "rotation": [80, 0, 0],
+          "position": [0, 4, 1],
+          "scale": 0.5
+        }
+      }
+    },
+    "animation.unicorn_horn_blade.third_person_off_hand": {
+      "loop": true,
+      "bones": {
+        "unicorn_horn_blade": {
+          "rotation": [80, 0, 0],
+          "position": [0, 4, 1],
+          "scale": 0.5
+        }
+      }
+    },
+    "animation.unicorn_horn_blade.first_person_main_hand": {
+      "loop": true,
+      "bones": {
+        "unicorn_horn_blade": {
+          "rotation": [50, 60, 0],
+          "position": [3, 5, 2],
+          "scale": 0.55
+        }
+      }
+    },
+    "animation.unicorn_horn_blade.first_person_off_hand": {
+      "loop": true,
+      "bones": {
+        "unicorn_horn_blade": {
+          "rotation": [50, -60, 0],
+          "position": [-3, 5, 2],
+          "scale": 0.55
+        }
+      }
+    }
+  }
+}

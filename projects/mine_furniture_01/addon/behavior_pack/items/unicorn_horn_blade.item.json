@@ -1,0 +1,39 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "mine_structure:unicorn_horn_blade",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:display_name": {
+        "value": "유니콘 뿔 검"
+      },
+      "minecraft:icon": {
+        "texture": "unicorn_horn_blade"
+      },
+      "minecraft:max_stack_size": 1,
+      "minecraft:hand_equipped": true,
+      "minecraft:damage": 9,
+      "minecraft:durability": {
+        "max_durability": 1800
+      },
+      "minecraft:enchantable": {
+        "slot": "sword",
+        "value": 14
+      },
+      "minecraft:repairable": {
+        "repair_items": [
+          {
+            "items": ["minecraft:diamond"],
+            "repair_amount": 250
+          }
+        ]
+      },
+      "minecraft:can_destroy_in_creative": true,
+      "minecraft:should_despawn": false
+    }
+  }
+}

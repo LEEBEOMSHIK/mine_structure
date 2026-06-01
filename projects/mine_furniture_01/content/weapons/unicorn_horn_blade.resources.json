@@ -1,0 +1,22 @@
+{
+  "identifier": "mine_structure:unicorn_horn_blade",
+  "content_type": "weapon_item",
+  "behavior_pack": {
+    "item": "../../addon/behavior_pack/items/unicorn_horn_blade.item.json"
+  },
+  "resource_pack": {
+    "item_texture": "../../addon/resource_pack/textures/item_texture.json",
+    "icon": "../../addon/resource_pack/textures/items/unicorn_horn_blade.png",
+    "attachable": "../../addon/resource_pack/attachables/unicorn_horn_blade.attachable.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_horn_blade.geo.json",
+    "model_texture": "../../addon/resource_pack/textures/entity/unicorn_horn_blade/unicorn_horn_blade.png",
+    "animation": "../../addon/resource_pack/animations/unicorn_horn_blade.animation.json"
+  },
+  "status": {
+    "json_links_ready": true,
+    "geometry_authored": true,
+    "icon_exported": true,
+    "model_texture_exported": true,
+    "in_hand_pose_tuned": false
+  }
+}

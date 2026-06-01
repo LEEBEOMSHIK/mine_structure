@@ -6,7 +6,15 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 RESOURCE_PACK = PROJECT_ROOT / "addon" / "resource_pack"
 BEHAVIOR_PACK = PROJECT_ROOT / "addon" / "behavior_pack"
 FURNITURE_ROOT = PROJECT_ROOT / "content" / "furniture"
+WEAPONS_ROOT = PROJECT_ROOT / "content" / "weapons"
 BLOCKBENCH_MODEL = PROJECT_ROOT / "blockbench" / "furniture.bbmodel"
+
+WEAPONS = {
+    "unicorn_horn_blade": {
+        "identifier": "mine_structure:unicorn_horn_blade",
+        "icon_shortname": "unicorn_horn_blade",
+    },
+}
 
 FURNITURE = {
     "unicorn_toilet": {
@@ -41,9 +49,9 @@ def load_json(path):
         return json.load(file)
 
 
-def validate_png(path, failures):
+def validate_png(path, failures, expected_size=(64, 64)):
     if not path.is_file():
-        failures.append(f"missing texture atlas: {path.relative_to(PROJECT_ROOT)}")
+        failures.append(f"missing texture: {path.relative_to(PROJECT_ROOT)}")
         return
 
     with path.open("rb") as file:
@@ -54,8 +62,8 @@ def validate_png(path, failures):
         from PIL import Image
 
         with Image.open(path) as image:
-            if image.size != (64, 64):
-                failures.append(f"{path.name} size is {image.size}, expected (64, 64)")
+            if expected_size is not None and image.size != expected_size:
+                failures.append(f"{path.name} size is {image.size}, expected {expected_size}")
     except ImportError:
         pass
 
@@ -156,6 +164,10 @@ def validate_blockbench_source(failures):
     for content_id in FURNITURE:
         if content_id not in root_names:
             failures.append(f"blockbench source is missing root group {content_id}")
+
+    for weapon_id in WEAPONS:
+        if weapon_id not in root_names:
+            failures.append(f"blockbench source is missing root group {weapon_id}")
 
     if "horn_centerpiece" in json.dumps(source):
         failures.append("blockbench source still contains horn_centerpiece")
@@ -271,6 +283,77 @@ def validate_static_decoration(content_id, behavior_entity, failures):
         failures.append(f"{content_id} should be static decoration without minecraft:rideable")
 
 
+def validate_weapon(weapon_id, config, failures):
+    expected_identifier = config["identifier"]
+    expected_geometry = f"geometry.{weapon_id}"
+    icon_shortname = config["icon_shortname"]
+
+    resource_map_path = WEAPONS_ROOT / f"{weapon_id}.resources.json"
+    item_path = BEHAVIOR_PACK / "items" / f"{weapon_id}.item.json"
+    attachable_path = RESOURCE_PACK / "attachables" / f"{weapon_id}.attachable.json"
+    geometry_path = RESOURCE_PACK / "models" / "entity" / f"{weapon_id}.geo.json"
+    animation_path = RESOURCE_PACK / "animations" / f"{weapon_id}.animation.json"
+    item_texture_path = RESOURCE_PACK / "textures" / "item_texture.json"
+    icon_path = RESOURCE_PACK / "textures" / "items" / f"{weapon_id}.png"
+    model_texture_path = RESOURCE_PACK / "textures" / "entity" / weapon_id / f"{weapon_id}.png"
+
+    for path in [
+        resource_map_path,
+        item_path,
+        attachable_path,
+        geometry_path,
+        animation_path,
+        item_texture_path,
+    ]:
+        if not path.is_file():
+            failures.append(f"missing file for {weapon_id}: {path.relative_to(PROJECT_ROOT)}")
+
+    validate_png(icon_path, failures, expected_size=(16, 16))
+    validate_png(model_texture_path, failures, expected_size=(64, 64))
+
+    if not item_path.is_file() or not attachable_path.is_file() or not item_texture_path.is_file():
+        return
+
+    item = load_json(item_path)
+    item_identifier = item.get("minecraft:item", {}).get("description", {}).get("identifier")
+    if item_identifier != expected_identifier:
+        failures.append(f"{weapon_id} item identifier is {item_identifier}, expected {expected_identifier}")
+
+    components = item.get("minecraft:item", {}).get("components", {})
+    if "minecraft:damage" not in components:
+        failures.append(f"{weapon_id} item is missing minecraft:damage (sword behavior)")
+    if components.get("minecraft:enchantable", {}).get("slot") != "sword":
+        failures.append(f"{weapon_id} item enchantable slot is not 'sword'")
+    if components.get("minecraft:icon", {}).get("texture") != icon_shortname:
+        failures.append(f"{weapon_id} item icon does not reference {icon_shortname}")
+
+    attachable = load_json(attachable_path)
+    attach_desc = attachable.get("minecraft:attachable", {}).get("description", {})
+    if attach_desc.get("identifier") != expected_identifier:
+        failures.append(f"{weapon_id} attachable identifier mismatch")
+    if attach_desc.get("geometry", {}).get("default") != expected_geometry:
+        failures.append(f"{weapon_id} attachable geometry does not reference {expected_geometry}")
+    if attach_desc.get("textures", {}).get("default") != f"textures/entity/{weapon_id}/{weapon_id}":
+        failures.append(f"{weapon_id} attachable default texture path mismatch")
+
+    item_texture = load_json(item_texture_path)
+    texture_data = item_texture.get("texture_data", {})
+    if icon_shortname not in texture_data:
+        failures.append(f"item_texture.json is missing texture_data.{icon_shortname}")
+    elif texture_data[icon_shortname].get("textures") != f"textures/items/{weapon_id}":
+        failures.append(f"item_texture.json {icon_shortname} does not point to textures/items/{weapon_id}")
+
+    if geometry_path.is_file():
+        geometry = load_json(geometry_path)
+        geometry_identifier = geometry.get("minecraft:geometry", [{}])[0].get("description", {}).get("identifier")
+        if geometry_identifier != expected_geometry:
+            failures.append(f"{weapon_id} geometry identifier is {geometry_identifier}, expected {expected_geometry}")
+
+    resource_map = load_json(resource_map_path) if resource_map_path.is_file() else {}
+    if resource_map.get("identifier") != expected_identifier:
+        failures.append(f"{weapon_id} resource map identifier mismatch")
+
+
 def validate_flush_behavior(resource_map, behavior_entity, failures):
     sound_definitions_path = RESOURCE_PACK / "sounds" / "sound_definitions.json"
     sound_path = RESOURCE_PACK / "sounds" / "flush.ogg"
@@ -327,6 +410,9 @@ def main():
 
     for content_id, config in FURNITURE.items():
         validate_common_furniture(content_id, config, failures)
+
+    for weapon_id, config in WEAPONS.items():
+        validate_weapon(weapon_id, config, failures)
 
     validate_blockbench_source(failures)
 
