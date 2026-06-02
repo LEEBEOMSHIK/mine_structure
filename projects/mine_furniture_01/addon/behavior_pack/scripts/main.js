@@ -4,6 +4,14 @@ const TABLE_ID = "mine_structure:unicorn_dining_table";
 const STORAGE_ID = "mine_structure:unicorn_barrel_cabinet";
 const STORAGE_PROPERTY = "barrel_storage_items";
 const STORAGE_MAX_SLOTS = 9;
+const ICE_CREAM_ID = "mine_structure:unicorn_ice_cream_machine";
+const ICE_CREAM_TREATS = [
+  "minecraft:cookie",
+  "minecraft:sweet_berries",
+  "minecraft:glow_berries",
+  "minecraft:pumpkin_pie",
+  "minecraft:honey_bottle",
+];
 
 function getMainhand(player) {
   const equippable = player.getComponent(EntityComponentTypes.Equippable);
@@ -119,10 +127,36 @@ function storeOrRetrieveItem(player, storageEntity) {
   spawnStoredItem(storageEntity, item);
 }
 
+function dispenseTreat(player, machine) {
+  const treatId = ICE_CREAM_TREATS[Math.floor(Math.random() * ICE_CREAM_TREATS.length)];
+  const treat = new ItemStack(treatId, 1);
+
+  const inventory = player.getComponent(EntityComponentTypes.Inventory);
+  const container = inventory ? inventory.container : undefined;
+  const leftover = container ? container.addItem(treat) : treat;
+
+  if (leftover) {
+    const location = machine.location;
+    machine.dimension.spawnItem(leftover, {
+      x: location.x,
+      y: location.y + 1.0,
+      z: location.z,
+    });
+  }
+
+  machine.dimension.playSound("random.pop", machine.location);
+}
+
 world.afterEvents.playerInteractWithEntity.subscribe((event) => {
   const target = event.target;
   if (!target) {
     return;
+  }
+
+  if (target.typeId === ICE_CREAM_ID) {
+    system.run(() => {
+      dispenseTreat(event.player, target);
+    });
   }
 
   if (target.typeId === TABLE_ID) {

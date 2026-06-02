@@ -1,0 +1,23 @@
+{
+  "identifier": "mine_structure:unicorn_sink_u",
+  "content_type": "furniture_entity",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_sink_u.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_sink_u.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_sink_u.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_sink/unicorn_sink_u_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_sink_u.render_controllers.json",
+    "animation": "../../addon/resource_pack/animations/unicorn_sink_u.animation.json",
+    "animation_controller": "../../addon/resource_pack/animation_controllers/unicorn_sink_u.animation_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_sink_u.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "water_toggle_ready": true,
+    "in_game_tested": false
+  }
+}

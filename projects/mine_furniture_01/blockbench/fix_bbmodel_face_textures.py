@@ -30,7 +30,6 @@ GROUP_TEXTURE = {
     "unicorn_chair": "unicorn_chair_atlas.png",
     "unicorn_barrel_cabinet": "unicorn_barrel_cabinet_atlas.png",
     "decorative_unicorn_doll": "decorative_unicorn_doll_atlas.png",
-    "unicorn_horn_blade": "unicorn_horn_blade.png",
 }
 FALLBACK_TEXTURE = "unicorn_toilet_atlas.png"
 

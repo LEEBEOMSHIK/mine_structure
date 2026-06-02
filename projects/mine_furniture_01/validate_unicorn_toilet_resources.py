@@ -7,7 +7,8 @@ RESOURCE_PACK = PROJECT_ROOT / "addon" / "resource_pack"
 BEHAVIOR_PACK = PROJECT_ROOT / "addon" / "behavior_pack"
 FURNITURE_ROOT = PROJECT_ROOT / "content" / "furniture"
 WEAPONS_ROOT = PROJECT_ROOT / "content" / "weapons"
-BLOCKBENCH_MODEL = PROJECT_ROOT / "blockbench" / "furniture.bbmodel"
+BLOCKBENCH_FURNITURE_MODEL = PROJECT_ROOT / "blockbench" / "furniture.bbmodel"
+BLOCKBENCH_WEAPON_MODEL = PROJECT_ROOT / "blockbench" / "unicorn_horn_blade.bbmodel"
 
 WEAPONS = {
     "unicorn_horn_blade": {
@@ -15,6 +16,28 @@ WEAPONS = {
         "icon_shortname": "unicorn_horn_blade",
     },
 }
+
+SINKS = {
+    "unicorn_sink_l": {"identifier": "mine_structure:unicorn_sink_l"},
+    "unicorn_sink_island": {"identifier": "mine_structure:unicorn_sink_island"},
+    "unicorn_sink_u": {"identifier": "mine_structure:unicorn_sink_u"},
+}
+
+KIDS = {
+    "unicorn_rocking_horse": {"mechanic": "rideable"},
+    "unicorn_night_lamp": {"mechanic": "variant_light"},
+    "unicorn_ice_cream_machine": {"mechanic": "script_give"},
+    "unicorn_cloud_bunk_bed": {"mechanic": "rideable_bunk"},
+}
+
+FURNITURE_BBMODEL_TEXTURE_BY_ROOT = {
+    "unicorn_toilet": "unicorn_toilet_atlas.png",
+    "unicorn_dining_table": "unicorn_dining_table_atlas.png",
+    "unicorn_chair": "unicorn_chair_atlas.png",
+    "unicorn_barrel_cabinet": "unicorn_barrel_cabinet_atlas.png",
+    "decorative_unicorn_doll": "decorative_unicorn_doll_atlas.png",
+}
+WEAPON_BBMODEL_TEXTURE_BY_ROOT = {"unicorn_horn_blade": "unicorn_horn_blade.png"}
 
 FURNITURE = {
     "unicorn_toilet": {
@@ -144,11 +167,11 @@ def validate_common_furniture(content_id, config, failures):
 
 
 def validate_blockbench_source(failures):
-    if not BLOCKBENCH_MODEL.is_file():
-        failures.append(f"missing Blockbench source: {BLOCKBENCH_MODEL.relative_to(PROJECT_ROOT)}")
+    if not BLOCKBENCH_FURNITURE_MODEL.is_file():
+        failures.append(f"missing Blockbench source: {BLOCKBENCH_FURNITURE_MODEL.relative_to(PROJECT_ROOT)}")
         return
 
-    source = load_json(BLOCKBENCH_MODEL)
+    source = load_json(BLOCKBENCH_FURNITURE_MODEL)
     groups_by_uuid = {
         item.get("uuid"): item.get("name")
         for item in source.get("groups", [])
@@ -166,11 +189,156 @@ def validate_blockbench_source(failures):
             failures.append(f"blockbench source is missing root group {content_id}")
 
     for weapon_id in WEAPONS:
-        if weapon_id not in root_names:
-            failures.append(f"blockbench source is missing root group {weapon_id}")
+        if weapon_id in root_names:
+            failures.append(f"furniture blockbench source still contains weapon root group {weapon_id}")
 
     if "horn_centerpiece" in json.dumps(source):
         failures.append("blockbench source still contains horn_centerpiece")
+
+    validate_blockbench_face_textures(
+        source,
+        groups_by_uuid,
+        FURNITURE_BBMODEL_TEXTURE_BY_ROOT,
+        failures,
+    )
+    validate_weapon_blockbench_source(failures)
+
+
+def validate_weapon_blockbench_source(failures):
+    if not BLOCKBENCH_WEAPON_MODEL.is_file():
+        failures.append(f"missing Blockbench weapon source: {BLOCKBENCH_WEAPON_MODEL.relative_to(PROJECT_ROOT)}")
+        return
+
+    source = load_json(BLOCKBENCH_WEAPON_MODEL)
+    groups_by_uuid = {
+        item.get("uuid"): item.get("name")
+        for item in source.get("groups", [])
+        if isinstance(item, dict)
+    }
+    root_names = {
+        groups_by_uuid.get(item.get("uuid"))
+        for item in source.get("outliner", [])
+        if isinstance(item, dict)
+    }
+    if root_names != {"unicorn_horn_blade"}:
+        failures.append(f"weapon blockbench source root groups are {sorted(root_names)}")
+
+    validate_weapon_blockbench_bounds(source, failures)
+    validate_blockbench_face_textures(
+        source,
+        groups_by_uuid,
+        WEAPON_BBMODEL_TEXTURE_BY_ROOT,
+        failures,
+    )
+    validate_blockbench_horn_blade_embedded_texture(source, failures)
+
+
+def validate_weapon_blockbench_bounds(source, failures):
+    elements = source.get("elements", [])
+    if not elements:
+        failures.append("weapon blockbench source has no elements")
+        return
+
+    mins = [999, 999, 999]
+    maxs = [-999, -999, -999]
+    for element in elements:
+        for index, value in enumerate(element.get("from", [0, 0, 0])):
+            mins[index] = min(mins[index], value)
+        for index, value in enumerate(element.get("to", [0, 0, 0])):
+            maxs[index] = max(maxs[index], value)
+
+    if mins[0] < -8 or maxs[0] > 8:
+        failures.append(f"weapon blockbench source x bounds are {mins[0]}..{maxs[0]}, expected near origin")
+
+
+def validate_blockbench_face_textures(source, groups_by_uuid, expected_textures, failures):
+    textures = source.get("textures", [])
+    texture_names = [item.get("name") for item in textures if isinstance(item, dict)]
+    missing = [
+        texture_name
+        for texture_name in expected_textures.values()
+        if texture_name not in texture_names
+    ]
+    if missing:
+        failures.append(f"blockbench source is missing textures: {missing}")
+        return
+
+    expected_indices = {
+        root_name: texture_names.index(texture_name)
+        for root_name, texture_name in expected_textures.items()
+    }
+    root_by_uuid = {}
+
+    def walk(node, root_name):
+        if isinstance(node, str):
+            root_by_uuid[node] = root_name
+            return
+        if not isinstance(node, dict):
+            return
+
+        current_root = root_name or groups_by_uuid.get(node.get("uuid"))
+        for child in node.get("children", []):
+            walk(child, current_root)
+
+    for top in source.get("outliner", []):
+        walk(top, groups_by_uuid.get(top.get("uuid")) if isinstance(top, dict) else None)
+
+    for element in source.get("elements", []):
+        root_name = root_by_uuid.get(element.get("uuid"))
+        if root_name not in expected_indices:
+            continue
+
+        expected_index = expected_indices[root_name]
+        expected_texture = expected_textures[root_name]
+        for face_name, face in element.get("faces", {}).items():
+            if face.get("texture") != expected_index:
+                actual = face.get("texture")
+                failures.append(
+                    f"blockbench {root_name}/{element.get('name')}/{face_name} "
+                    f"uses texture {actual}, expected {expected_texture}"
+                )
+                return
+
+def validate_blockbench_horn_blade_embedded_texture(source, failures):
+    texture = next(
+        (
+            item
+            for item in source.get("textures", [])
+            if isinstance(item, dict) and item.get("name") == "unicorn_horn_blade.png"
+        ),
+        None,
+    )
+    if not texture:
+        failures.append("blockbench source is missing embedded unicorn_horn_blade.png texture")
+        return
+
+    source_data = texture.get("source", "")
+    prefix = "data:image/png;base64,"
+    if not source_data.startswith(prefix):
+        failures.append("blockbench unicorn_horn_blade.png texture is not embedded")
+        return
+
+    try:
+        import base64
+        from io import BytesIO
+        from PIL import Image
+    except ImportError:
+        return
+
+    raw = base64.b64decode(source_data[len(prefix):])
+    with Image.open(BytesIO(raw)) as image:
+        pixels = [
+            image.getpixel((x, y))[:3]
+            for y in range(16)
+            for x in range(16)
+        ]
+
+    non_white = [pixel for pixel in pixels if pixel != (255, 255, 255)]
+    if len(set(non_white)) < 4:
+        failures.append("blockbench embedded unicorn_horn_blade horn swatch is not colorful enough")
+
+    if len(non_white) != len(pixels):
+        failures.append("blockbench embedded unicorn_horn_blade horn swatch contains white pixels")
 
 
 def validate_chair_rideable(content_id, behavior_entity, failures):
@@ -310,6 +478,8 @@ def validate_weapon(weapon_id, config, failures):
 
     validate_png(icon_path, failures, expected_size=(16, 16))
     validate_png(model_texture_path, failures, expected_size=(64, 64))
+    if weapon_id == "unicorn_horn_blade":
+        validate_horn_blade_texture(model_texture_path, failures)
 
     if not item_path.is_file() or not attachable_path.is_file() or not item_texture_path.is_file():
         return
@@ -352,6 +522,30 @@ def validate_weapon(weapon_id, config, failures):
     resource_map = load_json(resource_map_path) if resource_map_path.is_file() else {}
     if resource_map.get("identifier") != expected_identifier:
         failures.append(f"{weapon_id} resource map identifier mismatch")
+
+
+def validate_horn_blade_texture(path, failures):
+    if not path.is_file():
+        return
+
+    try:
+        from PIL import Image
+    except ImportError:
+        return
+
+    with Image.open(path) as image:
+        pixels = [
+            image.getpixel((x, y))[:3]
+            for y in range(16)
+            for x in range(16)
+        ]
+
+    non_white = [pixel for pixel in pixels if pixel != (255, 255, 255)]
+    if len(set(non_white)) < 4:
+        failures.append("unicorn_horn_blade horn swatch is not colorful enough")
+
+    if len(non_white) != len(pixels):
+        failures.append("unicorn_horn_blade horn swatch contains white pixels")
 
 
 def validate_flush_behavior(resource_map, behavior_entity, failures):
@@ -405,6 +599,280 @@ def validate_flush_behavior(resource_map, behavior_entity, failures):
         failures.append("mine_structure:play_flush does not queue the flush playanimation command")
 
 
+def validate_sink(sid, config, failures):
+    expected_identifier = config["identifier"]
+    expected_geometry = f"geometry.{sid}"
+
+    resource_map_path = FURNITURE_ROOT / f"{sid}.resources.json"
+    behavior_path = BEHAVIOR_PACK / "entities" / f"{sid}.entity.json"
+    client_path = RESOURCE_PACK / "entity" / f"{sid}.entity.json"
+    geometry_path = RESOURCE_PACK / "models" / "entity" / f"{sid}.geo.json"
+    render_path = RESOURCE_PACK / "render_controllers" / f"{sid}.render_controllers.json"
+    animation_path = RESOURCE_PACK / "animations" / f"{sid}.animation.json"
+    controller_path = RESOURCE_PACK / "animation_controllers" / f"{sid}.animation_controllers.json"
+    texture_path = RESOURCE_PACK / "textures" / "entity" / "unicorn_sink" / f"{sid}_atlas.png"
+    expected_texture = f"textures/entity/unicorn_sink/{sid}_atlas"
+    expected_bbmodel_texture = f"{sid}_atlas.png"
+
+    required = [
+        resource_map_path, behavior_path, client_path, geometry_path,
+        render_path, animation_path, controller_path,
+    ]
+    for path in required:
+        if not path.is_file():
+            failures.append(f"missing file for {sid}: {path.relative_to(PROJECT_ROOT)}")
+    validate_png(texture_path, failures)
+
+    if not (behavior_path.is_file() and client_path.is_file()
+            and animation_path.is_file() and controller_path.is_file()):
+        return
+
+    # behavior: variant water toggle
+    behavior = load_json(behavior_path)
+    entity = behavior.get("minecraft:entity", {})
+    if entity.get("description", {}).get("identifier") != expected_identifier:
+        failures.append(f"{sid} behavior identifier mismatch")
+    groups = entity.get("component_groups", {})
+    for state, value in (("mine_structure:water_off", 0), ("mine_structure:water_on", 1)):
+        group = groups.get(state, {})
+        if group.get("minecraft:variant", {}).get("value") != value:
+            failures.append(f"{sid} {state} does not set minecraft:variant value {value}")
+        if "minecraft:interact" not in group:
+            failures.append(f"{sid} {state} is missing minecraft:interact")
+    events = entity.get("events", {})
+    for ev in ("mine_structure:turn_water_on", "mine_structure:turn_water_off",
+               "minecraft:entity_spawned"):
+        if ev not in events:
+            failures.append(f"{sid} behavior is missing event {ev}")
+
+    # client entity: shared atlas + animate controller
+    client = load_json(client_path)
+    desc = client.get("minecraft:client_entity", {}).get("description", {})
+    if desc.get("identifier") != expected_identifier:
+        failures.append(f"{sid} client identifier mismatch")
+    if desc.get("geometry", {}).get("default") != expected_geometry:
+        failures.append(f"{sid} client geometry does not reference {expected_geometry}")
+    if desc.get("textures", {}).get("default") != expected_texture:
+        failures.append(f"{sid} client texture does not reference {expected_texture}")
+    if "water_ctrl" not in desc.get("scripts", {}).get("animate", []):
+        failures.append(f"{sid} client scripts.animate is missing water_ctrl")
+    anims = desc.get("animations", {})
+    for key in ("water_on", "water_off", "water_ctrl"):
+        if key not in anims:
+            failures.append(f"{sid} client animations is missing {key}")
+
+    # geometry: water bones present
+    if geometry_path.is_file():
+        geometry = load_json(geometry_path)
+        geo0 = geometry.get("minecraft:geometry", [{}])[0]
+        if geo0.get("description", {}).get("identifier") != expected_geometry:
+            failures.append(f"{sid} geometry identifier mismatch")
+        bone_names = {b.get("name") for b in geo0.get("bones", [])}
+        for bone in ("water_stream", "basin_pool", "faucet", "cabinet"):
+            if bone not in bone_names:
+                failures.append(f"{sid} geometry is missing bone {bone}")
+
+    # animations: water bones scaled
+    animation = load_json(animation_path)
+    anim_defs = animation.get("animations", {})
+    off = anim_defs.get(f"animation.{sid}.water_off", {})
+    if off.get("bones", {}).get("water_stream", {}).get("scale") != [0, 0, 0]:
+        failures.append(f"{sid} water_off does not scale water_stream to zero")
+    if f"animation.{sid}.water_on" not in anim_defs:
+        failures.append(f"{sid} is missing water_on animation")
+
+    # animation controller: off<->flowing on q.variant
+    controller = load_json(controller_path)
+    ctrl = controller.get("animation_controllers", {}).get(f"controller.animation.{sid}.water", {})
+    states = ctrl.get("states", {})
+    if "off" not in states or "flowing" not in states:
+        failures.append(f"{sid} animation controller is missing off/flowing states")
+    else:
+        if ctrl.get("initial_state") != "off":
+            failures.append(f"{sid} animation controller initial_state is not off")
+        if not any("q.variant" in str(t) for t in states["off"].get("transitions", [])):
+            failures.append(f"{sid} off state does not transition on q.variant")
+
+    # resource map
+    resource_map = load_json(resource_map_path) if resource_map_path.is_file() else {}
+    if resource_map.get("identifier") != expected_identifier:
+        failures.append(f"{sid} resource map identifier mismatch")
+    status = resource_map.get("status", {})
+    for key in ("json_links_ready", "geometry_exported", "texture_exported", "water_toggle_ready"):
+        if not status.get(key):
+            failures.append(f"{sid} resource map status.{key} is not true")
+
+    validate_sink_blockbench_source(sid, failures)
+
+
+def validate_sink_blockbench_source(sid, failures):
+    model_path = PROJECT_ROOT / "blockbench" / f"{sid}.bbmodel"
+    if not model_path.is_file():
+        failures.append(f"missing Blockbench sink source: {model_path.relative_to(PROJECT_ROOT)}")
+        return
+
+    source = load_json(model_path)
+    groups_by_uuid = {
+        item.get("uuid"): item.get("name")
+        for item in source.get("groups", [])
+        if isinstance(item, dict)
+    }
+    root_names = {
+        groups_by_uuid.get(item.get("uuid"))
+        for item in source.get("outliner", [])
+        if isinstance(item, dict)
+    }
+    if root_names != {sid}:
+        failures.append(f"{sid} blockbench source root groups are {sorted(root_names)}")
+
+    texture_names = [t.get("name") for t in source.get("textures", []) if isinstance(t, dict)]
+    if texture_names != [f"{sid}_atlas.png"]:
+        failures.append(f"{sid} blockbench source textures are {texture_names}, expected [{sid}_atlas.png]")
+
+    for element in source.get("elements", []):
+        for face_name, face in element.get("faces", {}).items():
+            if face.get("texture") not in (0, None):
+                failures.append(
+                    f"{sid} blockbench {element.get('name')}/{face_name} uses texture "
+                    f"{face.get('texture')}, expected the single embedded atlas"
+                )
+                return
+
+
+def validate_single_texture_bbmodel(sid, failures):
+    model_path = PROJECT_ROOT / "blockbench" / f"{sid}.bbmodel"
+    if not model_path.is_file():
+        failures.append(f"missing Blockbench source: {model_path.relative_to(PROJECT_ROOT)}")
+        return
+    source = load_json(model_path)
+    groups_by_uuid = {
+        item.get("uuid"): item.get("name")
+        for item in source.get("groups", [])
+        if isinstance(item, dict)
+    }
+    root_names = {
+        groups_by_uuid.get(item.get("uuid"))
+        for item in source.get("outliner", [])
+        if isinstance(item, dict)
+    }
+    if root_names != {sid}:
+        failures.append(f"{sid} blockbench source root groups are {sorted(root_names)}")
+    texture_names = [t.get("name") for t in source.get("textures", []) if isinstance(t, dict)]
+    if texture_names != [f"{sid}_atlas.png"]:
+        failures.append(f"{sid} blockbench source textures are {texture_names}, expected [{sid}_atlas.png]")
+    for element in source.get("elements", []):
+        for face_name, face in element.get("faces", {}).items():
+            if face.get("texture") not in (0, None):
+                failures.append(
+                    f"{sid} blockbench {element.get('name')}/{face_name} uses texture "
+                    f"{face.get('texture')}, expected the single embedded atlas"
+                )
+                return
+
+
+def validate_kids(sid, config, failures):
+    expected_identifier = f"mine_structure:{sid}"
+    expected_geometry = f"geometry.{sid}"
+    expected_texture = f"textures/entity/{sid}/{sid}_atlas"
+
+    resource_map_path = FURNITURE_ROOT / f"{sid}.resources.json"
+    behavior_path = BEHAVIOR_PACK / "entities" / f"{sid}.entity.json"
+    client_path = RESOURCE_PACK / "entity" / f"{sid}.entity.json"
+    geometry_path = RESOURCE_PACK / "models" / "entity" / f"{sid}.geo.json"
+    render_path = RESOURCE_PACK / "render_controllers" / f"{sid}.render_controllers.json"
+    texture_path = RESOURCE_PACK / "textures" / "entity" / sid / f"{sid}_atlas.png"
+
+    for path in [resource_map_path, behavior_path, client_path, geometry_path, render_path]:
+        if not path.is_file():
+            failures.append(f"missing file for {sid}: {path.relative_to(PROJECT_ROOT)}")
+    validate_png(texture_path, failures)
+
+    if not (behavior_path.is_file() and client_path.is_file()):
+        return
+
+    behavior = load_json(behavior_path)
+    entity = behavior.get("minecraft:entity", {})
+    if entity.get("description", {}).get("identifier") != expected_identifier:
+        failures.append(f"{sid} behavior identifier mismatch")
+    components = entity.get("components", {})
+
+    client = load_json(client_path)
+    desc = client.get("minecraft:client_entity", {}).get("description", {})
+    if desc.get("identifier") != expected_identifier:
+        failures.append(f"{sid} client identifier mismatch")
+    if desc.get("geometry", {}).get("default") != expected_geometry:
+        failures.append(f"{sid} client geometry does not reference {expected_geometry}")
+    if desc.get("textures", {}).get("default") != expected_texture:
+        failures.append(f"{sid} client texture does not reference {expected_texture}")
+
+    if geometry_path.is_file():
+        geometry = load_json(geometry_path)
+        if geometry.get("minecraft:geometry", [{}])[0].get("description", {}).get("identifier") != expected_geometry:
+            failures.append(f"{sid} geometry identifier mismatch")
+
+    resource_map = load_json(resource_map_path) if resource_map_path.is_file() else {}
+    if resource_map.get("identifier") != expected_identifier:
+        failures.append(f"{sid} resource map identifier mismatch")
+    status = resource_map.get("status", {})
+    for key in ("json_links_ready", "geometry_exported", "texture_exported"):
+        if not status.get(key):
+            failures.append(f"{sid} resource map status.{key} is not true")
+
+    mechanic = config["mechanic"]
+    if mechanic in ("rideable", "rideable_bunk"):
+        rideable = components.get("minecraft:rideable")
+        if not rideable:
+            failures.append(f"{sid} is missing minecraft:rideable")
+        else:
+            if "player" not in rideable.get("family_types", []):
+                failures.append(f"{sid} rideable family_types does not include player")
+            expected_seats = 2 if mechanic == "rideable_bunk" else 1
+            if rideable.get("seat_count") != expected_seats:
+                failures.append(f"{sid} rideable seat_count is {rideable.get('seat_count')}, expected {expected_seats}")
+        if mechanic == "rideable":
+            anim_path = RESOURCE_PACK / "animations" / f"{sid}.animation.json"
+            if "rock" not in desc.get("scripts", {}).get("animate", []):
+                failures.append(f"{sid} client scripts.animate is missing rock")
+            if not anim_path.is_file():
+                failures.append(f"{sid} is missing rock animation file")
+            elif f"animation.{sid}.rock" not in load_json(anim_path).get("animations", {}):
+                failures.append(f"{sid} animation file is missing animation.{sid}.rock")
+
+    elif mechanic == "variant_light":
+        groups = entity.get("component_groups", {})
+        for state, value in (("mine_structure:light_off", 0), ("mine_structure:light_on", 1)):
+            group = groups.get(state, {})
+            if group.get("minecraft:variant", {}).get("value") != value:
+                failures.append(f"{sid} {state} does not set variant {value}")
+            if "minecraft:interact" not in group:
+                failures.append(f"{sid} {state} is missing minecraft:interact")
+        for ev in ("mine_structure:turn_light_on", "mine_structure:turn_light_off", "minecraft:entity_spawned"):
+            if ev not in entity.get("events", {}):
+                failures.append(f"{sid} behavior is missing event {ev}")
+        if "light_ctrl" not in desc.get("scripts", {}).get("animate", []):
+            failures.append(f"{sid} client scripts.animate is missing light_ctrl")
+        controller_path = RESOURCE_PACK / "animation_controllers" / f"{sid}.animation_controllers.json"
+        anim_path = RESOURCE_PACK / "animations" / f"{sid}.animation.json"
+        if not controller_path.is_file():
+            failures.append(f"{sid} is missing animation controller")
+        else:
+            ctrl = load_json(controller_path).get("animation_controllers", {}).get(f"controller.animation.{sid}.light", {})
+            if set(ctrl.get("states", {})) != {"off", "on"}:
+                failures.append(f"{sid} light controller states are not off/on")
+        if anim_path.is_file():
+            off = load_json(anim_path).get("animations", {}).get(f"animation.{sid}.off", {})
+            if off.get("bones", {}).get("glow", {}).get("scale") != [0, 0, 0]:
+                failures.append(f"{sid} off animation does not hide glow")
+
+    elif mechanic == "script_give":
+        script = (BEHAVIOR_PACK / "scripts" / "main.js").read_text(encoding="utf-8")
+        for snippet in (expected_identifier, "dispenseTreat", "addItem"):
+            if snippet not in script:
+                failures.append(f"scripts/main.js is missing {snippet} for {sid}")
+
+    validate_single_texture_bbmodel(sid, failures)
+
+
 def main():
     failures = []
 
@@ -413,6 +881,12 @@ def main():
 
     for weapon_id, config in WEAPONS.items():
         validate_weapon(weapon_id, config, failures)
+
+    for sink_id, config in SINKS.items():
+        validate_sink(sink_id, config, failures)
+
+    for kid_id, config in KIDS.items():
+        validate_kids(kid_id, config, failures)
 
     validate_blockbench_source(failures)
 

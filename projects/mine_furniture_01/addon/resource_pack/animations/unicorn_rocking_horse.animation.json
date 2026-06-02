@@ -1,0 +1,40 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.unicorn_rocking_horse.rock": {
+      "loop": true,
+      "animation_length": 2.4,
+      "bones": {
+        "rock": {
+          "rotation": {
+            "0.0": [
+              0,
+              0,
+              0
+            ],
+            "0.6": [
+              7,
+              0,
+              0
+            ],
+            "1.2": [
+              0,
+              0,
+              0
+            ],
+            "1.8": [
+              -7,
+              0,
+              0
+            ],
+            "2.4": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      }
+    }
+  }
+}

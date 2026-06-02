@@ -1,0 +1,30 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_night_lamp",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_night_lamp/unicorn_night_lamp_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_night_lamp"
+      },
+      "render_controllers": [
+        "controller.render.unicorn_night_lamp"
+      ],
+      "animations": {
+        "on": "animation.unicorn_night_lamp.on",
+        "off": "animation.unicorn_night_lamp.off",
+        "light_ctrl": "controller.animation.unicorn_night_lamp.light"
+      },
+      "scripts": {
+        "animate": [
+          "light_ctrl"
+        ]
+      }
+    }
+  }
+}

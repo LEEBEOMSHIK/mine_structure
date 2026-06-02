@@ -1,0 +1,28 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_rocking_horse",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_rocking_horse/unicorn_rocking_horse_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_rocking_horse"
+      },
+      "render_controllers": [
+        "controller.render.unicorn_rocking_horse"
+      ],
+      "animations": {
+        "rock": "animation.unicorn_rocking_horse.rock"
+      },
+      "scripts": {
+        "animate": [
+          "rock"
+        ]
+      }
+    }
+  }
+}

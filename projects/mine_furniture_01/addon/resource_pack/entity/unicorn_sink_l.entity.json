@@ -1,0 +1,30 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_sink_l",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_sink/unicorn_sink_l_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_sink_l"
+      },
+      "animations": {
+        "water_on": "animation.unicorn_sink_l.water_on",
+        "water_off": "animation.unicorn_sink_l.water_off",
+        "water_ctrl": "controller.animation.unicorn_sink_l.water"
+      },
+      "scripts": {
+        "animate": [
+          "water_ctrl"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.unicorn_sink_l"
+      ]
+    }
+  }
+}

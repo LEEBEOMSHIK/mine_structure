@@ -9,7 +9,7 @@ The 3D model uses EXPLICIT PER-FACE UV (not box UV): the blade cubes are small
 horn render white. Instead every face points at a flat colour swatch, so each
 part shows a clear solid colour. Swatch rectangles in the atlas (must match the
 per-face uv in unicorn_horn_blade.geo.json):
-  horn (segments + tip) -> [0,0]  size 16x16  (pink pearl + sparkles, NOT white)
+  horn (segments + tip) -> [0,0]  size 16x16  (rainbow pearl spiral, NOT white)
   grip                  -> [16,0] size 8x8    (lavender)
   pommel                -> [24,0] size 8x8    (gold)
   base_glow             -> [32,0] size 8x8    (cyan)
@@ -18,9 +18,12 @@ per-face uv in unicorn_horn_blade.geo.json):
 """
 import os
 import random
+import base64
+import json
 from PIL import Image
 
 BASE = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "addon", "resource_pack"))
+BBMODEL = os.path.join(os.path.dirname(__file__), "unicorn_horn_blade.bbmodel")
 
 HORN = (236, 130, 200, 255)
 HORN_DK = (198, 92, 168, 255)
@@ -42,6 +45,24 @@ RAINBOW = [
     (140, 196, 244, 255),  # up blue
     (186, 150, 232, 255),  # down purple
 ]
+HORN_RAINBOW = [
+    (255, 116, 151, 255),
+    (255, 177, 92, 255),
+    (255, 232, 104, 255),
+    (126, 222, 167, 255),
+    (111, 193, 255, 255),
+    (181, 136, 244, 255),
+    (246, 136, 215, 255),
+]
+HORN_SHADOW = [
+    (219, 78, 128, 255),
+    (222, 132, 48, 255),
+    (218, 190, 62, 255),
+    (76, 171, 122, 255),
+    (64, 143, 218, 255),
+    (132, 91, 204, 255),
+    (203, 87, 179, 255),
+]
 
 
 def fill(img, x0, y0, x1, y1, color):
@@ -53,19 +74,19 @@ def fill(img, x0, y0, x1, y1, color):
 # ---------------------------------------------------------------- 3D atlas
 atlas = Image.new("RGBA", (64, 64), HORN)  # opaque base so nothing reads white
 
-# horn swatch [0,0]-[16,16]: pink pearl with darker spiral + sparkles
+# horn swatch [0,0]-[16,16]: rainbow pearl spiral, never white
 for y in range(16):
     for x in range(16):
-        d = (x + y) % 5
-        if d == 0:
-            atlas.putpixel((x, y), HORN_DK)
-        elif d == 2:
-            atlas.putpixel((x, y), HORN)
+        band = ((x + y) // 3) % len(HORN_RAINBOW)
+        if (x - y) % 6 == 0:
+            atlas.putpixel((x, y), HORN_SHADOW[band])
+        elif (x + y) % 7 == 1:
+            atlas.putpixel((x, y), HORN_HI)
         else:
-            atlas.putpixel((x, y), HORN)
+            atlas.putpixel((x, y), HORN_RAINBOW[band])
 rng = random.Random(7)
 for _ in range(10):
-    atlas.putpixel((rng.randint(1, 14), rng.randint(1, 14)), HORN_HI)
+    atlas.putpixel((rng.randint(1, 14), rng.randint(1, 14)), (255, 244, 168, 255))
 
 # grip swatch [16,0]-[24,8]
 fill(atlas, 16, 0, 24, 8, LAVENDER)
@@ -91,6 +112,29 @@ os.makedirs(os.path.dirname(out_atlas), exist_ok=True)
 atlas.save(out_atlas)
 print("wrote", out_atlas)
 
+if os.path.isfile(BBMODEL):
+    with open(out_atlas, "rb") as file:
+        atlas_source = "data:image/png;base64," + base64.b64encode(file.read()).decode("ascii")
+    with open(BBMODEL, encoding="utf-8") as file:
+        project = json.load(file)
+    updated = False
+    for texture in project.get("textures", []):
+        if texture.get("name") == "unicorn_horn_blade.png":
+            texture["source"] = atlas_source
+            texture["width"] = 64
+            texture["height"] = 64
+            texture["uv_width"] = 64
+            texture["uv_height"] = 64
+            texture["relative_path"] = "../addon/resource_pack/textures/entity/unicorn_horn_blade/unicorn_horn_blade.png"
+            texture["saved"] = True
+            updated = True
+    if updated:
+        with open(BBMODEL, "w", encoding="utf-8") as file:
+            json.dump(project, file, ensure_ascii=False, separators=(",", ":"))
+        print("updated embedded Blockbench texture", BBMODEL)
+    else:
+        print("warning: unicorn_horn_blade.png texture not found in", BBMODEL)
+
 # ---------------------------------------------------------------- 16x16 icon
 icon = Image.new("RGBA", (16, 16), CLEAR)
 base = (3.0, 13.0)
@@ -109,12 +153,9 @@ for i in range(steps + 1):
             if 0 <= px < 16 and 0 <= py < 16:
                 dist = (dx * dx + dy * dy) ** 0.5
                 if dist <= half:
-                    if band == 0 and dist > half - 0.9:
-                        icon.putpixel((px, py), PINK_DK)
-                    elif band == 1 and dist > half - 0.9:
-                        icon.putpixel((px, py), PINK)
-                    else:
-                        icon.putpixel((px, py), HORN)
+                    color = HORN_RAINBOW[int(t * len(HORN_RAINBOW)) % len(HORN_RAINBOW)]
+                    edge = HORN_SHADOW[int(t * len(HORN_SHADOW)) % len(HORN_SHADOW)]
+                    icon.putpixel((px, py), edge if dist > half - 0.9 else color)
 
 gx, gy = 3, 13
 for k, c in enumerate(RAINBOW[:4]):

@@ -1,0 +1,21 @@
+{
+  "identifier": "mine_structure:unicorn_rocking_horse",
+  "content_type": "furniture_entity",
+  "mechanic": "rideable",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_rocking_horse.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_rocking_horse.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_rocking_horse.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_rocking_horse/unicorn_rocking_horse_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_rocking_horse.render_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_rocking_horse.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}

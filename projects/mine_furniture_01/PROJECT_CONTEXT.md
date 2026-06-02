@@ -1,7 +1,7 @@
 # PROJECT_CONTEXT.md — mine_furniture_01
 
 이 프로젝트는 Minecraft Bedrock용 여러 가구와 무기를 묶는 add-on 패키지 작업 공간이다.
-현재 등록 콘텐츠는 가구 5종 — **무지개 유니콘 변기(`mine_structure:unicorn_toilet`)**, **유니콘 식탁(`mine_structure:unicorn_dining_table`)**, **유니콘 의자(`mine_structure:unicorn_chair`)**, **유니콘 barrel 수납장(`mine_structure:unicorn_barrel_cabinet`)**, **장식용 유니콘 인형(`mine_structure:decorative_unicorn_doll`)** — 과 무기 1종 **유니콘 뿔 검(`mine_structure:unicorn_horn_blade`)**이다.
+현재 등록 콘텐츠는 가구 12종 — **무지개 유니콘 변기(`mine_structure:unicorn_toilet`)**, **유니콘 식탁(`mine_structure:unicorn_dining_table`)**, **유니콘 의자(`mine_structure:unicorn_chair`)**, **유니콘 barrel 수납장(`mine_structure:unicorn_barrel_cabinet`)**, **장식용 유니콘 인형(`mine_structure:decorative_unicorn_doll`)**, **유니콘 싱크대 3종(`mine_structure:unicorn_sink_l` / `unicorn_sink_island` / `unicorn_sink_u`)**, **아이 친화적 가구 4종(`mine_structure:unicorn_rocking_horse` 흔들목마 / `unicorn_night_lamp` 무드등 / `unicorn_ice_cream_machine` 아이스크림 기계 / `unicorn_cloud_bunk_bed` 구름 2층침대)** — 과 무기 1종 **유니콘 뿔 검(`mine_structure:unicorn_horn_blade`)**이다.
 
 ## 세션 시작 순서
 
@@ -46,7 +46,10 @@
 - barrel 수납장 behavior는 Script API 간이 수납 방식이다. 아이템을 들고 상호작용하면 1개 저장, 빈 손으로 상호작용하면 가장 최근 저장 아이템 1개를 꺼낸다.
 - 장식용 유니콘 인형은 순수 정적 장식이다. `minecraft:interact`, Script API 핸들러, `minecraft:rideable`을 사용하지 않는다.
 - (2026-06-01) `decorative_unicorn_doll`을 직립 박스 인형 → 네 발로 선 조랑말(포니) 체형으로 재설계했다. 가로형 배럴 몸통 + 들린 목 + 주둥이 + 3단 뿔/앞머리/갈기/꼬리. `geometry.decorative_unicorn_doll` 6 bones / 27 cubes. `furniture.bbmodel`과 `decorative_unicorn_doll.geo.json` 갱신. 전용 텍스처는 아직 플레이스홀더다. 상세는 `README.md` 4.8절.
-- (2026-06-01) 첫 무기 콘텐츠 `mine_structure:unicorn_horn_blade`(유니콘 뿔 검)를 추가했다. 검 취급(데미지 9/내구도 1800/검 인챈트)이며 외형은 유니콘 뿔이다. 2D 아이콘 + 3D attachable 손모델. Blockbench `furniture` 루트 그룹 `unicorn_horn_blade`(1 bone/10 cubes, 월드 오프셋 `[120,0,0]`). hold 포즈는 인게임 미세조정 필요. 상세는 `README.md` 4.9절. 현재 Blockbench 루트 그룹은 가구 5종 + 무기 1종으로 총 6개다.
+- (2026-06-01) 첫 무기 콘텐츠 `mine_structure:unicorn_horn_blade`(유니콘 뿔 검)를 추가했다. 검 취급(데미지 9/내구도 1800/검 인챈트)이며 외형은 유니콘 뿔이다. 2D 아이콘 + 3D attachable 손모델. hold 포즈는 인게임 미세조정 필요. 상세는 `README.md` 4.9절.
+- (2026-06-01) `furniture.bbmodel`의 face texture binding이 저장 코덱 문제로 전부 toilet 아틀라스에 평탄화되어 칼날 수정이 가구 텍스처까지 바꾸는 문제가 있었다. 최종 조치로 `unicorn_horn_blade`를 `furniture.bbmodel`에서 제거하고 전용 `blockbench/unicorn_horn_blade.bbmodel`로 분리했다. 현재 `furniture.bbmodel`은 가구 5종만, `unicorn_horn_blade.bbmodel`은 무기 1종만 가진다. 전용 무기 프로젝트는 통합 프로젝트 오프셋 X=120을 제거해 원점 기준으로 보정했다. 칼날 뿔 스와치는 무지개 펄 나선 패턴이다. 최신 패키지: `../../dist/mine_furniture_01-20260601-213910/mine_furniture_01.mcaddon`
+- (2026-06-03) 세련된 유니콘 싱크대 3종(`unicorn_sink_l` L자, `unicorn_sink_island` 아일랜드 고리, `unicorn_sink_u` ㄷ자)을 독립 furniture entity로 추가했다. 형태는 2D 배열로 정의하고 칸 1개=1블록(16u)이며 메인 basin 1개 + 매끈한 카운터. 세 모델 모두 basin/수도꼭지는 가로 3칸의 가운데(뒤-가운데)에 둔다. 물 켜기/끄기는 `minecraft:variant`(0/1) + 리소스팩 애니메이션 컨트롤러(`q.variant`로 off↔flowing)로 지속 상태를 유지한다. 상호작용 사운드는 바닐라 물소리라 별도 음원 불필요. 텍스처는 3종 각각 다른 알록달록 테마의 전용 아틀라스(딸기/민트/레몬, `textures/entity/unicorn_sink/<id>_atlas.png`)이며 무지개 뿔 등 유니콘 시그니처는 공통. Blockbench 원본은 모델별 분리(`blockbench/unicorn_sink_*.bbmodel`, 각 자기 테마 텍스처 1장)이며 세 파일 모두 Blockbench에 로드 확인. 생성 스크립트 `gen_unicorn_sinks.py`/`gen_sink_wiring.py`. 검증(`validate_sink`) PASS. 최신 패키지: `../../dist/mine_furniture_01-20260603-002405/mine_furniture_01.mcaddon`
+- (2026-06-03) 아이 친화적 유니콘 가구 4종을 추가했다. 흔들목마(`unicorn_rocking_horse`, rideable 1인 + `rock` 본 항상 흔들 루프), 무드등(`unicorn_night_lamp`, 싱크대와 같은 `minecraft:variant` 토글 + 컨트롤러로 `glow` 후광 표시/숨김, 상태 지속), 아이스크림 기계(`unicorn_ice_cream_machine`, Script API `dispenseTreat`로 우클릭 시 랜덤 간식 1개 지급), 구름 2층침대(`unicorn_cloud_bunk_bed`, rideable 좌석 2개). 각 모델 전용 아틀라스(`textures/entity/<id>/<id>_atlas.png`)와 모델별 분리 bbmodel(`blockbench/<id>.bbmodel`, 단일 텍스처). 생성 스크립트 `gen_kids_furniture.py`/`gen_kids_wiring.py`. 검증(`validate_kids`) PASS. 최신 패키지: `../../dist/mine_furniture_01-20260603-003610/mine_furniture_01.mcaddon`
 - 현재 실행 환경에는 Bedrock 기본 `com.mojang` 경로가 없어 Minecraft 앱 기반 소환 테스트는 직접 수행하지 못했다.
 
 ## 공통 세부 지침

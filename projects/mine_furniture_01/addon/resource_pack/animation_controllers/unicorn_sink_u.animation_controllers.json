@@ -1,0 +1,30 @@
+{
+  "format_version": "1.10.0",
+  "animation_controllers": {
+    "controller.animation.unicorn_sink_u.water": {
+      "initial_state": "off",
+      "states": {
+        "off": {
+          "animations": [
+            "water_off"
+          ],
+          "transitions": [
+            {
+              "flowing": "q.variant == 1"
+            }
+          ]
+        },
+        "flowing": {
+          "animations": [
+            "water_on"
+          ],
+          "transitions": [
+            {
+              "off": "q.variant == 0"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

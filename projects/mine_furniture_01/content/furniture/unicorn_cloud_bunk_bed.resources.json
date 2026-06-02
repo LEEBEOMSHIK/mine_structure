@@ -1,0 +1,21 @@
+{
+  "identifier": "mine_structure:unicorn_cloud_bunk_bed",
+  "content_type": "furniture_entity",
+  "mechanic": "rideable_bunk",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_cloud_bunk_bed.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_cloud_bunk_bed.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_cloud_bunk_bed.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_cloud_bunk_bed/unicorn_cloud_bunk_bed_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_cloud_bunk_bed.render_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_cloud_bunk_bed.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}

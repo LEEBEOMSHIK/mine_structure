@@ -17,5 +17,12 @@
 | `mine_structure:unicorn_barrel_cabinet` | furniture entity | Script API simple storage furniture | `furniture/unicorn_barrel_cabinet.md` |
 | `mine_structure:decorative_unicorn_doll` | furniture entity | static decorative unicorn doll | `furniture/decorative_unicorn_doll.md` |
 | `mine_structure:unicorn_horn_blade` | weapon item (sword) | 2D icon + 3D attachable ready, in-hand pose needs tuning | `weapons/unicorn_horn_blade.md` |
+| `mine_structure:unicorn_sink_l` | furniture entity | L자 싱크대, 물 on/off 토글, in-game test 대기 | `furniture/unicorn_sinks.md` |
+| `mine_structure:unicorn_sink_island` | furniture entity | 아일랜드(고리) 싱크대, 물 on/off 토글, in-game test 대기 | `furniture/unicorn_sinks.md` |
+| `mine_structure:unicorn_sink_u` | furniture entity | ㄷ자 싱크대, 물 on/off 토글, in-game test 대기 | `furniture/unicorn_sinks.md` |
+| `mine_structure:unicorn_rocking_horse` | furniture entity | 흔들목마, rideable + 흔들 애니, in-game test 대기 | `furniture/unicorn_kids_furniture.md` |
+| `mine_structure:unicorn_night_lamp` | furniture entity | 무드등, variant on/off, in-game test 대기 | `furniture/unicorn_kids_furniture.md` |
+| `mine_structure:unicorn_ice_cream_machine` | furniture entity | 아이스크림 기계, Script 간식 지급, in-game test 대기 | `furniture/unicorn_kids_furniture.md` |
+| `mine_structure:unicorn_cloud_bunk_bed` | furniture entity | 구름 2층침대, rideable 2인, in-game test 대기 | `furniture/unicorn_kids_furniture.md` |
 
 새 콘텐츠를 추가할 때는 이 표에 ID, 분류, 상태, 상세 문서 경로를 먼저 등록한다.

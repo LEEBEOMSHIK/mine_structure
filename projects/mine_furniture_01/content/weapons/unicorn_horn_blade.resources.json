@@ -12,6 +12,9 @@
     "model_texture": "../../addon/resource_pack/textures/entity/unicorn_horn_blade/unicorn_horn_blade.png",
     "animation": "../../addon/resource_pack/animations/unicorn_horn_blade.animation.json"
   },
+  "blockbench": {
+    "source_project": "../../blockbench/unicorn_horn_blade.bbmodel"
+  },
   "status": {
     "json_links_ready": true,
     "geometry_authored": true,
