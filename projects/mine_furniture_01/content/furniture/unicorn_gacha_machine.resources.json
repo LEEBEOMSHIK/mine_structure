@@ -1,0 +1,21 @@
+{
+  "identifier": "mine_structure:unicorn_gacha_machine",
+  "content_type": "furniture_entity",
+  "mechanic": "script_give",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_gacha_machine.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_gacha_machine.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_gacha_machine.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_gacha_machine/unicorn_gacha_machine_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_gacha_machine.render_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_gacha_machine.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}

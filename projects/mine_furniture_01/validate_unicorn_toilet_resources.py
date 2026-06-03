@@ -28,6 +28,10 @@ KIDS = {
     "unicorn_night_lamp": {"mechanic": "variant_light"},
     "unicorn_ice_cream_machine": {"mechanic": "script_give"},
     "unicorn_cloud_bunk_bed": {"mechanic": "rideable_bunk"},
+    "unicorn_baby_pet": {"mechanic": "pet"},
+    "unicorn_gacha_machine": {"mechanic": "script_give"},
+    "unicorn_trampoline": {"mechanic": "script_bounce"},
+    "unicorn_gift_box": {"mechanic": "interact_give"},
 }
 
 FURNITURE_BBMODEL_TEXTURE_BY_ROOT = {
@@ -637,13 +641,17 @@ def validate_sink(sid, config, failures):
         group = groups.get(state, {})
         if group.get("minecraft:variant", {}).get("value") != value:
             failures.append(f"{sid} {state} does not set minecraft:variant value {value}")
-        if "minecraft:interact" not in group:
-            failures.append(f"{sid} {state} is missing minecraft:interact")
     events = entity.get("events", {})
     for ev in ("mine_structure:turn_water_on", "mine_structure:turn_water_off",
                "minecraft:entity_spawned"):
         if ev not in events:
             failures.append(f"{sid} behavior is missing event {ev}")
+
+    # interaction (water toggle + counter item placement) is handled in main.js
+    script = (BEHAVIOR_PACK / "scripts" / "main.js").read_text(encoding="utf-8")
+    for snippet in (expected_identifier, "triggerEvent", "placeOnSinkCounter", "toggleSinkWater"):
+        if snippet not in script:
+            failures.append(f"scripts/main.js is missing {snippet} for {sid}")
 
     # client entity: shared atlas + animate controller
     client = load_json(client_path)
@@ -866,9 +874,69 @@ def validate_kids(sid, config, failures):
 
     elif mechanic == "script_give":
         script = (BEHAVIOR_PACK / "scripts" / "main.js").read_text(encoding="utf-8")
-        for snippet in (expected_identifier, "dispenseTreat", "addItem"):
+        for snippet in (expected_identifier, "addItem"):
             if snippet not in script:
                 failures.append(f"scripts/main.js is missing {snippet} for {sid}")
+
+    elif mechanic == "pet":
+        for comp in ("minecraft:tameable", "minecraft:navigation.walk",
+                     "minecraft:movement", "minecraft:behavior.float"):
+            if comp not in components:
+                failures.append(f"{sid} pet is missing {comp}")
+        tamed = entity.get("component_groups", {}).get("mine_structure:tamed", {})
+        if "minecraft:rideable" not in tamed:
+            failures.append(f"{sid} tamed group is missing minecraft:rideable")
+        if "minecraft:behavior.follow_owner" not in tamed:
+            failures.append(f"{sid} tamed group is missing minecraft:behavior.follow_owner")
+        if "minecraft:on_tame" not in entity.get("events", {}):
+            failures.append(f"{sid} is missing minecraft:on_tame event")
+        if "move" not in desc.get("scripts", {}).get("animate", []):
+            failures.append(f"{sid} client scripts.animate is missing move controller")
+        anim_path = RESOURCE_PACK / "animations" / f"{sid}.animation.json"
+        if anim_path.is_file():
+            anims = load_json(anim_path).get("animations", {})
+            for key in (f"animation.{sid}.idle", f"animation.{sid}.walk"):
+                if key not in anims:
+                    failures.append(f"{sid} animation file is missing {key}")
+        else:
+            failures.append(f"{sid} is missing animation file")
+        controller_path = RESOURCE_PACK / "animation_controllers" / f"{sid}.animation_controllers.json"
+        if controller_path.is_file():
+            ctrl = load_json(controller_path).get("animation_controllers", {}).get(f"controller.animation.{sid}.move", {})
+            if set(ctrl.get("states", {})) != {"default", "move"}:
+                failures.append(f"{sid} move controller states are not default/move")
+        else:
+            failures.append(f"{sid} is missing animation controller")
+
+    elif mechanic == "script_bounce":
+        script = (BEHAVIOR_PACK / "scripts" / "main.js").read_text(encoding="utf-8")
+        for snippet in (expected_identifier, "applyKnockback", "runInterval"):
+            if snippet not in script:
+                failures.append(f"scripts/main.js is missing {snippet} for {sid}")
+
+    elif mechanic == "interact_give":
+        interact = components.get("minecraft:interact")
+        events = entity.get("events", {})
+        if not interact:
+            failures.append(f"{sid} is missing minecraft:interact")
+        else:
+            has_open = any(
+                isinstance(item, dict)
+                and item.get("on_interact", {}).get("event") == "mine_structure:open_gift"
+                for item in interact.get("interactions", [])
+            )
+            if not has_open:
+                failures.append(f"{sid} interact does not trigger mine_structure:open_gift")
+        if "mine_structure:open_gift" not in events:
+            failures.append(f"{sid} is missing mine_structure:open_gift event")
+        anim_path = RESOURCE_PACK / "animations" / f"{sid}.animation.json"
+        if not anim_path.is_file() or f"animation.{sid}.lid_open" not in load_json(anim_path).get("animations", {}):
+            failures.append(f"{sid} is missing animation.{sid}.lid_open")
+        if f"animation.{sid}.lid_open" not in desc.get("animations", {}).values():
+            failures.append(f"{sid} client entity does not register lid_open animation")
+        script = (BEHAVIOR_PACK / "scripts" / "main.js").read_text(encoding="utf-8")
+        if expected_identifier not in script:
+            failures.append(f"scripts/main.js is missing {expected_identifier} for {sid}")
 
     validate_single_texture_bbmodel(sid, failures)
 

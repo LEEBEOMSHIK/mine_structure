@@ -24,5 +24,9 @@
 | `mine_structure:unicorn_night_lamp` | furniture entity | 무드등, variant on/off, in-game test 대기 | `furniture/unicorn_kids_furniture.md` |
 | `mine_structure:unicorn_ice_cream_machine` | furniture entity | 아이스크림 기계, Script 간식 지급, in-game test 대기 | `furniture/unicorn_kids_furniture.md` |
 | `mine_structure:unicorn_cloud_bunk_bed` | furniture entity | 구름 2층침대, rideable 2인, in-game test 대기 | `furniture/unicorn_kids_furniture.md` |
+| `mine_structure:unicorn_baby_pet` | pet mob | 아기 유니콘, 길들이기+따라오기+탑승, in-game test 대기 | `furniture/unicorn_more_furniture.md` |
+| `mine_structure:unicorn_gacha_machine` | furniture entity | 가챠 뽑기(랜덤 보상), in-game test 대기 | `furniture/unicorn_more_furniture.md` |
+| `mine_structure:unicorn_trampoline` | furniture entity | 트램폴린(점프 바운스), in-game test 대기 | `furniture/unicorn_more_furniture.md` |
+| `mine_structure:unicorn_gift_box` | furniture entity | 선물상자(뚜껑 열기+선물), in-game test 대기 | `furniture/unicorn_more_furniture.md` |
 
 새 콘텐츠를 추가할 때는 이 표에 ID, 분류, 상태, 상세 문서 경로를 먼저 등록한다.

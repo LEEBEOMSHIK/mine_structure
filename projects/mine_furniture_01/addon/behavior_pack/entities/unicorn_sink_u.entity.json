@@ -11,37 +11,11 @@
       "mine_structure:water_off": {
         "minecraft:variant": {
           "value": 0
-        },
-        "minecraft:interact": {
-          "interactions": [
-            {
-              "interact_text": "action.interact.water_on",
-              "swing": true,
-              "play_sounds": "bucket.fill_water",
-              "on_interact": {
-                "event": "mine_structure:turn_water_on",
-                "target": "self"
-              }
-            }
-          ]
         }
       },
       "mine_structure:water_on": {
         "minecraft:variant": {
           "value": 1
-        },
-        "minecraft:interact": {
-          "interactions": [
-            {
-              "interact_text": "action.interact.water_off",
-              "swing": true,
-              "play_sounds": "bucket.empty_water",
-              "on_interact": {
-                "event": "mine_structure:turn_water_off",
-                "target": "self"
-              }
-            }
-          ]
         }
       }
     },

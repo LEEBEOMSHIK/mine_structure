@@ -51,12 +51,21 @@ Resource maps: `unicorn_sink_l.resources.json`, `unicorn_sink_island.resources.j
 - 좌표는 발치(0,0,0) 기준으로 풋프린트를 X/Z 중앙 정렬했다. per-face 풀셀(16×16) UV, 회전 큐브 없음.
 - 아틀라스 셀: body(0,0) / top(16,0) / rim(32,0) / wall(48,0) / faucet(0,16) / horn(16,16) / water(32,16).
 
+## 상호작용 (손 상태로 구분)
+
+우클릭 한 번을 손 상태로 나눠 처리한다(전부 `scripts/main.js`).
+
+- **빈손 + 우클릭 → 물 켜기/끄기** (아래 토글)
+- **아이템 들고 + 우클릭 → basin(물 나오는 곳) 제외 카운터 위에 그 아이템 1개 올리기** (`spawnItem`, 식탁과 동일 방식). 올릴 위치는 싱크대별 카운터 셀 로컬 오프셋(`SINK_COUNTER_OFFSET`)을 엔티티 yaw로 회전해 계산한다.
+
+물 토글은 더 이상 behavior `minecraft:interact`가 아니라 Script가 처리한다. 상태는 엔티티 dynamic property `sink_water_on`으로 기억하고, `entity.triggerEvent("mine_structure:turn_water_on"/"off")`로 variant component group을 교체한다(시각은 그대로 애니메이션 컨트롤러가 담당). component group에는 `minecraft:variant`만 남기고 interact는 제거했다(이중 발동 방지).
+
 ## 물 켜기/끄기 (지속 상태)
 
 - 상태 저장: `minecraft:variant` — `mine_structure:water_off`(value 0) / `mine_structure:water_on`(value 1) component group.
-- 토글: `minecraft:interact`가 상태별로 `mine_structure:turn_water_on` / `turn_water_off` 이벤트를 호출해 두 그룹을 교체한다. 스폰 시 `minecraft:entity_spawned`로 `water_off` 적용.
+- 토글: Script가 빈손 우클릭 때 dynamic property `sink_water_on`을 뒤집고 `triggerEvent`로 `mine_structure:turn_water_on` / `turn_water_off` 이벤트를 호출해 두 그룹을 교체한다. 스폰 시 `minecraft:entity_spawned`로 `water_off` 적용.
 - 표시: 리소스팩 애니메이션 컨트롤러 `controller.animation.<id>.water`가 `q.variant`로 `off`(water 본 scale 0)↔`flowing`(scale 1 + 낙수 위치 루프)을 전환한다. `scripts.animate`에 연결.
-- 소리: 상호작용 시 바닐라 `bucket.fill_water`/`bucket.empty_water` 사운드. 별도 음원 에셋 불필요.
+- 소리: 빈손 토글 시 Script가 바닐라 `bucket.fill_water`/`bucket.empty_water` 사운드를 재생. 별도 음원 에셋 불필요.
 - 청크 리로드에도 variant 값이 유지되므로 물 on/off 상태가 지속된다.
 
 ## Pending

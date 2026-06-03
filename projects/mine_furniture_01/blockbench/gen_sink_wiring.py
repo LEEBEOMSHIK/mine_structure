@@ -32,14 +32,11 @@ def write(path, data):
 
 def behavior(sid):
     ident = "mine_structure:" + sid
-    interact = lambda text, ev, snd: {
-        "interactions": [{
-            "interact_text": text,
-            "swing": True,
-            "play_sounds": snd,
-            "on_interact": {"event": ev, "target": "self"},
-        }]
-    }
+    # Interaction is handled in scripts/main.js so one right-click can do two
+    # things by hand state: empty hand toggles water (script triggerEvent flips
+    # these variant groups), holding an item places it on the counter. The groups
+    # below only carry the variant value that drives the resource animation
+    # controller; there is no minecraft:interact here (it would double-fire).
     return {
         "format_version": "1.20.0",
         "minecraft:entity": {
@@ -50,22 +47,8 @@ def behavior(sid):
                 "is_experimental": False,
             },
             "component_groups": {
-                "mine_structure:water_off": {
-                    "minecraft:variant": {"value": 0},
-                    "minecraft:interact": interact(
-                        "action.interact.water_on",
-                        "mine_structure:turn_water_on",
-                        "bucket.fill_water",
-                    ),
-                },
-                "mine_structure:water_on": {
-                    "minecraft:variant": {"value": 1},
-                    "minecraft:interact": interact(
-                        "action.interact.water_off",
-                        "mine_structure:turn_water_off",
-                        "bucket.empty_water",
-                    ),
-                },
+                "mine_structure:water_off": {"minecraft:variant": {"value": 0}},
+                "mine_structure:water_on": {"minecraft:variant": {"value": 1}},
             },
             "components": {
                 "minecraft:type_family": {"family": ["mine_structure_furniture", "unicorn_sink"]},

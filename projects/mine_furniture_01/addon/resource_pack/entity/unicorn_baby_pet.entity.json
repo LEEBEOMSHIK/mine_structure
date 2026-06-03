@@ -1,0 +1,30 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_baby_pet",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_baby_pet/unicorn_baby_pet_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_baby_pet"
+      },
+      "render_controllers": [
+        "controller.render.unicorn_baby_pet"
+      ],
+      "animations": {
+        "idle": "animation.unicorn_baby_pet.idle",
+        "walk": "animation.unicorn_baby_pet.walk",
+        "move": "controller.animation.unicorn_baby_pet.move"
+      },
+      "scripts": {
+        "animate": [
+          "move"
+        ]
+      }
+    }
+  }
+}

@@ -152,6 +152,20 @@ def draw_sign(img, px, py, rng):
     img.putpixel((px + 8, py + 3), cherry)
 
 
+def draw_capsule(img, px, py, base, rng):
+    """Gachapon globe: light base full of colourful capsule dots."""
+    draw_solid(img, px, py, base, random.Random(2))
+    dots = [(255, 150, 176), (255, 200, 120), (150, 224, 176),
+            (140, 198, 246), (200, 158, 240), (250, 230, 130)]
+    for _ in range(14):
+        cx, cy = rng.randint(1, 13), rng.randint(1, 13)
+        col = dots[rng.randint(0, len(dots) - 1)] + (255,)
+        img.putpixel((px + cx, py + cy), col)
+        img.putpixel((px + cx + 1, py + cy), col)
+        img.putpixel((px + cx, py + cy + 1), col)
+        img.putpixel((px + cx + 1, py + cy + 1), shade(col, -25))
+
+
 def make_atlas(sid, specs, seed):
     """specs: ordered list of (name, color, style). Returns (rel_path, base64, cellmap)."""
     img = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
@@ -173,6 +187,8 @@ def make_atlas(sid, specs, seed):
             draw_cone(img, px, py, color, rng)
         elif style == "sign":
             draw_sign(img, px, py, rng)
+        elif style == "capsule":
+            draw_capsule(img, px, py, color, rng)
         else:
             draw_solid(img, px, py, color, rng)
         cellmap[name] = (px, py)

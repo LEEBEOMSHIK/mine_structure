@@ -1,0 +1,21 @@
+{
+  "identifier": "mine_structure:unicorn_gift_box",
+  "content_type": "furniture_entity",
+  "mechanic": "interact_give",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_gift_box.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_gift_box.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_gift_box.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_gift_box/unicorn_gift_box_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_gift_box.render_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_gift_box.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}
