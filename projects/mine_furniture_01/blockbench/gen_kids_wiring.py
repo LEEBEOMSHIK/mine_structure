@@ -235,13 +235,52 @@ def main():
     write(os.path.join(RP, "render_controllers", machine + ".render_controllers.json"), render_controller(machine))
     write(os.path.join(CONTENT, machine + ".resources.json"), resources(machine, "script_give"))
 
-    # --- cloud bunk bed: rideable, two bunks ---
+    # --- cloud bunk bed: rideable, two bunks, solo can pick top via sneak ---
+    # Two component groups carry the same 2 seats in a different ORDER. Bedrock
+    # fills the lowest free seat, so the first-listed seat is what a solo player
+    # gets. main.js swaps to "order_top" (top listed first) when the player
+    # sneak-interacts, then re-seats them; an idle bunk is reset to order_bottom.
     bunk = "unicorn_cloud_bunk_bed"
-    write(os.path.join(BP, "entities", bunk + ".entity.json"),
-          behavior_rideable(bunk, 1.6, 1.9, [
-              {"position": [0, 0.5, 0], "lock_rider_rotation": 0},
-              {"position": [0, 1.3, 0], "lock_rider_rotation": 0},
-          ]))
+    bottom_seat = {"position": [0, 0.5, 0], "lock_rider_rotation": 0}
+    top_seat = {"position": [0, 1.3, 0], "lock_rider_rotation": 0}
+
+    def rideable_group(first, second):
+        return {"minecraft:rideable": {
+            "seat_count": 2, "family_types": ["player"],
+            "interact_text": "action.interact.ride", "seats": [first, second],
+        }}
+
+    write(os.path.join(BP, "entities", bunk + ".entity.json"), {
+        "format_version": "1.20.0",
+        "minecraft:entity": {
+            "description": {
+                "identifier": "mine_structure:" + bunk,
+                "is_spawnable": True, "is_summonable": True, "is_experimental": False,
+            },
+            "component_groups": {
+                "mine_structure:order_bottom": rideable_group(bottom_seat, top_seat),
+                "mine_structure:order_top": rideable_group(top_seat, bottom_seat),
+            },
+            "components": {
+                "minecraft:type_family": {"family": ["mine_structure_furniture", bunk]},
+                "minecraft:collision_box": {"width": 1.6, "height": 1.9},
+                "minecraft:health": {"value": 12, "max": 12},
+                "minecraft:physics": {"has_gravity": False, "has_collision": True},
+                "minecraft:pushable": {"is_pushable": False, "is_pushable_by_piston": False},
+            },
+            "events": {
+                "minecraft:entity_spawned": {"add": {"component_groups": ["mine_structure:order_bottom"]}},
+                "mine_structure:order_bottom": {
+                    "add": {"component_groups": ["mine_structure:order_bottom"]},
+                    "remove": {"component_groups": ["mine_structure:order_top"]},
+                },
+                "mine_structure:order_top": {
+                    "add": {"component_groups": ["mine_structure:order_top"]},
+                    "remove": {"component_groups": ["mine_structure:order_bottom"]},
+                },
+            },
+        },
+    })
     write(os.path.join(RP, "entity", bunk + ".entity.json"), client_entity(bunk))
     write(os.path.join(RP, "render_controllers", bunk + ".render_controllers.json"), render_controller(bunk))
     write(os.path.join(CONTENT, bunk + ".resources.json"), resources(bunk, "rideable_bunk"))

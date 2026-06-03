@@ -290,8 +290,9 @@ resource pack 측 JSON 연결을 교차검증했다. 결과:
 - 텍스처: 각 전용 아틀라스 `textures/entity/<id>/<id>_atlas.png`. 가챠용 캡슐 패턴 그리기(`draw_capsule`)를 추가.
 - 생성 스크립트: `blockbench/gen_more_furniture.py`(gen_kids_furniture 헬퍼 재사용, 첫 배치 bbmodel 미변경), `blockbench/gen_more_wiring.py`. `scripts/main.js`에 가챠/선물 지급 + 트램폴린 바운스 추가(`node --check` 통과).
 - `validate_unicorn_toilet_resources.py`에 mechanic `pet`/`script_bounce`/`interact_give` 검증을 추가하고 `script_give`를 범용화했다. 결과 PASS.
+- (2026-06-03 갱신) **펫 얼굴**: 머리 정면 표정이 주둥이에 가려져 안 보이던 문제를 작은 큐브(눈/볼/콧구멍/입)로 바꿔 해결. **2층침대 혼자 칸 선택**: 좌석 순서만 다른 component group(`order_bottom`/`order_top`) + `scripts/main.js`로 그냥 우클릭=아래칸 / 웅크림 우클릭=위칸. 빈 침대는 runInterval이 `order_bottom`으로 리셋(`bunk_seatlock`로 전환 중 보호). 검증 PASS.
 - 최신 테스트용 패키지:
-  - `dist/mine_furniture_01-20260603-213715/mine_furniture_01.mcaddon`
+  - `dist/mine_furniture_01-20260603-224431/mine_furniture_01.mcaddon`
 
 ## 5. 다음 작업 (NEXT)
 
@@ -320,10 +321,10 @@ resource pack 측 JSON 연결을 교차검증했다. 결과:
     - `/summon mine_structure:unicorn_rocking_horse` — 흔들 애니메이션이 보이고 우클릭으로 올라타지는지, 안장 좌석 위치가 맞는지.
     - `/summon mine_structure:unicorn_night_lamp` — 우클릭으로 켜기/끄기, 후광 표시/숨김과 상태 지속.
     - `/summon mine_structure:unicorn_ice_cream_machine` — 우클릭 시 간식 1개 지급(+소리), 인벤토리 가득 찼을 때 바닥 스폰.
-    - `/summon mine_structure:unicorn_cloud_bunk_bed` — 아래/위 두 좌석에 각각 앉는지, 좌석 높이가 매트리스에 맞는지.
+    - `/summon mine_structure:unicorn_cloud_bunk_bed` — 그냥 우클릭=아래칸 / 웅크리고 우클릭=위칸으로 혼자서도 칸을 고를 수 있는지, 좌석 높이가 매트리스에 맞는지.
     - 필요하면 좌석 위치/흔들 진폭/후광 크기/collision_box를 미세조정한다.
 12. 인게임에서 펫/가챠/트램폴린/선물상자를 검증한다.
-    - `/summon mine_structure:unicorn_baby_pet` — 설탕/사과/쿠키로 길들여지고, 길들인 뒤 따라오기 + 우클릭 탑승, 걸을 때 다리 애니메이션이 보이는지.
+    - `/summon mine_structure:unicorn_baby_pet` — 얼굴(눈/볼/콧구멍/입)이 보이는지, 설탕/사과/쿠키로 길들여지고, 길들인 뒤 따라오기 + 우클릭 탑승, 걸을 때 다리 애니메이션이 보이는지.
     - `/summon mine_structure:unicorn_gacha_machine` — 우클릭 시 랜덤 보상 지급(+소리).
     - `/summon mine_structure:unicorn_trampoline` — 위에 올라가 점프하면 통통 튕기는지, 웅크리면 멈추는지.
     - `/summon mine_structure:unicorn_gift_box` — 우클릭 시 뚜껑이 열리고 선물 1개 지급되는지.

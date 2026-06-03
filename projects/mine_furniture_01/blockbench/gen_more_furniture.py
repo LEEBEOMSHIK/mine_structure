@@ -17,8 +17,9 @@ def build_baby_pet():
     sid = "unicorn_baby_pet"
     specs = [
         ("body", (250, 246, 240), "solid"),
-        ("face", (250, 246, 240), "face"),
         ("hoof", (204, 190, 234), "solid"),
+        ("eye", (74, 60, 96), "solid"),
+        ("blush", (255, 170, 202), "solid"),
         ("rainbow", None, "horn"),
     ]
     atlas_rel, src, cm = make_atlas(sid, specs, 6101)
@@ -30,11 +31,20 @@ def build_baby_pet():
     b.add("body", "mane1", [-1, 10, 3.5], [2, 1.6, 1.6], "rainbow")
     b.add("body", "mane2", [-1, 9.6, 2], [2, 1.6, 1.6], "rainbow")
     b.add("body", "tail1", [-1, 5.5, -6.5], [2, 4.5, 1.5], "rainbow")
-    # head (own bone for idle bob); face on the front (+Z = south)
-    b.add("head", "head", [-2.5, 9, 4.5], [5, 5, 4], "body", face_cells={"south": "face"})
+    # head (own bone for idle bob); front = +Z
+    b.add("head", "head", [-2.5, 9, 4.5], [5, 5, 4], "body")
     b.add("head", "muzzle", [-2, 9.4, 8.5], [4, 3, 2], "body")
     b.add("head", "ear_l", [-2.2, 13.4, 5], [1.2, 1.6, 1.2], "body")
     b.add("head", "ear_r", [1, 13.4, 5], [1.2, 1.6, 1.2], "body")
+    # face built from small cubes so nothing hides it: eyes + blush above the
+    # muzzle, nostrils + mouth on the muzzle front.
+    b.add("head", "eye_l", [-1.9, 12.6, 8.4], [0.9, 0.9, 0.35], "eye")
+    b.add("head", "eye_r", [1.0, 12.6, 8.4], [0.9, 0.9, 0.35], "eye")
+    b.add("head", "blush_l", [-2.3, 11.3, 8.4], [0.9, 0.6, 0.25], "blush")
+    b.add("head", "blush_r", [1.4, 11.3, 8.4], [0.9, 0.6, 0.25], "blush")
+    b.add("head", "nostril_l", [-1.2, 10.3, 10.4], [0.5, 0.5, 0.25], "eye")
+    b.add("head", "nostril_r", [0.7, 10.3, 10.4], [0.5, 0.5, 0.25], "eye")
+    b.add("head", "mouth", [-0.6, 9.5, 10.4], [1.2, 0.4, 0.25], "eye")
     b.add("head", "horn1", [-0.8, 13.4, 6], [1.6, 2, 1.6], "rainbow")
     b.add("head", "horn2", [-0.5, 15.2, 6.2], [1, 1.6, 1], "rainbow")
     b.add("head", "forelock", [-1.4, 12.8, 7.6], [2.8, 1.5, 1], "rainbow")

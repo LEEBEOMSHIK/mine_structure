@@ -50,6 +50,8 @@ const SINK_COUNTER_OFFSET = {
   "mine_structure:unicorn_sink_u": { x: -1.0, z: 1.0 },
 };
 const SINK_WATER_PROPERTY = "sink_water_on";
+const BUNK_ID = "mine_structure:unicorn_cloud_bunk_bed";
+const BUNK_SEATLOCK_PROPERTY = "bunk_seatlock";
 
 function getMainhand(player) {
   const equippable = player.getComponent(EntityComponentTypes.Equippable);
@@ -223,8 +225,35 @@ system.runInterval(() => {
         }
       }
     }
+
+    // reset an empty bunk to "bottom first" so the next solo gets the bottom bunk
+    const bunks = dimension.getEntities({ type: BUNK_ID });
+    for (const bunk of bunks) {
+      const rideable = bunk.getComponent("minecraft:rideable");
+      if (!rideable || rideable.getRiders().length > 0) {
+        continue;
+      }
+      const lock = bunk.getDynamicProperty(BUNK_SEATLOCK_PROPERTY);
+      if (typeof lock === "number" && lock > system.currentTick) {
+        continue;
+      }
+      bunk.triggerEvent("mine_structure:order_bottom");
+    }
   }
 }, 3);
+
+function rideBunkTop(player, bunk) {
+  // the player has just auto-mounted the bottom seat; swap the seat order so the
+  // top bunk becomes seat 0, then re-seat the player there.
+  bunk.setDynamicProperty(BUNK_SEATLOCK_PROPERTY, system.currentTick + 20);
+  bunk.triggerEvent("mine_structure:order_top");
+  system.runTimeout(() => {
+    const rideable = bunk.getComponent("minecraft:rideable");
+    if (rideable) {
+      rideable.addRider(player);
+    }
+  }, 2);
+}
 
 function placeOnSinkCounter(player, sink) {
   const held = getMainhand(player);
@@ -266,6 +295,12 @@ world.afterEvents.playerInteractWithEntity.subscribe((event) => {
       if (!placeOnSinkCounter(event.player, target)) {
         toggleSinkWater(target);
       }
+    });
+  }
+
+  if (target.typeId === BUNK_ID && event.player.isSneaking) {
+    system.run(() => {
+      rideBunkTop(event.player, target);
     });
   }
 

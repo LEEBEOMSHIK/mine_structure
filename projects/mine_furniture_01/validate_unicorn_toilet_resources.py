@@ -827,24 +827,38 @@ def validate_kids(sid, config, failures):
             failures.append(f"{sid} resource map status.{key} is not true")
 
     mechanic = config["mechanic"]
-    if mechanic in ("rideable", "rideable_bunk"):
+    if mechanic == "rideable":
         rideable = components.get("minecraft:rideable")
         if not rideable:
             failures.append(f"{sid} is missing minecraft:rideable")
         else:
             if "player" not in rideable.get("family_types", []):
                 failures.append(f"{sid} rideable family_types does not include player")
-            expected_seats = 2 if mechanic == "rideable_bunk" else 1
-            if rideable.get("seat_count") != expected_seats:
-                failures.append(f"{sid} rideable seat_count is {rideable.get('seat_count')}, expected {expected_seats}")
-        if mechanic == "rideable":
-            anim_path = RESOURCE_PACK / "animations" / f"{sid}.animation.json"
-            if "rock" not in desc.get("scripts", {}).get("animate", []):
-                failures.append(f"{sid} client scripts.animate is missing rock")
-            if not anim_path.is_file():
-                failures.append(f"{sid} is missing rock animation file")
-            elif f"animation.{sid}.rock" not in load_json(anim_path).get("animations", {}):
-                failures.append(f"{sid} animation file is missing animation.{sid}.rock")
+            if rideable.get("seat_count") != 1:
+                failures.append(f"{sid} rideable seat_count is {rideable.get('seat_count')}, expected 1")
+        anim_path = RESOURCE_PACK / "animations" / f"{sid}.animation.json"
+        if "rock" not in desc.get("scripts", {}).get("animate", []):
+            failures.append(f"{sid} client scripts.animate is missing rock")
+        if not anim_path.is_file():
+            failures.append(f"{sid} is missing rock animation file")
+        elif f"animation.{sid}.rock" not in load_json(anim_path).get("animations", {}):
+            failures.append(f"{sid} animation file is missing animation.{sid}.rock")
+
+    elif mechanic == "rideable_bunk":
+        groups = entity.get("component_groups", {})
+        for group_name in ("mine_structure:order_bottom", "mine_structure:order_top"):
+            rideable = groups.get(group_name, {}).get("minecraft:rideable")
+            if not rideable:
+                failures.append(f"{sid} {group_name} is missing minecraft:rideable")
+            elif rideable.get("seat_count") != 2:
+                failures.append(f"{sid} {group_name} rideable seat_count is not 2")
+        for ev in ("mine_structure:order_top", "mine_structure:order_bottom", "minecraft:entity_spawned"):
+            if ev not in entity.get("events", {}):
+                failures.append(f"{sid} behavior is missing event {ev}")
+        script = (BEHAVIOR_PACK / "scripts" / "main.js").read_text(encoding="utf-8")
+        for snippet in (expected_identifier, "rideBunkTop", "triggerEvent"):
+            if snippet not in script:
+                failures.append(f"scripts/main.js is missing {snippet} for {sid}")
 
     elif mechanic == "variant_light":
         groups = entity.get("component_groups", {})

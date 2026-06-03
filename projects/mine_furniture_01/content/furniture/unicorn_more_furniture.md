@@ -31,7 +31,7 @@ Resource maps: `<id>.resources.json`
 
 ## 메커니즘 메모
 
-- **아기 유니콘 펫**: 일반 걷는 몹 컴포넌트(`physics`/`movement`/`navigation.walk`/`movement.basic`/`jump.static`/`behavior.float`)에 `minecraft:tameable`(tame_items: 설탕/사과/쿠키, `minecraft:on_tame` 이벤트)을 더했다. 길들이기 전엔 `behavior.tempt`로 먹이를 따라오고 `random_stroll`/`look_at_player`로 돌아다닌다. 길들이면 `mine_structure:tamed` 그룹이 `behavior.follow_owner`와 `minecraft:rideable`(좌석 `[0,0.6,0]`)을 추가한다. 다리 4개(`leg_*`)와 머리(`head`)를 별도 본으로 분리해 `controller.animation.<id>.move`가 `q.modified_move_speed`로 idle↔walk 전환(`scripts.animate: ["move"]`).
+- **아기 유니콘 펫**: 일반 걷는 몹 컴포넌트(`physics`/`movement`/`navigation.walk`/`movement.basic`/`jump.static`/`behavior.float`)에 `minecraft:tameable`(tame_items: 설탕/사과/쿠키, `minecraft:on_tame` 이벤트)을 더했다. 길들이기 전엔 `behavior.tempt`로 먹이를 따라오고 `random_stroll`/`look_at_player`로 돌아다닌다. 길들이면 `mine_structure:tamed` 그룹이 `behavior.follow_owner`와 `minecraft:rideable`(좌석 `[0,0.6,0]`)을 추가한다. 다리 4개(`leg_*`)와 머리(`head`)를 별도 본으로 분리해 `controller.animation.<id>.move`가 `q.modified_move_speed`로 idle↔walk 전환(`scripts.animate: ["move"]`). 표정은 주둥이에 가려지지 않도록 텍스처가 아니라 작은 큐브(눈 2 + 볼터치 2 + 콧구멍 2 + 입)로 주둥이 위·앞에 직접 붙였다.
 - **가챠 뽑기**: behavior 상호작용 없이 Script API에서 처리. 우클릭 시 `GACHA_REWARDS`(cake/cookie/emerald/slime_ball/name_tag/music_disc_cat/golden_apple/diamond/firework_rocket/painting) 중 1개를 인벤토리에 추가(가득 차면 바닥 스폰), `random.orb` 소리.
 - **트램폴린**: 매트(`mat`)에 콜리전이 있어 위에 설 수 있다. `system.runInterval`(3틱)이 모든 차원에서 트램폴린을 찾아 매트 위(높이 0.2~1.1) 플레이어 중 하강/정지(velocity.y ≤ 0.08)·비웅크림 상태면 `applyKnockback({x:0,z:0}, 0.9)`로 위로 튕긴다 → 연속 바운스. 웅크리면 멈춘다.
 - **선물상자**: `minecraft:interact`가 `mine_structure:open_gift`를 호출 → `queue_command`로 `playanimation @s animation.<id>.lid_open`(경첩 `lid` 본이 열렸다 닫힘). 동시에 Script가 `GIFT_REWARDS` 중 1개 지급 + `random.orb`.
