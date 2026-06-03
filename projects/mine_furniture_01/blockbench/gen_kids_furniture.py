@@ -98,6 +98,60 @@ def draw_water(img, px, py, base, rng):
             img.putpixel((px + x, py + y), col)
 
 
+def draw_face(img, px, py, base, rng):
+    """A cute sleepy unicorn face: happy closed eyes, blush, little smile."""
+    draw_solid(img, px, py, base, random.Random(1))
+    dark = (140, 120, 170, 255)
+    cheek = (255, 168, 200, 255)
+    # happy closed eyes (gentle smile-shaped arcs)
+    for x, y in [(3, 7), (4, 6), (5, 6), (6, 7), (9, 7), (10, 6), (11, 6), (12, 7)]:
+        img.putpixel((px + x, py + y), dark)
+    # rosy cheeks
+    for x in range(3, 5):
+        for y in range(9, 11):
+            img.putpixel((px + x, py + y), cheek)
+    for x in range(11, 13):
+        for y in range(9, 11):
+            img.putpixel((px + x, py + y), cheek)
+    # small smile
+    for x, y in [(6, 10), (7, 11), (8, 11), (9, 10)]:
+        img.putpixel((px + x, py + y), dark)
+
+
+def draw_cone(img, px, py, base, rng):
+    """Waffle cone: tan with a crosshatch pattern."""
+    dark = shade(base, -34)
+    for y in range(16):
+        for x in range(16):
+            col = dark if ((x + y) % 4 == 0 or (x - y) % 4 == 0) else base
+            img.putpixel((px + x, py + y), col)
+
+
+def draw_sign(img, px, py, rng):
+    """Menu sign showing a little ice-cream-cone icon."""
+    bg = (255, 230, 242, 255)
+    tan = (230, 196, 140, 255)
+    scoop = (250, 150, 192, 255)
+    cherry = (228, 72, 86, 255)
+    for y in range(16):
+        for x in range(16):
+            img.putpixel((px + x, py + y), bg if (x + y) % 7 else shade(bg, -10))
+    # scoop (pink blob)
+    for y in range(3, 10):
+        for x in range(16):
+            if (x - 8) ** 2 + (y - 7) ** 2 <= 12:
+                img.putpixel((px + x, py + y), scoop)
+    img.putpixel((px + 6, py + 5), WHITE)
+    # cone (tan triangle, point down)
+    for y in range(10, 15):
+        half = max(0, 5 - (y - 10))
+        for x in range(8 - half, 8 + half + 1):
+            img.putpixel((px + x, py + y), tan)
+    # cherry
+    img.putpixel((px + 8, py + 2), cherry)
+    img.putpixel((px + 8, py + 3), cherry)
+
+
 def make_atlas(sid, specs, seed):
     """specs: ordered list of (name, color, style). Returns (rel_path, base64, cellmap)."""
     img = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
@@ -113,6 +167,12 @@ def make_atlas(sid, specs, seed):
             draw_water(img, px, py, color, rng)
         elif style == "trim":
             draw_solid(img, px, py, color, rng, trim=specs_trim(specs))
+        elif style == "face":
+            draw_face(img, px, py, color, rng)
+        elif style == "cone":
+            draw_cone(img, px, py, color, rng)
+        elif style == "sign":
+            draw_sign(img, px, py, rng)
         else:
             draw_solid(img, px, py, color, rng)
         cellmap[name] = (px, py)
@@ -148,13 +208,14 @@ class Builder:
         self.bones.setdefault(name, [])
         self.children.setdefault(name, [])
 
-    def add(self, bone, name, frm, size, cell):
+    def add(self, bone, name, frm, size, cell, face_cells=None):
         self.bone(bone)
-        px, py = self.cellmap[cell]
-        geo_uv = {f: {"uv": [px, py], "uv_size": [16, 16]}
-                  for f in ("north", "east", "south", "west", "up", "down")}
-        bb_uv = {f: {"uv": [px, py, px + 16, py + 16], "texture": 0}
-                 for f in ("north", "east", "south", "west", "up", "down")}
+        face_cells = face_cells or {}
+        geo_uv, bb_uv = {}, {}
+        for f in ("north", "east", "south", "west", "up", "down"):
+            px, py = self.cellmap[face_cells.get(f, cell)]
+            geo_uv[f] = {"uv": [px, py], "uv_size": [16, 16]}
+            bb_uv[f] = {"uv": [px, py, px + 16, py + 16], "texture": 0}
         self.bones[bone].append({
             "origin": [round(v, 3) for v in frm],
             "size": [round(v, 3) for v in size],
@@ -320,70 +381,96 @@ def build_rocking_horse():
 
 
 def build_night_lamp():
+    """A chubby sleepy cloud-unicorn night light. Front = -Z (north face)."""
     sid = "unicorn_night_lamp"
     specs = [
-        ("base", (200, 186, 232), "solid"),
-        ("post", (244, 240, 250), "solid"),
-        ("shade", (255, 244, 198), "solid"),
-        ("star", (245, 210, 120), "solid"),
+        ("base", (202, 188, 234), "solid"),
+        ("cloud", (250, 250, 255), "solid"),
+        ("face", (250, 250, 255), "face"),
+        ("star", (247, 212, 120), "solid"),
         ("rainbow", None, "horn"),
-        ("glow", (255, 238, 150), "glow"),
+        ("glow", (255, 226, 168), "glow"),
     ]
     atlas_rel, src, cm = make_atlas(sid, specs, 6002)
     b = Builder(cm)
     C = "cabinet"
-    b.add(C, "base", [-4, 0, -4], [8, 2, 8], "base")
-    b.add(C, "post", [-1.5, 2, -1.5], [3, 6, 3], "post")
-    b.add(C, "shade", [-5, 8, -5], [10, 7, 10], "shade")
-    b.add(C, "shade_top", [-3.5, 15, -3.5], [7, 1.5, 7], "shade")
-    # star topper
-    b.add(C, "star_c", [-1.5, 16.5, -0.4], [3, 3, 0.8], "star")
-    b.add(C, "star_v", [-0.6, 15, -0.4], [1.2, 6, 0.8], "star")
-    b.add(C, "star_h", [-3, 17, -0.4], [6, 1.2, 0.8], "star")
-    # little horn on top (unicorn)
-    b.add(C, "horn", [-0.5, 19.4, -0.1], [1, 2.2, 1], "rainbow")
-    # glow halo (toggled, hidden by default off animation)
+    # little pedestal
+    b.add(C, "base", [-3.5, 0, -3.5], [7, 1.5, 7], "base")
+    b.add(C, "base_top", [-3, 1.5, -3], [6, 1, 6], "base")
+    # chubby cloud body (rounded silhouette via stacked puffs); face on the front (north)
+    b.add(C, "cloud_core", [-5, 2.5, -3.5], [10, 7, 7], "cloud", face_cells={"north": "face"})
+    b.add(C, "puff_left", [-7, 3.5, -3], [3, 4.5, 6], "cloud")
+    b.add(C, "puff_right", [4, 3.5, -3], [3, 4.5, 6], "cloud")
+    b.add(C, "puff_top", [-3.5, 9, -3], [7, 3, 6], "cloud")
+    # ears + unicorn horn on top
+    b.add(C, "ear_left", [-3, 11.5, -1], [1.6, 2, 1.6], "cloud")
+    b.add(C, "ear_right", [1.4, 11.5, -1], [1.6, 2, 1.6], "cloud")
+    b.add(C, "horn1", [-0.8, 11.5, -1], [1.6, 2.2, 1.6], "rainbow")
+    b.add(C, "horn2", [-0.5, 13.5, -0.7], [1, 1.8, 1], "rainbow")
+    # tiny gold star topper (always on)
+    b.add(C, "star_top", [-1.4, 14.5, -0.5], [2.8, 2.8, 0.6], "star")
+    # glow twinkles (toggled, hidden by default; appear around the cloud when on)
     G = "glow"
-    b.add(G, "glow_halo", [-5.6, 7.4, -5.6], [11.2, 8.4, 11.2], "glow")
+    b.add(G, "tw_l", [-9, 7, -0.8], [2, 2, 0.6], "glow")
+    b.add(G, "tw_r", [7, 8, -0.8], [1.8, 1.8, 0.6], "glow")
+    b.add(G, "tw_bl", [-8, 2.5, -0.8], [1.4, 1.4, 0.6], "glow")
+    b.add(G, "tw_br", [6.4, 3, -0.8], [1.4, 1.4, 0.6], "glow")
+    b.add(G, "tw_top", [-2.5, 16, -0.8], [1.8, 1.8, 0.6], "glow")
 
     bone_defs = [
         {"name": sid, "parent": None, "pivot": [0, 0, 0]},
         {"name": C, "parent": sid, "pivot": [0, 0, 0]},
-        {"name": G, "parent": sid, "pivot": [0, 11, 0]},
+        {"name": G, "parent": sid, "pivot": [0, 8, 0]},
     ]
     assemble(sid, b, bone_defs, atlas_rel, src)
 
 
 def build_ice_cream_machine():
+    """Soft-serve machine: two-tone body, a hero cone with white/pink swirl + cherry
+    on the serving tray, and a cone-icon menu sign. Front = -Z (north face)."""
     sid = "unicorn_ice_cream_machine"
     specs = [
-        ("body", (248, 178, 214), "solid"),
-        ("dome", (246, 242, 252), "solid"),
-        ("nozzle", (210, 208, 224), "solid"),
+        ("body_white", (248, 244, 250), "solid"),
+        ("body_pink", (248, 178, 214), "solid"),
         ("tray", (196, 224, 240), "solid"),
-        ("lever", (245, 210, 120), "solid"),
+        ("cone", (230, 196, 140), "cone"),
+        ("swirl_white", (255, 250, 250), "solid"),
+        ("swirl_pink", (250, 182, 210), "solid"),
+        ("cherry", (228, 72, 86), "solid"),
+        ("sign", None, "sign"),
+        ("lever", (247, 212, 120), "solid"),
         ("rainbow", None, "horn"),
     ]
     atlas_rel, src, cm = make_atlas(sid, specs, 6003)
     b = Builder(cm)
     M = "machine"
-    b.add(M, "body", [-5, 0, -5], [10, 12, 10], "body")
-    b.add(M, "dome", [-5.5, 12, -5.5], [11, 4, 11], "dome")
-    # twin nozzles (front +Z)
-    b.add(M, "nozzle_l", [-3.2, 9, 5], [1.6, 2.5, 1.5], "nozzle")
-    b.add(M, "nozzle_r", [1.6, 9, 5], [1.6, 2.5, 1.5], "nozzle")
-    b.add(M, "tray", [-3.5, 8, 5], [7, 1, 2.5], "tray")
+    # two-tone rounded body
+    b.add(M, "body_lower", [-5, 0, -5], [10, 7, 9], "body_white")
+    b.add(M, "body_upper", [-5, 7, -5], [10, 6, 9], "body_pink")
+    b.add(M, "body_cap", [-5.5, 13, -4.5], [11, 2.5, 8], "body_pink")
+    # serving tray sticking out the front (-Z)
+    b.add(M, "tray", [-3.5, 6, -8], [7, 1, 3], "tray")
+    # the hero cone (waffle, point down) sitting on the tray
+    b.add(M, "cone_tip", [-1, 7, -7], [2, 2, 2], "cone")
+    b.add(M, "cone_mid", [-2, 9, -7.5], [4, 2, 4], "cone")
+    b.add(M, "cone_rim", [-2.5, 11, -8], [5, 1.5, 5], "cone")
+    # soft-serve swirl (alternating white/pink, tapering to a point)
+    b.add(M, "swirl1", [-2.2, 12.5, -7.8], [4.4, 2, 4.4], "swirl_white")
+    b.add(M, "swirl2", [-1.8, 14.5, -7.4], [3.6, 2, 3.6], "swirl_pink")
+    b.add(M, "swirl3", [-1.3, 16.5, -6.9], [2.6, 2, 2.6], "swirl_white")
+    b.add(M, "swirl4", [-0.8, 18.5, -6.4], [1.6, 1.8, 1.6], "swirl_pink")
+    b.add(M, "swirl_tip", [-0.4, 20, -6], [0.8, 1.2, 0.8], "swirl_white")
+    b.add(M, "cherry", [-0.6, 21, -6], [1.2, 1.2, 1.2], "cherry")
+    # menu sign on top, cone icon facing the front (north)
+    b.add(M, "sign_post", [-0.6, 15.5, -1], [1.2, 2, 1.2], "body_white")
+    b.add(M, "sign_board", [-4, 17, -1.4], [8, 5, 0.8], "body_pink", face_cells={"north": "sign"})
     # side lever
-    b.add(M, "lever", [4.8, 7, 0], [1, 5, 1], "lever")
-    b.add(M, "lever_knob", [4.6, 11.5, -0.2], [1.4, 1.4, 1.4], "rainbow")
-    # ice-cream swirl on dome (rainbow taper)
-    b.add(M, "swirl1", [-2.2, 16, -2.2], [4.4, 2, 4.4], "rainbow")
-    b.add(M, "swirl2", [-1.6, 18, -1.6], [3.2, 2, 3.2], "rainbow")
-    b.add(M, "swirl3", [-1.1, 20, -1.1], [2.2, 2, 2.2], "rainbow")
-    b.add(M, "swirl_tip", [-0.55, 22, -0.55], [1.1, 1.6, 1.1], "rainbow")
-    # unicorn ears on dome
-    b.add(M, "ear_l", [-4, 15.5, 0], [1.4, 2, 1.4], "dome")
-    b.add(M, "ear_r", [2.6, 15.5, 0], [1.4, 2, 1.4], "dome")
+    b.add(M, "lever", [4.8, 6, -1], [1, 5, 1], "lever")
+    b.add(M, "lever_knob", [4.6, 10.5, -1.2], [1.4, 1.4, 1.4], "rainbow")
+    # small unicorn touch on the back top
+    b.add(M, "ear_l", [-4.5, 15.5, 2.5], [1.4, 2, 1.4], "body_pink")
+    b.add(M, "ear_r", [3.1, 15.5, 2.5], [1.4, 2, 1.4], "body_pink")
+    b.add(M, "horn", [-0.7, 15.5, 3], [1.4, 2.2, 1.4], "rainbow")
 
     bone_defs = [
         {"name": sid, "parent": None, "pivot": [0, 0, 0]},

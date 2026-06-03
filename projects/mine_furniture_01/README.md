@@ -264,15 +264,16 @@ resource pack 측 JSON 연결을 교차검증했다. 결과:
 
 - 아이들이 좋아할 유니콘 가구 4종을 독립 furniture entity로 등록했다. 각각 검증된 상호작용 패턴을 재사용한다.
   - 🐴 `mine_structure:unicorn_rocking_horse` — **흔들목마**. `minecraft:rideable`(1인 안장)로 올라타고, `rock` 본이 항상 가볍게 흔들리는 루프 애니메이션(`scripts.animate: ["rock"]`, 좌우 ±7° 2.4초).
-  - 🌙 `mine_structure:unicorn_night_lamp` — **무드등**. 싱크대 물 토글과 같은 `minecraft:variant`(0/1) 방식. 우클릭으로 켜기/끄기, 켜지면 `glow` 본(밝은 후광)이 스케일 0→1로 나타나며 은은히 맥동. 청크 리로드에도 상태 유지. 사운드는 바닐라 `random.click`.
-  - 🍦 `mine_structure:unicorn_ice_cream_machine` — **아이스크림 기계**. Script API(`scripts/main.js`)가 `playerInteractWithEntity`에서 우클릭 시 간식 1개(쿠키/딸기/발광열매/호박파이/꿀병 중 랜덤)를 인벤토리에 지급(가득 차면 바닥에 스폰)하고 `random.pop` 소리를 낸다. behavior 상호작용 컴포넌트는 쓰지 않는다(식탁과 동일 방식).
+  - 🌙 `mine_structure:unicorn_night_lamp` — **무드등(잠자는 구름 유니콘)**. 통통한 구름 몸통 + 정면에 잠든 표정(감은 눈/볼터치/미소, 텍스처 셀로 한 면만 매핑) + 귀/무지개 뿔 + 별 토퍼. 싱크대 물 토글과 같은 `minecraft:variant`(0/1) 방식이며, 켜지면 `glow` 본의 **반짝이는 별 트윙클**이 구름 주변에 스케일 0→1로 떠오른다(표정을 가리지 않도록 큰 후광 대신 작은 별로 변경). 상태 지속, 사운드 `random.click`.
+  - 🍦 `mine_structure:unicorn_ice_cream_machine` — **아이스크림 기계**. 한눈에 아이스크림으로 보이도록 재설계: 투톤 둥근 본체 + 앞 트레이 위의 **와플 콘 + 흰/핑크 소프트아이스크림 스월 + 체리** + 콘 아이콘이 그려진 메뉴 간판. Script API(`scripts/main.js`)가 우클릭 시 간식 1개(쿠키/딸기/발광열매/호박파이/꿀병 중 랜덤)를 인벤토리에 지급(가득 차면 바닥에 스폰)하고 `random.pop` 소리를 낸다. behavior 상호작용 컴포넌트는 쓰지 않는다(식탁과 동일 방식).
   - ☁️ `mine_structure:unicorn_cloud_bunk_bed` — **구름 2층침대**. `minecraft:rideable` 좌석 2개(아래/위 칸, position `[0,0.5,0]` / `[0,1.3,0]`)로 두 명이 앉/눕는다.
 - 텍스처: 각 모델 전용 아틀라스 `textures/entity/<id>/<id>_atlas.png`(64×64, per-face 풀셀 UV). 모두 파스텔 + 무지개 뿔/갈기 등 유니콘 시그니처 + 방울/스파클.
 - Blockbench 원본: `blockbench/<id>.bbmodel` 4개(각 단일 텍스처). 네 파일 모두 Blockbench에 로드해 큐브 수/텍스처를 확인했다.
 - 생성 스크립트: `blockbench/gen_kids_furniture.py`(geo + 아틀라스 + bbmodel, 범용 atlas/assembler), `blockbench/gen_kids_wiring.py`(behavior/client/render/animation/animation_controller/resources.json).
 - `validate_unicorn_toilet_resources.py`에 `KIDS`/`validate_kids`/`validate_single_texture_bbmodel`를 추가했다. mechanic별(rideable / rideable_bunk seat 2 / variant_light 토글+컨트롤러 / script_give main.js) 검증 + bbmodel 단일 텍스처까지 본다. 결과 PASS.
+- (2026-06-03 갱신) 무드등을 잠자는 구름 유니콘(표정 + 반짝 별 트윙클)으로, 아이스크림 기계를 콘+소프트 스월+체리+간판으로 재디자인했다. `gen_kids_furniture.py`에 면별 텍스처 셀(face/sign)과 cone/face/sign 그리기를 추가했다.
 - 최신 테스트용 패키지:
-  - `dist/mine_furniture_01-20260603-003610/mine_furniture_01.mcaddon`
+  - `dist/mine_furniture_01-20260603-005119/mine_furniture_01.mcaddon`
 
 ## 5. 다음 작업 (NEXT)
 
