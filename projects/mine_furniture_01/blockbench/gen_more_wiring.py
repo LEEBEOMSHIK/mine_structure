@@ -350,11 +350,107 @@ def aquarium():
     write(os.path.join(CONTENT, sid + ".resources.json"), resources(sid, "variant_light"))
 
 
+def pegasus():
+    sid = "unicorn_pegasus"
+    behavior = {
+        "format_version": "1.20.0",
+        "minecraft:entity": {
+            "description": {
+                "identifier": "mine_structure:" + sid,
+                "is_spawnable": True, "is_summonable": True, "is_experimental": False,
+            },
+            "components": {
+                "minecraft:type_family": {"family": ["mine_structure_pet", sid]},
+                "minecraft:collision_box": {"width": 1.0, "height": 1.4},
+                "minecraft:health": {"value": 30, "max": 30},
+                "minecraft:physics": {"has_gravity": False, "has_collision": True},
+                "minecraft:movement": {"value": 0.4},
+                "minecraft:movement.fly": {},
+                "minecraft:navigation.fly": {"can_path_over_water": True},
+                "minecraft:flying_speed": {"value": 0.6},
+                "minecraft:jump.static": {},
+                "minecraft:behavior.float": {"priority": 1},
+                "minecraft:behavior.controlled_by_player": {"priority": 0},
+                "minecraft:rideable": {
+                    "seat_count": 1, "family_types": ["player"], "controlling_seat": 0,
+                    "pull_in_entities": False, "interact_text": "action.interact.ride",
+                    "seats": [{"position": [0, 1.0, 0], "lock_rider_rotation": 0}],
+                },
+            },
+        },
+    }
+    write(os.path.join(BP, "entities", sid + ".entity.json"), behavior)
+    write(os.path.join(RP, "entity", sid + ".entity.json"),
+          client_entity(sid, animations={"flap": "animation." + sid + ".flap"}, animate=["flap"]))
+    write(os.path.join(RP, "render_controllers", sid + ".render_controllers.json"), render_controller(sid))
+    write(os.path.join(RP, "animations", sid + ".animation.json"), {
+        "format_version": "1.8.0",
+        "animations": {
+            "animation." + sid + ".flap": {
+                "loop": True, "animation_length": 0.8,
+                "bones": {
+                    "wing_l": {"rotation": {"0.0": [0, 0, 20], "0.4": [0, 0, -15], "0.8": [0, 0, 20]}},
+                    "wing_r": {"rotation": {"0.0": [0, 0, -20], "0.4": [0, 0, 15], "0.8": [0, 0, -20]}},
+                },
+            }
+        },
+    })
+    write(os.path.join(CONTENT, sid + ".resources.json"), resources(sid, "fly"))
+
+
+def fridge():
+    sid = "unicorn_fridge"
+    behavior = {
+        "format_version": "1.20.0",
+        "minecraft:entity": {
+            "description": {
+                "identifier": "mine_structure:" + sid,
+                "is_spawnable": True, "is_summonable": True, "is_experimental": False,
+            },
+            "components": {
+                "minecraft:type_family": {"family": ["mine_structure_furniture", sid]},
+                "minecraft:collision_box": {"width": 0.7, "height": 2.0},
+                "minecraft:health": {"value": 12, "max": 12},
+                "minecraft:physics": {"has_gravity": False, "has_collision": True},
+                "minecraft:pushable": {"is_pushable": False, "is_pushable_by_piston": False},
+                "minecraft:interact": {"interactions": [{
+                    "interact_text": "action.interact.open", "swing": True,
+                    "play_sounds": "random.door_open",
+                    "on_interact": {"event": "mine_structure:open_fridge", "target": "self"},
+                }]},
+            },
+            "events": {
+                "mine_structure:open_fridge": {
+                    "queue_command": {"target": "self", "command": "playanimation @s animation." + sid + ".door_open"}
+                }
+            },
+        },
+    }
+    write(os.path.join(BP, "entities", sid + ".entity.json"), behavior)
+    write(os.path.join(RP, "entity", sid + ".entity.json"),
+          client_entity(sid, animations={"door_open": "animation." + sid + ".door_open"}))
+    write(os.path.join(RP, "render_controllers", sid + ".render_controllers.json"), render_controller(sid))
+    write(os.path.join(RP, "animations", sid + ".animation.json"), {
+        "format_version": "1.8.0",
+        "animations": {
+            "animation." + sid + ".door_open": {
+                "loop": False, "animation_length": 2.6,
+                "bones": {"door": {"rotation": {
+                    "0.0": [0, 0, 0], "0.4": [0, -115, 0], "2.0": [0, -115, 0], "2.6": [0, 0, 0],
+                }}},
+            }
+        },
+    })
+    write(os.path.join(CONTENT, sid + ".resources.json"), resources(sid, "fridge"))
+
+
 def main():
     pet_entity("unicorn_baby_pet")
     pet_entity("unicorn_baby_dragon")
     car()
     aquarium()
+    pegasus()
+    fridge()
 
     static_entity("unicorn_gacha_machine", 0.7, 1.3, "script_give")
 

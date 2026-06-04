@@ -1,0 +1,67 @@
+{
+  "format_version": "1.20.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_pegasus",
+      "is_spawnable": true,
+      "is_summonable": true,
+      "is_experimental": false
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": [
+          "mine_structure_pet",
+          "unicorn_pegasus"
+        ]
+      },
+      "minecraft:collision_box": {
+        "width": 1.0,
+        "height": 1.4
+      },
+      "minecraft:health": {
+        "value": 30,
+        "max": 30
+      },
+      "minecraft:physics": {
+        "has_gravity": false,
+        "has_collision": true
+      },
+      "minecraft:movement": {
+        "value": 0.4
+      },
+      "minecraft:movement.fly": {},
+      "minecraft:navigation.fly": {
+        "can_path_over_water": true
+      },
+      "minecraft:flying_speed": {
+        "value": 0.6
+      },
+      "minecraft:jump.static": {},
+      "minecraft:behavior.float": {
+        "priority": 1
+      },
+      "minecraft:behavior.controlled_by_player": {
+        "priority": 0
+      },
+      "minecraft:rideable": {
+        "seat_count": 1,
+        "family_types": [
+          "player"
+        ],
+        "controlling_seat": 0,
+        "pull_in_entities": false,
+        "interact_text": "action.interact.ride",
+        "seats": [
+          {
+            "position": [
+              0,
+              1.0,
+              0
+            ],
+            "lock_rider_rotation": 0
+          }
+        ]
+      }
+    }
+  }
+}

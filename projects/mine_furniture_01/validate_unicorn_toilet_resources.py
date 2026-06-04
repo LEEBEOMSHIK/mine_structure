@@ -35,6 +35,8 @@ KIDS = {
     "unicorn_car": {"mechanic": "drive"},
     "unicorn_baby_dragon": {"mechanic": "pet"},
     "unicorn_aquarium": {"mechanic": "variant_light"},
+    "unicorn_pegasus": {"mechanic": "fly"},
+    "unicorn_fridge": {"mechanic": "fridge"},
 }
 
 FURNITURE_BBMODEL_TEXTURE_BY_ROOT = {
@@ -862,6 +864,50 @@ def validate_kids(sid, config, failures):
             failures.append(f"{sid} is missing minecraft:movement")
         if "wheels" not in desc.get("scripts", {}).get("animate", []):
             failures.append(f"{sid} client scripts.animate is missing wheels")
+
+    elif mechanic == "fly":
+        rideable = components.get("minecraft:rideable")
+        if not rideable:
+            failures.append(f"{sid} is missing minecraft:rideable")
+        else:
+            if rideable.get("controlling_seat") != 0:
+                failures.append(f"{sid} rideable controlling_seat is not 0")
+            if "player" not in rideable.get("family_types", []):
+                failures.append(f"{sid} rideable family_types does not include player")
+        for comp in ("minecraft:behavior.controlled_by_player", "minecraft:movement.fly",
+                     "minecraft:navigation.fly"):
+            if comp not in components:
+                failures.append(f"{sid} is missing {comp}")
+        if "flap" not in desc.get("scripts", {}).get("animate", []):
+            failures.append(f"{sid} client scripts.animate is missing flap")
+        script = (BEHAVIOR_PACK / "scripts" / "main.js").read_text(encoding="utf-8")
+        for snippet in (expected_identifier, "isJumping", "applyImpulse"):
+            if snippet not in script:
+                failures.append(f"scripts/main.js is missing {snippet} for {sid}")
+
+    elif mechanic == "fridge":
+        interact = components.get("minecraft:interact")
+        if not interact:
+            failures.append(f"{sid} is missing minecraft:interact")
+        else:
+            has_open = any(
+                isinstance(item, dict)
+                and item.get("on_interact", {}).get("event") == "mine_structure:open_fridge"
+                for item in interact.get("interactions", [])
+            )
+            if not has_open:
+                failures.append(f"{sid} interact does not trigger mine_structure:open_fridge")
+        if "mine_structure:open_fridge" not in entity.get("events", {}):
+            failures.append(f"{sid} is missing mine_structure:open_fridge event")
+        anim_path = RESOURCE_PACK / "animations" / f"{sid}.animation.json"
+        if not anim_path.is_file() or f"animation.{sid}.door_open" not in load_json(anim_path).get("animations", {}):
+            failures.append(f"{sid} is missing animation.{sid}.door_open")
+        if f"animation.{sid}.door_open" not in desc.get("animations", {}).values():
+            failures.append(f"{sid} client entity does not register door_open animation")
+        script = (BEHAVIOR_PACK / "scripts" / "main.js").read_text(encoding="utf-8")
+        for snippet in (expected_identifier, "storeOrRetrieveItem"):
+            if snippet not in script:
+                failures.append(f"scripts/main.js is missing {snippet} for {sid}")
 
     elif mechanic == "rideable_bunk":
         groups = entity.get("component_groups", {})

@@ -304,6 +304,90 @@ def build_aquarium():
     assemble(sid, b, bone_defs, atlas_rel, src)
 
 
+def build_pegasus():
+    sid = "unicorn_pegasus"
+    specs = [
+        ("body", (244, 240, 250), "solid"),
+        ("hoof", (204, 190, 234), "solid"),
+        ("eye", (74, 60, 96), "solid"),
+        ("blush", (255, 170, 202), "solid"),
+        ("saddle", (245, 210, 120), "solid"),
+        ("rainbow", None, "horn"),
+    ]
+    atlas_rel, src, cm = make_atlas(sid, specs, 6301)
+    b = Builder(cm)
+    B = "body"
+    # legs
+    b.add(B, "leg_fl", [-3.5, 0, 3], [2, 7, 2], "hoof")
+    b.add(B, "leg_fr", [1.5, 0, 3], [2, 7, 2], "hoof")
+    b.add(B, "leg_bl", [-3.5, 0, -5], [2, 7, 2], "hoof")
+    b.add(B, "leg_br", [1.5, 0, -5], [2, 7, 2], "hoof")
+    # body + neck + head (front = +Z)
+    b.add(B, "barrel", [-4, 7, -6], [8, 7, 13], "body")
+    b.add(B, "chest", [-3.5, 7.2, 6.5], [7, 6, 1.5], "body")
+    b.add(B, "neck", [-2, 13, 4], [4, 5, 4], "body")
+    b.add(B, "head", [-2, 17, 5.5], [4, 4, 5], "body")
+    b.add(B, "muzzle", [-1.6, 17.2, 10], [3.2, 2.5, 2], "body")
+    b.add(B, "ear_l", [-1.8, 21, 6], [1.2, 1.6, 1.2], "body")
+    b.add(B, "ear_r", [0.6, 21, 6], [1.2, 1.6, 1.2], "body")
+    b.add(B, "horn1", [-0.8, 21, 7.5], [1.6, 2, 1.6], "rainbow")
+    b.add(B, "horn2", [-0.5, 23, 7.7], [1, 1.8, 1], "rainbow")
+    # mane + tail
+    b.add(B, "mane1", [-0.6, 18, 4.2], [1.2, 4, 1.2], "rainbow")
+    b.add(B, "mane2", [-0.6, 14.5, 3.6], [1.2, 3.5, 1.4], "rainbow")
+    b.add(B, "tail1", [-0.8, 7, -7], [1.6, 7, 1.6], "rainbow")
+    # face cubes (above + on the muzzle)
+    b.add(B, "eye_l", [-1.5, 19.4, 10.3], [0.9, 0.9, 0.35], "eye")
+    b.add(B, "eye_r", [0.6, 19.4, 10.3], [0.9, 0.9, 0.35], "eye")
+    b.add(B, "blush_l", [-1.7, 18.2, 10.3], [0.9, 0.6, 0.25], "blush")
+    b.add(B, "blush_r", [0.8, 18.2, 10.3], [0.9, 0.6, 0.25], "blush")
+    b.add(B, "nostril_l", [-1.0, 17.5, 12], [0.5, 0.5, 0.25], "eye")
+    b.add(B, "nostril_r", [0.5, 17.5, 12], [0.5, 0.5, 0.25], "eye")
+    # saddle
+    b.add(B, "saddle", [-4, 13.5, -3], [8, 1.5, 8], "saddle")
+    # wings (own bones, flap)
+    b.add("wing_l", "wing_l", [-10, 11, -3], [6, 5, 1], "rainbow")
+    b.add("wing_r", "wing_r", [4, 11, -3], [6, 5, 1], "rainbow")
+
+    bone_defs = [
+        {"name": sid, "parent": None, "pivot": [0, 0, 0]},
+        {"name": B, "parent": sid, "pivot": [0, 0, 0]},
+        {"name": "wing_l", "parent": B, "pivot": [-4, 12, -2]},
+        {"name": "wing_r", "parent": B, "pivot": [4, 12, -2]},
+    ]
+    assemble(sid, b, bone_defs, atlas_rel, src)
+
+
+def build_fridge():
+    sid = "unicorn_fridge"
+    specs = [
+        ("body", (170, 224, 210), "solid"),
+        ("door", (150, 214, 198), "solid"),
+        ("handle", (247, 212, 120), "solid"),
+        ("rainbow", None, "horn"),
+    ]
+    atlas_rel, src, cm = make_atlas(sid, specs, 6302)
+    b = Builder(cm)
+    # cabinet (front = -Z)
+    b.add("body", "cabinet", [-5, 0, -4], [10, 20, 8], "body")
+    b.add("body", "ear_l", [-4.5, 20, -1], [1.4, 2, 1.4], "body")
+    b.add("body", "ear_r", [3.1, 20, -1], [1.4, 2, 1.4], "body")
+    b.add("body", "horn1", [-0.8, 20, -0.3], [1.6, 2.2, 1.6], "rainbow")
+    b.add("body", "horn2", [-0.5, 22.2, -0.1], [1, 1.6, 1], "rainbow")
+    # door (own bone, hinged on the left vertical edge)
+    b.add("door", "door", [-5, 1, -5], [10, 18, 1], "door")
+    b.add("door", "handle", [3.3, 8, -5.5], [0.9, 4, 0.7], "handle")
+    b.add("door", "magnet1", [-3.2, 13, -5.3], [1.1, 1.1, 0.4], "rainbow")
+    b.add("door", "magnet2", [-2.8, 9, -5.3], [0.9, 0.9, 0.4], "rainbow")
+
+    bone_defs = [
+        {"name": sid, "parent": None, "pivot": [0, 0, 0]},
+        {"name": "body", "parent": sid, "pivot": [0, 0, 0]},
+        {"name": "door", "parent": sid, "pivot": [-5, 10, -4]},
+    ]
+    assemble(sid, b, bone_defs, atlas_rel, src)
+
+
 def main():
     build_baby_pet()
     build_gacha_machine()
@@ -312,6 +396,8 @@ def main():
     build_car()
     build_baby_dragon()
     build_aquarium()
+    build_pegasus()
+    build_fridge()
 
 
 if __name__ == "__main__":

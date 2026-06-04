@@ -1,0 +1,28 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_pegasus",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_pegasus/unicorn_pegasus_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_pegasus"
+      },
+      "render_controllers": [
+        "controller.render.unicorn_pegasus"
+      ],
+      "animations": {
+        "flap": "animation.unicorn_pegasus.flap"
+      },
+      "scripts": {
+        "animate": [
+          "flap"
+        ]
+      }
+    }
+  }
+}

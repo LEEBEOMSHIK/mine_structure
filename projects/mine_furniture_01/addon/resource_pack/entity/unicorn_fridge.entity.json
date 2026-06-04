@@ -1,0 +1,23 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_fridge",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_fridge/unicorn_fridge_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_fridge"
+      },
+      "render_controllers": [
+        "controller.render.unicorn_fridge"
+      ],
+      "animations": {
+        "door_open": "animation.unicorn_fridge.door_open"
+      }
+    }
+  }
+}

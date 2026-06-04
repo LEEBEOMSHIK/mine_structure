@@ -1,0 +1,56 @@
+{
+  "format_version": "1.20.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_fridge",
+      "is_spawnable": true,
+      "is_summonable": true,
+      "is_experimental": false
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": [
+          "mine_structure_furniture",
+          "unicorn_fridge"
+        ]
+      },
+      "minecraft:collision_box": {
+        "width": 0.7,
+        "height": 2.0
+      },
+      "minecraft:health": {
+        "value": 12,
+        "max": 12
+      },
+      "minecraft:physics": {
+        "has_gravity": false,
+        "has_collision": true
+      },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      },
+      "minecraft:interact": {
+        "interactions": [
+          {
+            "interact_text": "action.interact.open",
+            "swing": true,
+            "play_sounds": "random.door_open",
+            "on_interact": {
+              "event": "mine_structure:open_fridge",
+              "target": "self"
+            }
+          }
+        ]
+      }
+    },
+    "events": {
+      "mine_structure:open_fridge": {
+        "queue_command": {
+          "target": "self",
+          "command": "playanimation @s animation.unicorn_fridge.door_open"
+        }
+      }
+    }
+  }
+}

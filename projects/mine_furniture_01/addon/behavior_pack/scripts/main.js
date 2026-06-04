@@ -52,6 +52,10 @@ const SINK_COUNTER_OFFSET = {
 const SINK_WATER_PROPERTY = "sink_water_on";
 const BUNK_ID = "mine_structure:unicorn_cloud_bunk_bed";
 const BUNK_SEATLOCK_PROPERTY = "bunk_seatlock";
+const FRIDGE_ID = "mine_structure:unicorn_fridge";
+const FRIDGE_PROPERTY = "fridge_items";
+const FRIDGE_MAX_SLOTS = 18;
+const PEGASUS_ID = "mine_structure:unicorn_pegasus";
 
 function getMainhand(player) {
   const equippable = player.getComponent(EntityComponentTypes.Equippable);
@@ -100,8 +104,8 @@ function placeItemOnTable(player, table) {
   setMainhand(player, split.remaining);
 }
 
-function getStoredItems(storageEntity) {
-  const raw = storageEntity.getDynamicProperty(STORAGE_PROPERTY);
+function getStoredItems(storageEntity, property) {
+  const raw = storageEntity.getDynamicProperty(property);
   if (typeof raw !== "string" || raw.length === 0) {
     return [];
   }
@@ -124,8 +128,8 @@ function getStoredItems(storageEntity) {
   }
 }
 
-function setStoredItems(storageEntity, items) {
-  storageEntity.setDynamicProperty(STORAGE_PROPERTY, JSON.stringify(items));
+function setStoredItems(storageEntity, property, items) {
+  storageEntity.setDynamicProperty(property, JSON.stringify(items));
 }
 
 function spawnStoredItem(storageEntity, item) {
@@ -139,12 +143,12 @@ function spawnStoredItem(storageEntity, item) {
   });
 }
 
-function storeOrRetrieveItem(player, storageEntity) {
+function storeOrRetrieveItem(player, storageEntity, property, maxSlots) {
   const held = getMainhand(player);
-  const items = getStoredItems(storageEntity);
+  const items = getStoredItems(storageEntity, property);
 
   if (held) {
-    if (items.length >= STORAGE_MAX_SLOTS) {
+    if (items.length >= maxSlots) {
       return;
     }
 
@@ -153,7 +157,7 @@ function storeOrRetrieveItem(player, storageEntity) {
       typeId: split.placed.typeId,
       amount: split.placed.amount,
     });
-    setStoredItems(storageEntity, items);
+    setStoredItems(storageEntity, property, items);
     setMainhand(player, split.remaining);
     return;
   }
@@ -163,7 +167,7 @@ function storeOrRetrieveItem(player, storageEntity) {
     return;
   }
 
-  setStoredItems(storageEntity, items);
+  setStoredItems(storageEntity, property, items);
   spawnStoredItem(storageEntity, item);
 }
 
@@ -223,6 +227,30 @@ system.runInterval(() => {
         if (player.getVelocity().y <= 0.08) {
           player.applyKnockback({ x: 0, z: 0 }, 0.9);
         }
+      }
+    }
+
+    // flying unicorn: rider jumps to climb, sneaks to descend (horizontal is
+    // handled by behavior.controlled_by_player; gravity is off so it hovers)
+    const flyers = dimension.getEntities({ type: PEGASUS_ID });
+    for (const flyer of flyers) {
+      const flyerRideable = flyer.getComponent("minecraft:rideable");
+      if (!flyerRideable) {
+        continue;
+      }
+      const riders = flyerRideable.getRiders();
+      if (riders.length === 0) {
+        continue;
+      }
+      const rider = riders[0];
+      if (!rider || rider.typeId !== "minecraft:player") {
+        continue;
+      }
+      const vy = flyer.getVelocity().y;
+      if (rider.isJumping && vy < 0.55) {
+        flyer.applyImpulse({ x: 0, y: 0.16, z: 0 });
+      } else if (rider.isSneaking && vy > -0.55) {
+        flyer.applyImpulse({ x: 0, y: -0.16, z: 0 });
       }
     }
 
@@ -330,7 +358,13 @@ world.afterEvents.playerInteractWithEntity.subscribe((event) => {
 
   if (target.typeId === STORAGE_ID) {
     system.run(() => {
-      storeOrRetrieveItem(event.player, target);
+      storeOrRetrieveItem(event.player, target, STORAGE_PROPERTY, STORAGE_MAX_SLOTS);
+    });
+  }
+
+  if (target.typeId === FRIDGE_ID) {
+    system.run(() => {
+      storeOrRetrieveItem(event.player, target, FRIDGE_PROPERTY, FRIDGE_MAX_SLOTS);
     });
   }
 });
