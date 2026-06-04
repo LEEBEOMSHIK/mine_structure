@@ -1,0 +1,46 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:attachable": {
+    "description": {
+      "identifier": "mine_structure:unicorn_phone_item",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_phone_item/unicorn_phone_item_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_phone_item"
+      },
+      "scripts": {
+        "pre_animation": [
+          "v.main_hand = c.item_slot == 'main_hand';",
+          "v.off_hand = c.item_slot == 'off_hand';"
+        ],
+        "animate": [
+          {
+            "first_person_main_hand": "v.main_hand && c.is_first_person"
+          },
+          {
+            "third_person_main_hand": "v.main_hand && !c.is_first_person"
+          },
+          {
+            "first_person_off_hand": "v.off_hand && c.is_first_person"
+          },
+          {
+            "third_person_off_hand": "v.off_hand && !c.is_first_person"
+          }
+        ]
+      },
+      "animations": {
+        "first_person_main_hand": "animation.unicorn_phone_item.first_person_main_hand",
+        "third_person_main_hand": "animation.unicorn_phone_item.third_person_main_hand",
+        "first_person_off_hand": "animation.unicorn_phone_item.first_person_off_hand",
+        "third_person_off_hand": "animation.unicorn_phone_item.third_person_off_hand"
+      },
+      "render_controllers": [
+        "controller.render.item_default"
+      ]
+    }
+  }
+}

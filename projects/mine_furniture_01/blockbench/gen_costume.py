@@ -53,13 +53,6 @@ def fill_horn(img, px, py):
             img.putpixel((px + x, py + y), RAINBOW[((x + y) // 3) % len(RAINBOW)])
 
 
-def fill_wing(img, px, py):
-    for y in range(16):
-        for x in range(16):
-            img.putpixel((px + x, py + y), RAINBOW[(y // 3) % len(RAINBOW)])
-    for x in range(16):
-        img.putpixel((px + x, py + 15), (255, 255, 255, 255))
-
 
 def save_png(path, img):
     os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -146,35 +139,8 @@ def build_headband():
     write_json(os.path.join(RP, "attachables", sid + ".attachable.json"), attachable_json(sid))
 
 
-def build_wings():
-    sid = "unicorn_wings"
-    atlas = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
-    fill_wing(atlas, 0, 0)
-    save_png(os.path.join(RP, "textures", "entity", sid, sid + ".png"), atlas)
-    # icon
-    icon = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
-    for x in range(2, 7):
-        for y in range(3, 13):
-            icon.putpixel((x, y), RAINBOW[(y - 3) % len(RAINBOW)])
-    for x in range(9, 14):
-        for y in range(3, 13):
-            icon.putpixel((x, y), RAINBOW[(y - 3) % len(RAINBOW)])
-    save_png(os.path.join(RP, "textures", "items", sid + ".png"), icon)
-    # geometry on the player's "body" bone (torso y12..24), wings on the back (z>2)
-    cubes = [
-        cube([-9, 13, 2.6], [7, 10, 1], (0, 0)),  # left wing
-        cube([2, 13, 2.6], [7, 10, 1], (0, 0)),   # right wing
-    ]
-    write_json(os.path.join(RP, "models", "entity", sid + ".geo.json"),
-               geo_json(sid, "body", [0, 24, 0], cubes))
-    write_json(os.path.join(BP_ITEMS, sid + ".item.json"),
-               item_json(sid, "유니콘 날개", "slot.armor.chest"))
-    write_json(os.path.join(RP, "attachables", sid + ".attachable.json"), attachable_json(sid))
-
-
 def main():
     build_headband()
-    build_wings()
 
 
 if __name__ == "__main__":

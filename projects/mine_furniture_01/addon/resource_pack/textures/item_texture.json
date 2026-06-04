@@ -26,8 +26,11 @@
     "unicorn_horn_headband": {
       "textures": "textures/items/unicorn_horn_headband"
     },
-    "unicorn_wings": {
-      "textures": "textures/items/unicorn_wings"
+    "unicorn_elytra": {
+      "textures": "textures/items/unicorn_elytra"
+    },
+    "unicorn_phone_item": {
+      "textures": "textures/items/unicorn_phone_item"
     }
   }
 }

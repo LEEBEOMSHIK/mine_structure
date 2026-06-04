@@ -1,0 +1,45 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.unicorn_elytra.folded": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.25,
+			"bones": {
+				"right_wing": {
+					"rotation": [
+						0,
+						-6,
+						0
+					]
+				},
+				"left_wing": {
+					"rotation": [
+						0,
+						6,
+						0
+					]
+				}
+			}
+		},
+		"animation.unicorn_elytra.spread": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.25,
+			"bones": {
+				"right_wing": {
+					"rotation": [
+						0,
+						-38,
+						0
+					]
+				},
+				"left_wing": {
+					"rotation": [
+						0,
+						38,
+						0
+					]
+				}
+			}
+		}
+	}
+}

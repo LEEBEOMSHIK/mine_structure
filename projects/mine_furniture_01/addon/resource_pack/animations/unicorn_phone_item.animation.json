@@ -1,0 +1,77 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.unicorn_phone_item.third_person_main_hand": {
+      "loop": true,
+      "bones": {
+        "unicorn_phone_item": {
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "position": [
+            0,
+            3,
+            1
+          ],
+          "scale": 0.6
+        }
+      }
+    },
+    "animation.unicorn_phone_item.third_person_off_hand": {
+      "loop": true,
+      "bones": {
+        "unicorn_phone_item": {
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "position": [
+            0,
+            3,
+            1
+          ],
+          "scale": 0.6
+        }
+      }
+    },
+    "animation.unicorn_phone_item.first_person_main_hand": {
+      "loop": true,
+      "bones": {
+        "unicorn_phone_item": {
+          "rotation": [
+            10,
+            -18,
+            0
+          ],
+          "position": [
+            4,
+            4,
+            2
+          ],
+          "scale": 0.75
+        }
+      }
+    },
+    "animation.unicorn_phone_item.first_person_off_hand": {
+      "loop": true,
+      "bones": {
+        "unicorn_phone_item": {
+          "rotation": [
+            10,
+            18,
+            0
+          ],
+          "position": [
+            -4,
+            4,
+            2
+          ],
+          "scale": 0.75
+        }
+      }
+    }
+  }
+}

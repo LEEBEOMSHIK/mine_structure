@@ -1,0 +1,22 @@
+{
+  "identifier": "mine_structure:unicorn_phone_item",
+  "content_type": "held_item",
+  "behavior_pack": {
+    "item": "../../addon/behavior_pack/items/unicorn_phone_item.item.json"
+  },
+  "resource_pack": {
+    "attachable": "../../addon/resource_pack/attachables/unicorn_phone_item.attachable.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_phone_item.geo.json",
+    "animation": "../../addon/resource_pack/animations/unicorn_phone_item.animation.json",
+    "icon": "../../addon/resource_pack/textures/items/unicorn_phone_item.png",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_phone_item/unicorn_phone_item_atlas.png"
+  },
+  "blockbench_source": "../../blockbench/unicorn_phone_item.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_hand_pose_tuned": false,
+    "in_game_tested": false
+  }
+}

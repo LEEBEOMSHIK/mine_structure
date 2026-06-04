@@ -57,6 +57,9 @@ const FRIDGE_PROPERTY = "fridge_items";
 const FRIDGE_MAX_SLOTS = 18;
 const PEGASUS_ID = "mine_structure:unicorn_pegasus";
 const WAND_ID = "mine_structure:unicorn_wand";
+const PHONE_ITEM_ID = "mine_structure:unicorn_phone_item";
+const PHONE_FLASHLIGHT_PROPERTY = "phone_flashlight";
+const PHONE_RINGTONE = [1.0, 1.18, 1.33, 1.0];
 // edible items -> [effectName, durationTicks, amplifier] applied when finished eating
 const FOOD_EFFECTS = {
   "mine_structure:unicorn_cookie": [["regeneration", 100, 1], ["saturation", 1, 19]],
@@ -420,5 +423,57 @@ world.afterEvents.itemUse.subscribe((event) => {
     player.dimension.playSound("random.orb", player.location);
   } catch (error) {
     // sound is cosmetic
+  }
+});
+
+function phoneSelfie(player) {
+  sparkle(player, "minecraft:heart_particle");
+  try {
+    const loc = player.location;
+    player.dimension.spawnParticle("minecraft:villager_happy", { x: loc.x, y: loc.y + 1.8, z: loc.z });
+  } catch (error) {
+    // flash particle is cosmetic
+  }
+  try {
+    player.dimension.playSound("random.orb", player.location);  // shutter "click"
+  } catch (error) { /* cosmetic */ }
+  // short cheerful ringtone melody
+  PHONE_RINGTONE.forEach((pitch, i) => {
+    system.runTimeout(() => {
+      try {
+        player.dimension.playSound("note.bell", player.location, { pitch });
+      } catch (error) { /* cosmetic */ }
+    }, i * 4);
+  });
+}
+
+function phoneFlashlight(player) {
+  const next = player.getDynamicProperty(PHONE_FLASHLIGHT_PROPERTY) !== true;
+  player.setDynamicProperty(PHONE_FLASHLIGHT_PROPERTY, next);
+  if (next) {
+    player.addEffect("night_vision", 1000000, { amplifier: 0, showParticles: false });
+  } else {
+    try {
+      player.removeEffect("night_vision");
+    } catch (error) { /* may not be present */ }
+  }
+  try {
+    player.dimension.playSound("random.click", player.location);
+  } catch (error) { /* cosmetic */ }
+}
+
+// Held phone: right-click = selfie (flash + shutter + ringtone), sneak = flashlight.
+world.afterEvents.itemUse.subscribe((event) => {
+  if (!event.itemStack || event.itemStack.typeId !== PHONE_ITEM_ID) {
+    return;
+  }
+  const player = event.source;
+  if (!player) {
+    return;
+  }
+  if (player.isSneaking) {
+    phoneFlashlight(player);
+  } else {
+    phoneSelfie(player);
   }
 });

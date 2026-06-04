@@ -41,6 +41,10 @@
 | `mine_structure:unicorn_cupcake` 외 3종 | food item | 효과 음식 세트(컵케이크/막대사탕/무지개음료/별사탕), in-game test 대기 | `foods/unicorn_treats.md` |
 | `mine_structure:unicorn_wand` | tool item | 마법 지팡이(파티클+부스트), in-game test 대기 | `items/unicorn_wand.md` |
 | `mine_structure:unicorn_cloud_block` 외 2종 | block | 건축 블록(구름/사탕/별), in-game test 대기 | `blocks/unicorn_blocks.md` |
-| `mine_structure:unicorn_horn_headband` / `unicorn_wings` | wearable | 입는 코스튬(뿔 머리띠/날개), in-game test 대기(실험) | `wearables/unicorn_costume.md` |
+| `mine_structure:unicorn_laptop` | furniture entity | 노트북(뚜껑 열기/닫기, 디테일 키보드), in-game test 대기 | `furniture/unicorn_laptop.md` |
+| `mine_structure:unicorn_phone` | furniture entity | 핸드폰(받침대 거치, 화면 켜기/끄기), in-game test 대기 | `furniture/unicorn_phone.md` |
+| `mine_structure:unicorn_phone_item` | held item | 손에 드는 핸드폰(3D attachable), in-game test 대기 | `items/unicorn_phone_item.md` |
+| `mine_structure:unicorn_horn_headband` | wearable | 입는 코스튬(뿔 머리띠), in-game test 대기(실험) | `wearables/unicorn_costume.md` |
+| `mine_structure:unicorn_elytra` | wearable glider | 커스텀 엘리트라(바닐라 별개, 활공+접힘/펴짐), in-game test 대기(실험) | `wearables/unicorn_costume.md` |
 
 새 콘텐츠를 추가할 때는 이 표에 ID, 분류, 상태, 상세 문서 경로를 먼저 등록한다.

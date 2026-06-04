@@ -46,7 +46,7 @@ FOODS = [
 
 ICONS = ["unicorn_horn_blade", "unicorn_cookie", "unicorn_cupcake", "unicorn_lollipop",
          "unicorn_rainbow_drink", "unicorn_star_candy", "unicorn_wand",
-         "unicorn_horn_headband", "unicorn_wings"]
+         "unicorn_horn_headband", "unicorn_elytra", "unicorn_phone_item"]
 
 
 def main():

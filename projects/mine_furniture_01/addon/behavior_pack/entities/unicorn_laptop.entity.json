@@ -1,0 +1,106 @@
+{
+  "format_version": "1.20.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_laptop",
+      "is_spawnable": true,
+      "is_summonable": true,
+      "is_experimental": false
+    },
+    "component_groups": {
+      "mine_structure:lid_open": {
+        "minecraft:variant": {
+          "value": 0
+        },
+        "minecraft:interact": {
+          "interactions": [
+            {
+              "interact_text": "action.interact.close",
+              "swing": true,
+              "play_sounds": "random.click",
+              "on_interact": {
+                "event": "mine_structure:close_lid",
+                "target": "self"
+              }
+            }
+          ]
+        }
+      },
+      "mine_structure:lid_closed": {
+        "minecraft:variant": {
+          "value": 1
+        },
+        "minecraft:interact": {
+          "interactions": [
+            {
+              "interact_text": "action.interact.open",
+              "swing": true,
+              "play_sounds": "random.click",
+              "on_interact": {
+                "event": "mine_structure:open_lid",
+                "target": "self"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": [
+          "mine_structure_furniture",
+          "unicorn_laptop"
+        ]
+      },
+      "minecraft:collision_box": {
+        "width": 0.95,
+        "height": 0.6
+      },
+      "minecraft:health": {
+        "value": 12,
+        "max": 12
+      },
+      "minecraft:physics": {
+        "has_gravity": false,
+        "has_collision": true
+      },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      }
+    },
+    "events": {
+      "minecraft:entity_spawned": {
+        "add": {
+          "component_groups": [
+            "mine_structure:lid_open"
+          ]
+        }
+      },
+      "mine_structure:close_lid": {
+        "remove": {
+          "component_groups": [
+            "mine_structure:lid_open"
+          ]
+        },
+        "add": {
+          "component_groups": [
+            "mine_structure:lid_closed"
+          ]
+        }
+      },
+      "mine_structure:open_lid": {
+        "remove": {
+          "component_groups": [
+            "mine_structure:lid_closed"
+          ]
+        },
+        "add": {
+          "component_groups": [
+            "mine_structure:lid_open"
+          ]
+        }
+      }
+    }
+  }
+}

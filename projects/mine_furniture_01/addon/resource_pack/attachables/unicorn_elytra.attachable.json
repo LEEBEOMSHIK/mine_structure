@@ -1,0 +1,30 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:attachable": {
+		"description": {
+			"identifier": "mine_structure:unicorn_elytra",
+			"materials": {
+				"default": "entity_alphatest"
+			},
+			"textures": {
+				"default": "textures/entity/unicorn_elytra/unicorn_elytra"
+			},
+			"geometry": {
+				"default": "geometry.unicorn_elytra"
+			},
+			"animations": {
+				"folded": "animation.unicorn_elytra.folded",
+				"spread": "animation.unicorn_elytra.spread",
+				"glide": "controller.animation.unicorn_elytra.glide"
+			},
+			"scripts": {
+				"animate": [
+					"glide"
+				]
+			},
+			"render_controllers": [
+				"controller.render.armor"
+			]
+		}
+	}
+}

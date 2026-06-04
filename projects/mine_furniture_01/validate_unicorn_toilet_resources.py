@@ -37,6 +37,8 @@ KIDS = {
     "unicorn_aquarium": {"mechanic": "variant_light"},
     "unicorn_pegasus": {"mechanic": "fly"},
     "unicorn_fridge": {"mechanic": "fridge"},
+    "unicorn_laptop": {"mechanic": "variant_lid"},
+    "unicorn_phone": {"mechanic": "variant_light"},
 }
 
 FOODS = {
@@ -51,6 +53,10 @@ TOOLS = {
     "unicorn_wand": {"identifier": "mine_structure:unicorn_wand", "icon_shortname": "unicorn_wand"},
 }
 
+HELD_ITEMS = {
+    "unicorn_phone_item": {"identifier": "mine_structure:unicorn_phone_item", "scripted": True},
+}
+
 BLOCKS = {
     "unicorn_cloud_block": {"identifier": "mine_structure:unicorn_cloud_block", "texture": "unicorn_cloud"},
     "unicorn_candy_block": {"identifier": "mine_structure:unicorn_candy_block", "texture": "unicorn_candy"},
@@ -59,7 +65,6 @@ BLOCKS = {
 
 WEARABLES = {
     "unicorn_horn_headband": {"identifier": "mine_structure:unicorn_horn_headband", "slot": "slot.armor.head", "bone": "head"},
-    "unicorn_wings": {"identifier": "mine_structure:unicorn_wings", "slot": "slot.armor.chest", "bone": "body"},
 }
 
 FURNITURE_BBMODEL_TEXTURE_BY_ROOT = {
@@ -948,6 +953,41 @@ def validate_kids(sid, config, failures):
             if snippet not in script:
                 failures.append(f"scripts/main.js is missing {snippet} for {sid}")
 
+    elif mechanic == "variant_lid":
+        groups = entity.get("component_groups", {})
+        for state, value in (("mine_structure:lid_open", 0), ("mine_structure:lid_closed", 1)):
+            group = groups.get(state, {})
+            if group.get("minecraft:variant", {}).get("value") != value:
+                failures.append(f"{sid} {state} does not set variant {value}")
+            if "minecraft:interact" not in group:
+                failures.append(f"{sid} {state} is missing minecraft:interact")
+        for ev in ("mine_structure:open_lid", "mine_structure:close_lid", "minecraft:entity_spawned"):
+            if ev not in entity.get("events", {}):
+                failures.append(f"{sid} behavior is missing event {ev}")
+        if "lid_ctrl" not in desc.get("scripts", {}).get("animate", []):
+            failures.append(f"{sid} client scripts.animate is missing lid_ctrl")
+        controller_path = RESOURCE_PACK / "animation_controllers" / f"{sid}.animation_controllers.json"
+        anim_path = RESOURCE_PACK / "animations" / f"{sid}.animation.json"
+        if controller_path.is_file():
+            ctrl = load_json(controller_path).get("animation_controllers", {}).get(f"controller.animation.{sid}.lid", {})
+            if set(ctrl.get("states", {})) != {"open", "closed"}:
+                failures.append(f"{sid} lid controller states are not open/closed")
+        else:
+            failures.append(f"{sid} is missing animation controller")
+        if anim_path.is_file():
+            anims = load_json(anim_path).get("animations", {})
+            for key in (f"animation.{sid}.open", f"animation.{sid}.closed"):
+                if key not in anims:
+                    failures.append(f"{sid} animation file is missing {key}")
+            if "lid" not in str(anims.get(f"animation.{sid}.open", {}).get("bones", {})):
+                failures.append(f"{sid} open animation does not rotate the lid bone")
+        else:
+            failures.append(f"{sid} is missing animation file")
+        if geometry_path.is_file():
+            geo_bones = {b.get("name") for b in load_json(geometry_path).get("minecraft:geometry", [{}])[0].get("bones", [])}
+            if "lid" not in geo_bones:
+                failures.append(f"{sid} geometry is missing lid bone")
+
     elif mechanic == "variant_light":
         groups = entity.get("component_groups", {})
         for state, value in (("mine_structure:light_off", 0), ("mine_structure:light_on", 1)):
@@ -1107,6 +1147,71 @@ def validate_tool(tool_id, config, failures):
             failures.append(f"scripts/main.js is missing {snippet} for {tool_id}")
 
 
+def validate_elytra(failures):
+    # custom glider item mine_structure:unicorn_elytra (vanilla elytra untouched)
+    sid = "unicorn_elytra"
+    ident = "mine_structure:unicorn_elytra"
+    item_path = BEHAVIOR_PACK / "items" / f"{sid}.item.json"
+    attachable_path = RESOURCE_PACK / "attachables" / f"{sid}.attachable.json"
+    geometry_path = RESOURCE_PACK / "models" / "entity" / f"{sid}.geo.json"
+    controller_path = RESOURCE_PACK / "animation_controllers" / f"{sid}.animation_controllers.json"
+    animation_path = RESOURCE_PACK / "animations" / f"{sid}.animation.json"
+
+    validate_png(RESOURCE_PACK / "textures" / "items" / f"{sid}.png", failures, expected_size=(16, 16))
+    validate_png(RESOURCE_PACK / "textures" / "entity" / sid / f"{sid}.png", failures, expected_size=(64, 64))
+
+    if item_path.is_file():
+        components = load_json(item_path).get("minecraft:item", {}).get("components", {})
+        if components.get("minecraft:wearable", {}).get("slot") != "slot.armor.chest":
+            failures.append(f"{sid} wearable slot is not chest")
+        if "minecraft:glider" not in components:
+            failures.append(f"{sid} is missing minecraft:glider")
+    else:
+        failures.append(f"missing item {item_path.relative_to(PROJECT_ROOT)}")
+
+    if attachable_path.is_file():
+        desc = load_json(attachable_path).get("minecraft:attachable", {}).get("description", {})
+        if desc.get("identifier") != ident:
+            failures.append(f"{sid} attachable identifier mismatch")
+        if desc.get("geometry", {}).get("default") != f"geometry.{sid}":
+            failures.append(f"{sid} attachable geometry mismatch")
+        if "glide" not in desc.get("scripts", {}).get("animate", []):
+            failures.append(f"{sid} attachable scripts.animate is missing glide")
+    else:
+        failures.append(f"missing attachable {attachable_path.relative_to(PROJECT_ROOT)}")
+
+    if geometry_path.is_file():
+        geo = load_json(geometry_path).get("minecraft:geometry", [{}])[0]
+        bone_names = {b.get("name") for b in geo.get("bones", [])}
+        for bone in ("body", "left_wing", "right_wing"):
+            if bone not in bone_names:
+                failures.append(f"{sid} geometry is missing bone {bone}")
+    else:
+        failures.append(f"missing geometry {geometry_path.relative_to(PROJECT_ROOT)}")
+
+    if animation_path.is_file():
+        anims = load_json(animation_path).get("animations", {})
+        for key in (f"animation.{sid}.folded", f"animation.{sid}.spread"):
+            if key not in anims:
+                failures.append(f"{sid} animation file is missing {key}")
+    else:
+        failures.append(f"missing animation {animation_path.relative_to(PROJECT_ROOT)}")
+
+    if controller_path.is_file():
+        ctrl = load_json(controller_path).get("animation_controllers", {}).get(f"controller.animation.{sid}.glide", {})
+        states = ctrl.get("states", {})
+        if set(states) != {"folded", "spread"}:
+            failures.append(f"{sid} glide controller states are not folded/spread")
+        elif not any("is_gliding" in str(t) for t in states.get("folded", {}).get("transitions", [])):
+            failures.append(f"{sid} folded state does not transition on q.is_gliding")
+    else:
+        failures.append(f"missing animation controller {controller_path.relative_to(PROJECT_ROOT)}")
+
+    item_texture_path = RESOURCE_PACK / "textures" / "item_texture.json"
+    if item_texture_path.is_file() and sid not in load_json(item_texture_path).get("texture_data", {}):
+        failures.append(f"item_texture.json is missing texture_data.{sid}")
+
+
 def validate_wearable(sid, config, failures):
     expected_identifier = config["identifier"]
     expected_geometry = f"geometry.{sid}"
@@ -1149,6 +1254,52 @@ def validate_wearable(sid, config, failures):
     if item_texture_path.is_file():
         if sid not in load_json(item_texture_path).get("texture_data", {}):
             failures.append(f"item_texture.json is missing texture_data.{sid}")
+
+
+def validate_held(sid, config, failures):
+    expected_identifier = config["identifier"]
+    expected_geometry = f"geometry.{sid}"
+    item_path = BEHAVIOR_PACK / "items" / f"{sid}.item.json"
+    attachable_path = RESOURCE_PACK / "attachables" / f"{sid}.attachable.json"
+    geometry_path = RESOURCE_PACK / "models" / "entity" / f"{sid}.geo.json"
+    icon_path = RESOURCE_PACK / "textures" / "items" / f"{sid}.png"
+    atlas_path = RESOURCE_PACK / "textures" / "entity" / sid / f"{sid}_atlas.png"
+    item_texture_path = RESOURCE_PACK / "textures" / "item_texture.json"
+
+    for path in [item_path, attachable_path, geometry_path]:
+        if not path.is_file():
+            failures.append(f"missing file for {sid}: {path.relative_to(PROJECT_ROOT)}")
+    validate_png(icon_path, failures, expected_size=(16, 16))
+    validate_png(atlas_path, failures, expected_size=(64, 64))
+
+    if item_path.is_file():
+        item = load_json(item_path)
+        components = item.get("minecraft:item", {}).get("components", {})
+        if item.get("minecraft:item", {}).get("description", {}).get("identifier") != expected_identifier:
+            failures.append(f"{sid} item identifier mismatch")
+        if not components.get("minecraft:hand_equipped"):
+            failures.append(f"{sid} item is missing minecraft:hand_equipped")
+        if components.get("minecraft:icon", {}).get("texture") != sid:
+            failures.append(f"{sid} item icon does not reference {sid}")
+
+    if attachable_path.is_file():
+        desc = load_json(attachable_path).get("minecraft:attachable", {}).get("description", {})
+        if desc.get("identifier") != expected_identifier:
+            failures.append(f"{sid} attachable identifier mismatch")
+        if desc.get("geometry", {}).get("default") != expected_geometry:
+            failures.append(f"{sid} attachable geometry mismatch")
+
+    if geometry_path.is_file():
+        if load_json(geometry_path).get("minecraft:geometry", [{}])[0].get("description", {}).get("identifier") != expected_geometry:
+            failures.append(f"{sid} geometry identifier mismatch")
+
+    if item_texture_path.is_file() and sid not in load_json(item_texture_path).get("texture_data", {}):
+        failures.append(f"item_texture.json is missing texture_data.{sid}")
+
+    if config.get("scripted"):
+        script = (BEHAVIOR_PACK / "scripts" / "main.js").read_text(encoding="utf-8")
+        if expected_identifier not in script:
+            failures.append(f"scripts/main.js is missing {expected_identifier} for {sid}")
 
 
 def validate_block(block_id, config, failures):
@@ -1196,11 +1347,16 @@ def main():
     for tool_id, config in TOOLS.items():
         validate_tool(tool_id, config, failures)
 
+    for held_id, config in HELD_ITEMS.items():
+        validate_held(held_id, config, failures)
+
     for block_id, config in BLOCKS.items():
         validate_block(block_id, config, failures)
 
     for wearable_id, config in WEARABLES.items():
         validate_wearable(wearable_id, config, failures)
+
+    validate_elytra(failures)
 
     for sink_id, config in SINKS.items():
         validate_sink(sink_id, config, failures)
