@@ -39,6 +39,10 @@ KIDS = {
     "unicorn_fridge": {"mechanic": "fridge"},
 }
 
+FOODS = {
+    "unicorn_cookie": {"identifier": "mine_structure:unicorn_cookie", "icon_shortname": "unicorn_cookie"},
+}
+
 FURNITURE_BBMODEL_TEXTURE_BY_ROOT = {
     "unicorn_toilet": "unicorn_toilet_atlas.png",
     "unicorn_dining_table": "unicorn_dining_table_atlas.png",
@@ -1020,6 +1024,41 @@ def validate_kids(sid, config, failures):
     validate_single_texture_bbmodel(sid, failures)
 
 
+def validate_food(food_id, config, failures):
+    expected_identifier = config["identifier"]
+    icon_shortname = config["icon_shortname"]
+
+    item_path = BEHAVIOR_PACK / "items" / f"{food_id}.item.json"
+    icon_path = RESOURCE_PACK / "textures" / "items" / f"{food_id}.png"
+    item_texture_path = RESOURCE_PACK / "textures" / "item_texture.json"
+
+    for path in [item_path, item_texture_path]:
+        if not path.is_file():
+            failures.append(f"missing file for {food_id}: {path.relative_to(PROJECT_ROOT)}")
+    validate_png(icon_path, failures, expected_size=(16, 16))
+
+    if not item_path.is_file() or not item_texture_path.is_file():
+        return
+
+    item = load_json(item_path)
+    components = item.get("minecraft:item", {}).get("components", {})
+    if item.get("minecraft:item", {}).get("description", {}).get("identifier") != expected_identifier:
+        failures.append(f"{food_id} item identifier mismatch")
+    if "minecraft:food" not in components:
+        failures.append(f"{food_id} item is missing minecraft:food")
+    if components.get("minecraft:icon", {}).get("texture") != icon_shortname:
+        failures.append(f"{food_id} item icon does not reference {icon_shortname}")
+
+    texture_data = load_json(item_texture_path).get("texture_data", {})
+    if icon_shortname not in texture_data:
+        failures.append(f"item_texture.json is missing texture_data.{icon_shortname}")
+
+    script = (BEHAVIOR_PACK / "scripts" / "main.js").read_text(encoding="utf-8")
+    for snippet in (expected_identifier, "addEffect"):
+        if snippet not in script:
+            failures.append(f"scripts/main.js is missing {snippet} for {food_id}")
+
+
 def main():
     failures = []
 
@@ -1028,6 +1067,9 @@ def main():
 
     for weapon_id, config in WEAPONS.items():
         validate_weapon(weapon_id, config, failures)
+
+    for food_id, config in FOODS.items():
+        validate_food(food_id, config, failures)
 
     for sink_id, config in SINKS.items():
         validate_sink(sink_id, config, failures)

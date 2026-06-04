@@ -56,6 +56,7 @@ const FRIDGE_ID = "mine_structure:unicorn_fridge";
 const FRIDGE_PROPERTY = "fridge_items";
 const FRIDGE_MAX_SLOTS = 18;
 const PEGASUS_ID = "mine_structure:unicorn_pegasus";
+const COOKIE_ID = "mine_structure:unicorn_cookie";
 
 function getMainhand(player) {
   const equippable = player.getComponent(EntityComponentTypes.Equippable);
@@ -366,5 +367,28 @@ world.afterEvents.playerInteractWithEntity.subscribe((event) => {
     system.run(() => {
       storeOrRetrieveItem(event.player, target, FRIDGE_PROPERTY, FRIDGE_MAX_SLOTS);
     });
+  }
+});
+
+// Eating a unicorn cookie tops up hunger and actually heals (Regeneration).
+world.afterEvents.itemCompleteUse.subscribe((event) => {
+  if (!event.itemStack || event.itemStack.typeId !== COOKIE_ID) {
+    return;
+  }
+  const player = event.source;
+  if (!player) {
+    return;
+  }
+  player.addEffect("regeneration", 100, { amplifier: 1, showParticles: true });
+  player.addEffect("saturation", 1, { amplifier: 19, showParticles: false });
+  try {
+    const location = player.location;
+    player.dimension.spawnParticle("minecraft:heart_particle", {
+      x: location.x,
+      y: location.y + 1.6,
+      z: location.z,
+    });
+  } catch (error) {
+    // particle is cosmetic; ignore if it cannot spawn
   }
 });

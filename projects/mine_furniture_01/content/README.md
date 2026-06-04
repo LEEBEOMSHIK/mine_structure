@@ -6,6 +6,7 @@
 
 - `furniture/` — 배치형/상호작용형 가구
 - `weapons/` — 무기 아이템, 장비, 전투용 엔티티
+- `foods/` — 먹는 아이템
 
 ## 등록 상태
 
@@ -33,5 +34,6 @@
 | `mine_structure:unicorn_aquarium` | furniture entity | 어항(물고기 헤엄+불빛), in-game test 대기 | `furniture/unicorn_vehicles_pets.md` |
 | `mine_structure:unicorn_pegasus` | mount entity | 하늘 나는 유니콘(탑승 비행), in-game test 대기 | `furniture/unicorn_vehicles_pets.md` |
 | `mine_structure:unicorn_fridge` | furniture entity | 냉장고(문 열기+저장/꺼내기), in-game test 대기 | `furniture/unicorn_vehicles_pets.md` |
+| `mine_structure:unicorn_cookie` | food item | 유니콘 쿠키(허기 회복 + 체력 회복), in-game test 대기 | `foods/unicorn_cookie.md` |
 
 새 콘텐츠를 추가할 때는 이 표에 ID, 분류, 상태, 상세 문서 경로를 먼저 등록한다.

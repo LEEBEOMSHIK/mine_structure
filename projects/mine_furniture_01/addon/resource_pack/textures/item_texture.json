@@ -4,6 +4,9 @@
   "texture_data": {
     "unicorn_horn_blade": {
       "textures": "textures/items/unicorn_horn_blade"
+    },
+    "unicorn_cookie": {
+      "textures": "textures/items/unicorn_cookie"
     }
   }
 }
