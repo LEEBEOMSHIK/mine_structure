@@ -28,5 +28,8 @@
 | `mine_structure:unicorn_gacha_machine` | furniture entity | 가챠 뽑기(랜덤 보상), in-game test 대기 | `furniture/unicorn_more_furniture.md` |
 | `mine_structure:unicorn_trampoline` | furniture entity | 트램폴린(점프 바운스), in-game test 대기 | `furniture/unicorn_more_furniture.md` |
 | `mine_structure:unicorn_gift_box` | furniture entity | 선물상자(뚜껑 열기+선물), in-game test 대기 | `furniture/unicorn_more_furniture.md` |
+| `mine_structure:unicorn_car` | vehicle entity | 운전하는 자동차(조종+바퀴 회전), in-game test 대기 | `furniture/unicorn_vehicles_pets.md` |
+| `mine_structure:unicorn_baby_dragon` | pet mob | 아기 드래곤(길들이기+따라오기+탑승), in-game test 대기 | `furniture/unicorn_vehicles_pets.md` |
+| `mine_structure:unicorn_aquarium` | furniture entity | 어항(물고기 헤엄+불빛), in-game test 대기 | `furniture/unicorn_vehicles_pets.md` |
 
 새 콘텐츠를 추가할 때는 이 표에 ID, 분류, 상태, 상세 문서 경로를 먼저 등록한다.

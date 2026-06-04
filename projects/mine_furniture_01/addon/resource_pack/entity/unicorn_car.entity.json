@@ -1,0 +1,29 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_car",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_car/unicorn_car_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_car"
+      },
+      "render_controllers": [
+        "controller.render.unicorn_car"
+      ],
+      "animations": {
+        "roll": "animation.unicorn_car.roll",
+        "wheels": "controller.animation.unicorn_car.wheels"
+      },
+      "scripts": {
+        "animate": [
+          "wheels"
+        ]
+      }
+    }
+  }
+}

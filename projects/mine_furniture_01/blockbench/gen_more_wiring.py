@@ -73,8 +73,7 @@ def resources(sid, mechanic):
 TAME_ITEMS = ["minecraft:sugar", "minecraft:apple", "minecraft:cookie"]
 
 
-def baby_pet():
-    sid = "unicorn_baby_pet"
+def pet_entity(sid):
     behavior = {
         "format_version": "1.20.0",
         "minecraft:entity": {
@@ -193,8 +192,169 @@ def static_entity(sid, width, height, mechanic, interact=None, events=None, anim
     write(os.path.join(CONTENT, sid + ".resources.json"), resources(sid, mechanic))
 
 
+def car():
+    sid = "unicorn_car"
+    behavior = {
+        "format_version": "1.20.0",
+        "minecraft:entity": {
+            "description": {
+                "identifier": "mine_structure:" + sid,
+                "is_spawnable": True, "is_summonable": True, "is_experimental": False,
+            },
+            "components": {
+                "minecraft:type_family": {"family": ["mine_structure_vehicle", sid]},
+                "minecraft:collision_box": {"width": 1.2, "height": 0.8},
+                "minecraft:health": {"value": 20, "max": 20},
+                "minecraft:physics": {},
+                "minecraft:movement": {"value": 0.3},
+                "minecraft:navigation.walk": {"can_path_over_water": False, "avoid_water": True},
+                "minecraft:movement.basic": {},
+                "minecraft:jump.static": {},
+                "minecraft:behavior.controlled_by_player": {"priority": 0},
+                "minecraft:rideable": {
+                    "seat_count": 1, "family_types": ["player"], "controlling_seat": 0,
+                    "pull_in_entities": False, "interact_text": "action.interact.ride",
+                    "seats": [{"position": [0, 0.55, 0], "lock_rider_rotation": 0}],
+                },
+            },
+        },
+    }
+    write(os.path.join(BP, "entities", sid + ".entity.json"), behavior)
+    write(os.path.join(RP, "entity", sid + ".entity.json"),
+          client_entity(sid,
+                        animations={"roll": "animation." + sid + ".roll",
+                                    "wheels": "controller.animation." + sid + ".wheels"},
+                        animate=["wheels"]))
+    write(os.path.join(RP, "render_controllers", sid + ".render_controllers.json"), render_controller(sid))
+    spin = {"rotation": {"0.0": [0, 0, 0], "1.0": [360, 0, 0]}}
+    write(os.path.join(RP, "animations", sid + ".animation.json"), {
+        "format_version": "1.8.0",
+        "animations": {
+            "animation." + sid + ".roll": {
+                "loop": True, "animation_length": 1.0,
+                "bones": {"wheel_fl": spin, "wheel_fr": spin, "wheel_bl": spin, "wheel_br": spin},
+            }
+        },
+    })
+    write(os.path.join(RP, "animation_controllers", sid + ".animation_controllers.json"), {
+        "format_version": "1.10.0",
+        "animation_controllers": {
+            "controller.animation." + sid + ".wheels": {
+                "initial_state": "default",
+                "states": {
+                    "default": {"transitions": [{"move": "q.modified_move_speed > 0.05"}]},
+                    "move": {"animations": ["roll"], "transitions": [{"default": "q.modified_move_speed <= 0.05"}]},
+                },
+            }
+        },
+    })
+    write(os.path.join(CONTENT, sid + ".resources.json"), resources(sid, "drive"))
+
+
+def aquarium():
+    sid = "unicorn_aquarium"
+    interact = lambda text, ev: {
+        "interactions": [{
+            "interact_text": text, "swing": True, "play_sounds": "random.click",
+            "on_interact": {"event": ev, "target": "self"},
+        }]
+    }
+    behavior = {
+        "format_version": "1.20.0",
+        "minecraft:entity": {
+            "description": {
+                "identifier": "mine_structure:" + sid,
+                "is_spawnable": True, "is_summonable": True, "is_experimental": False,
+            },
+            "component_groups": {
+                "mine_structure:light_off": {
+                    "minecraft:variant": {"value": 0},
+                    "minecraft:interact": interact("action.interact.light_on", "mine_structure:turn_light_on"),
+                },
+                "mine_structure:light_on": {
+                    "minecraft:variant": {"value": 1},
+                    "minecraft:interact": interact("action.interact.light_off", "mine_structure:turn_light_off"),
+                },
+            },
+            "components": {
+                "minecraft:type_family": {"family": ["mine_structure_furniture", sid]},
+                "minecraft:collision_box": {"width": 1.0, "height": 0.9},
+                "minecraft:health": {"value": 12, "max": 12},
+                "minecraft:physics": {"has_gravity": False, "has_collision": True},
+                "minecraft:pushable": {"is_pushable": False, "is_pushable_by_piston": False},
+            },
+            "events": {
+                "minecraft:entity_spawned": {"add": {"component_groups": ["mine_structure:light_off"]}},
+                "mine_structure:turn_light_on": {
+                    "remove": {"component_groups": ["mine_structure:light_off"]},
+                    "add": {"component_groups": ["mine_structure:light_on"]},
+                },
+                "mine_structure:turn_light_off": {
+                    "remove": {"component_groups": ["mine_structure:light_on"]},
+                    "add": {"component_groups": ["mine_structure:light_off"]},
+                },
+            },
+        },
+    }
+    write(os.path.join(BP, "entities", sid + ".entity.json"), behavior)
+    write(os.path.join(RP, "entity", sid + ".entity.json"),
+          client_entity(sid,
+                        animations={"fish": "animation." + sid + ".fish",
+                                    "on": "animation." + sid + ".on",
+                                    "off": "animation." + sid + ".off",
+                                    "light_ctrl": "controller.animation." + sid + ".light"},
+                        animate=["fish", "light_ctrl"]))
+    write(os.path.join(RP, "render_controllers", sid + ".render_controllers.json"), render_controller(sid))
+    write(os.path.join(RP, "animations", sid + ".animation.json"), {
+        "format_version": "1.8.0",
+        "animations": {
+            "animation." + sid + ".fish": {
+                "loop": True, "animation_length": 3.2,
+                "bones": {
+                    "fish1": {
+                        "position": {"0.0": [0, 0, 0], "0.8": [3, 0.4, 0], "1.6": [0, 0, 0],
+                                     "2.4": [-3, -0.4, 0], "3.2": [0, 0, 0]},
+                        "rotation": {"0.0": [0, 0, 0], "0.8": [0, 14, 0], "1.6": [0, 0, 0],
+                                     "2.4": [0, -14, 0], "3.2": [0, 0, 0]},
+                    },
+                    "fish2": {
+                        "position": {"0.0": [0, 0, 0], "0.8": [-2.6, -0.3, 0], "1.6": [0, 0, 0],
+                                     "2.4": [2.6, 0.3, 0], "3.2": [0, 0, 0]},
+                        "rotation": {"0.0": [0, 0, 0], "0.8": [0, -14, 0], "1.6": [0, 0, 0],
+                                     "2.4": [0, 14, 0], "3.2": [0, 0, 0]},
+                    },
+                },
+            },
+            "animation." + sid + ".off": {
+                "loop": "hold_on_last_frame", "animation_length": 0.05,
+                "bones": {"glow": {"scale": [0, 0, 0]}},
+            },
+            "animation." + sid + ".on": {
+                "loop": True, "animation_length": 2.0,
+                "bones": {"glow": {"scale": {"0.0": [1, 1, 1], "1.0": [1.05, 1, 1.05], "2.0": [1, 1, 1]}}},
+            },
+        },
+    })
+    write(os.path.join(RP, "animation_controllers", sid + ".animation_controllers.json"), {
+        "format_version": "1.10.0",
+        "animation_controllers": {
+            "controller.animation." + sid + ".light": {
+                "initial_state": "off",
+                "states": {
+                    "off": {"animations": ["off"], "transitions": [{"on": "q.variant == 1"}]},
+                    "on": {"animations": ["on"], "transitions": [{"off": "q.variant == 0"}]},
+                },
+            }
+        },
+    })
+    write(os.path.join(CONTENT, sid + ".resources.json"), resources(sid, "variant_light"))
+
+
 def main():
-    baby_pet()
+    pet_entity("unicorn_baby_pet")
+    pet_entity("unicorn_baby_dragon")
+    car()
+    aquarium()
 
     static_entity("unicorn_gacha_machine", 0.7, 1.3, "script_give")
 

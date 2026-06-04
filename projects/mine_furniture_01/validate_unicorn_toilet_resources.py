@@ -32,6 +32,9 @@ KIDS = {
     "unicorn_gacha_machine": {"mechanic": "script_give"},
     "unicorn_trampoline": {"mechanic": "script_bounce"},
     "unicorn_gift_box": {"mechanic": "interact_give"},
+    "unicorn_car": {"mechanic": "drive"},
+    "unicorn_baby_dragon": {"mechanic": "pet"},
+    "unicorn_aquarium": {"mechanic": "variant_light"},
 }
 
 FURNITURE_BBMODEL_TEXTURE_BY_ROOT = {
@@ -843,6 +846,22 @@ def validate_kids(sid, config, failures):
             failures.append(f"{sid} is missing rock animation file")
         elif f"animation.{sid}.rock" not in load_json(anim_path).get("animations", {}):
             failures.append(f"{sid} animation file is missing animation.{sid}.rock")
+
+    elif mechanic == "drive":
+        rideable = components.get("minecraft:rideable")
+        if not rideable:
+            failures.append(f"{sid} is missing minecraft:rideable")
+        else:
+            if rideable.get("controlling_seat") != 0:
+                failures.append(f"{sid} rideable controlling_seat is not 0")
+            if "player" not in rideable.get("family_types", []):
+                failures.append(f"{sid} rideable family_types does not include player")
+        if "minecraft:behavior.controlled_by_player" not in components:
+            failures.append(f"{sid} is missing minecraft:behavior.controlled_by_player")
+        if "minecraft:movement" not in components:
+            failures.append(f"{sid} is missing minecraft:movement")
+        if "wheels" not in desc.get("scripts", {}).get("animate", []):
+            failures.append(f"{sid} client scripts.animate is missing wheels")
 
     elif mechanic == "rideable_bunk":
         groups = entity.get("component_groups", {})

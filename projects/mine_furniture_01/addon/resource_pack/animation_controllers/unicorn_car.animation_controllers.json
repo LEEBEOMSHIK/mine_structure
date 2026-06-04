@@ -1,0 +1,27 @@
+{
+  "format_version": "1.10.0",
+  "animation_controllers": {
+    "controller.animation.unicorn_car.wheels": {
+      "initial_state": "default",
+      "states": {
+        "default": {
+          "transitions": [
+            {
+              "move": "q.modified_move_speed > 0.05"
+            }
+          ]
+        },
+        "move": {
+          "animations": [
+            "roll"
+          ],
+          "transitions": [
+            {
+              "default": "q.modified_move_speed <= 0.05"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

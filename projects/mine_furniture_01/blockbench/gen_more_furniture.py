@@ -168,11 +168,150 @@ def build_gift_box():
     assemble(sid, b, bone_defs, atlas_rel, src)
 
 
+def build_car():
+    sid = "unicorn_car"
+    specs = [
+        ("body", (248, 168, 210), "solid"),
+        ("window", (158, 212, 240), "solid"),
+        ("wheel", (88, 82, 108), "solid"),
+        ("light", (255, 230, 140), "solid"),
+        ("rainbow", None, "horn"),
+    ]
+    atlas_rel, src, cm = make_atlas(sid, specs, 6201)
+    b = Builder(cm)
+    B = "body"
+    # chassis + cabin + hood (front = -Z)
+    b.add(B, "chassis", [-7, 2.5, -12], [14, 4, 24], "body")
+    b.add(B, "hood", [-6, 5.5, -12], [12, 2, 9], "body")
+    b.add(B, "cabin", [-6, 6.5, -3], [12, 5, 11], "body")
+    b.add(B, "roof", [-6.5, 11.5, -2], [13, 1, 9], "body")
+    b.add(B, "windshield", [-5.5, 7.5, -3.6], [11, 4.5, 1], "window")
+    b.add(B, "window_l", [-6.4, 7.5, -2], [0.8, 4, 9], "window")
+    b.add(B, "window_r", [5.6, 7.5, -2], [0.8, 4, 9], "window")
+    # headlight "eyes" on the front
+    b.add(B, "light_l", [-5, 5.5, -12.4], [2.2, 2.2, 0.6], "light")
+    b.add(B, "light_r", [2.8, 5.5, -12.4], [2.2, 2.2, 0.6], "light")
+    # seat
+    b.add(B, "seat", [-3, 7, 0.5], [6, 1, 4], "window")
+    # unicorn horn on the hood
+    b.add(B, "horn1", [-0.9, 7.5, -9], [1.8, 2, 1.8], "rainbow")
+    b.add(B, "horn2", [-0.6, 9.5, -8.8], [1.2, 1.6, 1.2], "rainbow")
+    # four wheels (own bones to spin)
+    b.add("wheel_fl", "wheel_fl", [-8.5, 0, -9], [2, 4, 4], "wheel")
+    b.add("wheel_fr", "wheel_fr", [6.5, 0, -9], [2, 4, 4], "wheel")
+    b.add("wheel_bl", "wheel_bl", [-8.5, 0, 5], [2, 4, 4], "wheel")
+    b.add("wheel_br", "wheel_br", [6.5, 0, 5], [2, 4, 4], "wheel")
+
+    bone_defs = [
+        {"name": sid, "parent": None, "pivot": [0, 0, 0]},
+        {"name": B, "parent": sid, "pivot": [0, 0, 0]},
+        {"name": "wheel_fl", "parent": sid, "pivot": [-7.5, 2, -7]},
+        {"name": "wheel_fr", "parent": sid, "pivot": [7.5, 2, -7]},
+        {"name": "wheel_bl", "parent": sid, "pivot": [-7.5, 2, 7]},
+        {"name": "wheel_br", "parent": sid, "pivot": [7.5, 2, 7]},
+    ]
+    assemble(sid, b, bone_defs, atlas_rel, src)
+
+
+def build_baby_dragon():
+    sid = "unicorn_baby_dragon"
+    specs = [
+        ("body", (172, 152, 226), "solid"),
+        ("eye", (74, 60, 96), "solid"),
+        ("blush", (255, 170, 202), "solid"),
+        ("rainbow", None, "horn"),
+    ]
+    atlas_rel, src, cm = make_atlas(sid, specs, 6202)
+    b = Builder(cm)
+    # body (front = +Z so walk anim with legs reads forward)
+    b.add("body", "barrel", [-3.5, 5, -5], [7, 5, 9], "body")
+    b.add("body", "chest", [-3, 5.2, 3.5], [6, 4.6, 1.5], "body")
+    # back spikes + tail + wings (static, under body)
+    b.add("body", "spike1", [-0.6, 10, 1], [1.2, 1.6, 1.2], "rainbow")
+    b.add("body", "spike2", [-0.6, 9.6, -1], [1.2, 1.6, 1.2], "rainbow")
+    b.add("body", "spike3", [-0.6, 9.2, -3], [1.2, 1.6, 1.2], "rainbow")
+    b.add("body", "tail", [-0.8, 5, -5.5], [1.6, 2, 2], "body")
+    b.add("body", "tail_tip", [-0.6, 4.5, -7], [1.2, 1.5, 1.5], "rainbow")
+    b.add("body", "wing_l", [-7, 8, -1.5], [4, 4, 1], "rainbow")
+    b.add("body", "wing_r", [3, 8, -1.5], [4, 4, 1], "rainbow")
+    # head (own bone) + snout + face cubes
+    b.add("head", "head", [-2.5, 8.5, 3.5], [5, 4.5, 4], "body")
+    b.add("head", "snout", [-1.8, 8.8, 7], [3.6, 2.5, 2], "body")
+    b.add("head", "horn_l", [-1.9, 12.4, 4.5], [1.2, 1.8, 1.2], "rainbow")
+    b.add("head", "horn_r", [0.7, 12.4, 4.5], [1.2, 1.8, 1.2], "rainbow")
+    b.add("head", "eye_l", [-1.7, 11, 7.4], [0.9, 0.9, 0.35], "eye")
+    b.add("head", "eye_r", [0.8, 11, 7.4], [0.9, 0.9, 0.35], "eye")
+    b.add("head", "blush_l", [-2.1, 9.8, 7.4], [0.9, 0.6, 0.25], "blush")
+    b.add("head", "blush_r", [1.2, 9.8, 7.4], [0.9, 0.6, 0.25], "blush")
+    b.add("head", "nostril_l", [-1.0, 9, 9], [0.5, 0.5, 0.25], "eye")
+    b.add("head", "nostril_r", [0.5, 9, 9], [0.5, 0.5, 0.25], "eye")
+    b.add("head", "mouth", [-0.6, 8.4, 9], [1.2, 0.4, 0.25], "eye")
+    # legs
+    b.add("leg_fl", "leg_fl", [-3, 0, 2.5], [2, 5, 2], "body")
+    b.add("leg_fr", "leg_fr", [1, 0, 2.5], [2, 5, 2], "body")
+    b.add("leg_bl", "leg_bl", [-3, 0, -4], [2, 5, 2], "body")
+    b.add("leg_br", "leg_br", [1, 0, -4], [2, 5, 2], "body")
+
+    bone_defs = [
+        {"name": sid, "parent": None, "pivot": [0, 0, 0]},
+        {"name": "body", "parent": sid, "pivot": [0, 7, 0]},
+        {"name": "head", "parent": "body", "pivot": [0, 9, 5]},
+        {"name": "leg_fl", "parent": "body", "pivot": [-2, 5, 4]},
+        {"name": "leg_fr", "parent": "body", "pivot": [2, 5, 4]},
+        {"name": "leg_bl", "parent": "body", "pivot": [-2, 5, -3]},
+        {"name": "leg_br", "parent": "body", "pivot": [2, 5, -3]},
+    ]
+    assemble(sid, b, bone_defs, atlas_rel, src)
+
+
+def build_aquarium():
+    sid = "unicorn_aquarium"
+    specs = [
+        ("frame", (204, 190, 234), "solid"),
+        ("water", (132, 206, 234), "water"),
+        ("fish_a", (255, 168, 90), "solid"),
+        ("fish_b", (255, 120, 182), "solid"),
+        ("plant", (120, 200, 150), "solid"),
+        ("glow", (196, 232, 255), "glow"),
+        ("rainbow", None, "horn"),
+    ]
+    atlas_rel, src, cm = make_atlas(sid, specs, 6203)
+    b = Builder(cm)
+    T = "tank"
+    b.add(T, "base", [-7, 0, -4], [14, 2, 8], "frame")
+    b.add(T, "water", [-6.5, 2, -3.5], [13, 9, 7], "water")
+    b.add(T, "rim", [-7, 11, -4], [14, 1.5, 8], "frame")
+    for px, pz, nm in [(-7, -4, "post_a"), (6.4, -4, "post_b"), (-7, 3.4, "post_c"), (6.4, 3.4, "post_d")]:
+        b.add(T, nm, [px, 2, pz], [0.6, 9, 0.6], "frame")
+    b.add(T, "plant1", [-5, 2, -2], [1.2, 4, 1.2], "plant")
+    b.add(T, "plant2", [4, 2, 1], [1.2, 3.5, 1.2], "plant")
+    # unicorn deco horn on the rim corner
+    b.add(T, "horn1", [5.6, 12.5, 2.6], [1.4, 1.8, 1.4], "rainbow")
+    b.add(T, "horn2", [5.8, 14.3, 2.8], [1, 1.4, 1], "rainbow")
+    # fish (own bones, swim left-right; near the front pane z=-3.4)
+    b.add("fish1", "fish1", [-1.5, 6.5, -3.4], [3, 1.8, 1], "fish_a")
+    b.add("fish2", "fish2", [-1, 4.5, -3.4], [2.6, 1.6, 1], "fish_b")
+    # glow bar at the water surface (toggled)
+    b.add("glow", "glow_bar", [-6, 10.4, -3.6], [12, 0.6, 7.2], "glow")
+
+    bone_defs = [
+        {"name": sid, "parent": None, "pivot": [0, 0, 0]},
+        {"name": T, "parent": sid, "pivot": [0, 0, 0]},
+        {"name": "fish1", "parent": sid, "pivot": [0, 7.4, -3]},
+        {"name": "fish2", "parent": sid, "pivot": [0, 5.3, -3]},
+        {"name": "glow", "parent": sid, "pivot": [0, 10.7, 0]},
+    ]
+    assemble(sid, b, bone_defs, atlas_rel, src)
+
+
 def main():
     build_baby_pet()
     build_gacha_machine()
     build_trampoline()
     build_gift_box()
+    build_car()
+    build_baby_dragon()
+    build_aquarium()
 
 
 if __name__ == "__main__":

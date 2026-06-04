@@ -1,0 +1,67 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.unicorn_car.roll": {
+      "loop": true,
+      "animation_length": 1.0,
+      "bones": {
+        "wheel_fl": {
+          "rotation": {
+            "0.0": [
+              0,
+              0,
+              0
+            ],
+            "1.0": [
+              360,
+              0,
+              0
+            ]
+          }
+        },
+        "wheel_fr": {
+          "rotation": {
+            "0.0": [
+              0,
+              0,
+              0
+            ],
+            "1.0": [
+              360,
+              0,
+              0
+            ]
+          }
+        },
+        "wheel_bl": {
+          "rotation": {
+            "0.0": [
+              0,
+              0,
+              0
+            ],
+            "1.0": [
+              360,
+              0,
+              0
+            ]
+          }
+        },
+        "wheel_br": {
+          "rotation": {
+            "0.0": [
+              0,
+              0,
+              0
+            ],
+            "1.0": [
+              360,
+              0,
+              0
+            ]
+          }
+        }
+      }
+    }
+  }
+}

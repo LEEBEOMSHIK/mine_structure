@@ -1,0 +1,59 @@
+{
+  "format_version": "1.20.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_car",
+      "is_spawnable": true,
+      "is_summonable": true,
+      "is_experimental": false
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": [
+          "mine_structure_vehicle",
+          "unicorn_car"
+        ]
+      },
+      "minecraft:collision_box": {
+        "width": 1.2,
+        "height": 0.8
+      },
+      "minecraft:health": {
+        "value": 20,
+        "max": 20
+      },
+      "minecraft:physics": {},
+      "minecraft:movement": {
+        "value": 0.3
+      },
+      "minecraft:navigation.walk": {
+        "can_path_over_water": false,
+        "avoid_water": true
+      },
+      "minecraft:movement.basic": {},
+      "minecraft:jump.static": {},
+      "minecraft:behavior.controlled_by_player": {
+        "priority": 0
+      },
+      "minecraft:rideable": {
+        "seat_count": 1,
+        "family_types": [
+          "player"
+        ],
+        "controlling_seat": 0,
+        "pull_in_entities": false,
+        "interact_text": "action.interact.ride",
+        "seats": [
+          {
+            "position": [
+              0,
+              0.55,
+              0
+            ],
+            "lock_rider_rotation": 0
+          }
+        ]
+      }
+    }
+  }
+}

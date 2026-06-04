@@ -1,0 +1,112 @@
+{
+  "format_version": "1.20.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_baby_dragon",
+      "is_spawnable": true,
+      "is_summonable": true,
+      "is_experimental": false
+    },
+    "component_groups": {
+      "mine_structure:tamed": {
+        "minecraft:is_tamed": {},
+        "minecraft:behavior.follow_owner": {
+          "priority": 4,
+          "speed_multiplier": 1.2,
+          "start_distance": 4,
+          "stop_distance": 2
+        },
+        "minecraft:rideable": {
+          "seat_count": 1,
+          "family_types": [
+            "player"
+          ],
+          "interact_text": "action.interact.ride",
+          "seats": [
+            {
+              "position": [
+                0,
+                0.6,
+                0
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": [
+          "mine_structure_pet",
+          "unicorn_baby_dragon"
+        ]
+      },
+      "minecraft:collision_box": {
+        "width": 0.7,
+        "height": 0.9
+      },
+      "minecraft:health": {
+        "value": 14,
+        "max": 14
+      },
+      "minecraft:physics": {},
+      "minecraft:movement": {
+        "value": 0.25
+      },
+      "minecraft:navigation.walk": {
+        "can_path_over_water": true,
+        "avoid_water": true
+      },
+      "minecraft:movement.basic": {},
+      "minecraft:jump.static": {},
+      "minecraft:behavior.float": {
+        "priority": 0
+      },
+      "minecraft:behavior.tempt": {
+        "priority": 4,
+        "speed_multiplier": 1.2,
+        "items": [
+          "minecraft:sugar",
+          "minecraft:apple",
+          "minecraft:cookie"
+        ]
+      },
+      "minecraft:behavior.follow_parent": {
+        "priority": 5,
+        "speed_multiplier": 1.1
+      },
+      "minecraft:behavior.random_stroll": {
+        "priority": 6,
+        "speed_multiplier": 1.0
+      },
+      "minecraft:behavior.look_at_player": {
+        "priority": 7,
+        "look_distance": 6.0
+      },
+      "minecraft:behavior.random_look_around": {
+        "priority": 8
+      },
+      "minecraft:tameable": {
+        "probability": 1.0,
+        "tame_items": [
+          "minecraft:sugar",
+          "minecraft:apple",
+          "minecraft:cookie"
+        ],
+        "tame_event": {
+          "event": "minecraft:on_tame",
+          "target": "self"
+        }
+      }
+    },
+    "events": {
+      "minecraft:on_tame": {
+        "add": {
+          "component_groups": [
+            "mine_structure:tamed"
+          ]
+        }
+      }
+    }
+  }
+}
