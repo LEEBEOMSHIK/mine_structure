@@ -1,0 +1,30 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "mine_structure:unicorn_cupcake",
+      "menu_category": {
+        "category": "nature"
+      }
+    },
+    "components": {
+      "minecraft:display_name": {
+        "value": "유니콘 컵케이크"
+      },
+      "minecraft:icon": {
+        "texture": "unicorn_cupcake"
+      },
+      "minecraft:max_stack_size": 64,
+      "minecraft:use_animation": "eat",
+      "minecraft:use_modifiers": {
+        "use_duration": 1.6,
+        "movement_modifier": 0.35
+      },
+      "minecraft:food": {
+        "nutrition": 5,
+        "saturation_modifier": "good",
+        "can_always_eat": false
+      }
+    }
+  }
+}

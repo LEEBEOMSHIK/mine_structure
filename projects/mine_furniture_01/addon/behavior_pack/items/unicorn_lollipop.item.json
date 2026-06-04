@@ -1,0 +1,30 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "mine_structure:unicorn_lollipop",
+      "menu_category": {
+        "category": "nature"
+      }
+    },
+    "components": {
+      "minecraft:display_name": {
+        "value": "유니콘 막대사탕"
+      },
+      "minecraft:icon": {
+        "texture": "unicorn_lollipop"
+      },
+      "minecraft:max_stack_size": 64,
+      "minecraft:use_animation": "eat",
+      "minecraft:use_modifiers": {
+        "use_duration": 1.6,
+        "movement_modifier": 0.35
+      },
+      "minecraft:food": {
+        "nutrition": 3,
+        "saturation_modifier": "normal",
+        "can_always_eat": true
+      }
+    }
+  }
+}

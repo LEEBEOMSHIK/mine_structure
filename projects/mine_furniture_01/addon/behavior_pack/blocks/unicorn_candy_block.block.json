@@ -1,0 +1,28 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:block": {
+    "description": {
+      "identifier": "mine_structure:unicorn_candy_block",
+      "menu_category": {
+        "category": "construction"
+      }
+    },
+    "components": {
+      "minecraft:display_name": "사탕 블록",
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 0.5
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 1.0
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "unicorn_candy",
+          "render_method": "opaque"
+        }
+      },
+      "minecraft:map_color": "#F69AC4",
+      "minecraft:friction": 0.6
+    }
+  }
+}

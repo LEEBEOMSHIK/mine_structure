@@ -1,0 +1,20 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:attachable": {
+		"description": {
+			"identifier": "mine_structure:unicorn_horn_headband",
+			"materials": {
+				"default": "entity_alphatest"
+			},
+			"textures": {
+				"default": "textures/entity/unicorn_horn_headband/unicorn_horn_headband"
+			},
+			"geometry": {
+				"default": "geometry.unicorn_horn_headband"
+			},
+			"render_controllers": [
+				"controller.render.armor"
+			]
+		}
+	}
+}

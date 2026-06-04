@@ -56,7 +56,15 @@ const FRIDGE_ID = "mine_structure:unicorn_fridge";
 const FRIDGE_PROPERTY = "fridge_items";
 const FRIDGE_MAX_SLOTS = 18;
 const PEGASUS_ID = "mine_structure:unicorn_pegasus";
-const COOKIE_ID = "mine_structure:unicorn_cookie";
+const WAND_ID = "mine_structure:unicorn_wand";
+// edible items -> [effectName, durationTicks, amplifier] applied when finished eating
+const FOOD_EFFECTS = {
+  "mine_structure:unicorn_cookie": [["regeneration", 100, 1], ["saturation", 1, 19]],
+  "mine_structure:unicorn_cupcake": [["regeneration", 140, 1], ["saturation", 1, 19]],
+  "mine_structure:unicorn_lollipop": [["speed", 600, 0]],
+  "mine_structure:unicorn_rainbow_drink": [["speed", 600, 0], ["jump_boost", 600, 0]],
+  "mine_structure:unicorn_star_candy": [["night_vision", 1200, 0], ["saturation", 1, 4]],
+};
 
 function getMainhand(player) {
   const equippable = player.getComponent(EntityComponentTypes.Equippable);
@@ -370,25 +378,47 @@ world.afterEvents.playerInteractWithEntity.subscribe((event) => {
   }
 });
 
-// Eating a unicorn cookie tops up hunger and actually heals (Regeneration).
+function sparkle(entity, particle) {
+  try {
+    const location = entity.location;
+    entity.dimension.spawnParticle(particle, {
+      x: location.x,
+      y: location.y + 1.6,
+      z: location.z,
+    });
+  } catch (error) {
+    // particles are cosmetic; ignore if they cannot spawn
+  }
+}
+
+// Eating a unicorn treat tops up hunger and applies its effect(s).
 world.afterEvents.itemCompleteUse.subscribe((event) => {
-  if (!event.itemStack || event.itemStack.typeId !== COOKIE_ID) {
+  const effects = event.itemStack ? FOOD_EFFECTS[event.itemStack.typeId] : undefined;
+  const player = event.source;
+  if (!effects || !player) {
+    return;
+  }
+  for (const [name, duration, amplifier] of effects) {
+    player.addEffect(name, duration, { amplifier, showParticles: true });
+  }
+  sparkle(player, "minecraft:heart_particle");
+});
+
+// The magic wand: right-click for a sparkle + a short jump/speed boost.
+world.afterEvents.itemUse.subscribe((event) => {
+  if (!event.itemStack || event.itemStack.typeId !== WAND_ID) {
     return;
   }
   const player = event.source;
   if (!player) {
     return;
   }
-  player.addEffect("regeneration", 100, { amplifier: 1, showParticles: true });
-  player.addEffect("saturation", 1, { amplifier: 19, showParticles: false });
+  player.addEffect("jump_boost", 120, { amplifier: 1, showParticles: true });
+  player.addEffect("speed", 120, { amplifier: 0, showParticles: true });
+  sparkle(player, "minecraft:totem_particle");
   try {
-    const location = player.location;
-    player.dimension.spawnParticle("minecraft:heart_particle", {
-      x: location.x,
-      y: location.y + 1.6,
-      z: location.z,
-    });
+    player.dimension.playSound("random.orb", player.location);
   } catch (error) {
-    // particle is cosmetic; ignore if it cannot spawn
+    // sound is cosmetic
   }
 });

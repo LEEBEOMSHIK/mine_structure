@@ -7,6 +7,27 @@
     },
     "unicorn_cookie": {
       "textures": "textures/items/unicorn_cookie"
+    },
+    "unicorn_cupcake": {
+      "textures": "textures/items/unicorn_cupcake"
+    },
+    "unicorn_lollipop": {
+      "textures": "textures/items/unicorn_lollipop"
+    },
+    "unicorn_rainbow_drink": {
+      "textures": "textures/items/unicorn_rainbow_drink"
+    },
+    "unicorn_star_candy": {
+      "textures": "textures/items/unicorn_star_candy"
+    },
+    "unicorn_wand": {
+      "textures": "textures/items/unicorn_wand"
+    },
+    "unicorn_horn_headband": {
+      "textures": "textures/items/unicorn_horn_headband"
+    },
+    "unicorn_wings": {
+      "textures": "textures/items/unicorn_wings"
     }
   }
 }

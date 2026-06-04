@@ -41,6 +41,25 @@ KIDS = {
 
 FOODS = {
     "unicorn_cookie": {"identifier": "mine_structure:unicorn_cookie", "icon_shortname": "unicorn_cookie"},
+    "unicorn_cupcake": {"identifier": "mine_structure:unicorn_cupcake", "icon_shortname": "unicorn_cupcake"},
+    "unicorn_lollipop": {"identifier": "mine_structure:unicorn_lollipop", "icon_shortname": "unicorn_lollipop"},
+    "unicorn_rainbow_drink": {"identifier": "mine_structure:unicorn_rainbow_drink", "icon_shortname": "unicorn_rainbow_drink"},
+    "unicorn_star_candy": {"identifier": "mine_structure:unicorn_star_candy", "icon_shortname": "unicorn_star_candy"},
+}
+
+TOOLS = {
+    "unicorn_wand": {"identifier": "mine_structure:unicorn_wand", "icon_shortname": "unicorn_wand"},
+}
+
+BLOCKS = {
+    "unicorn_cloud_block": {"identifier": "mine_structure:unicorn_cloud_block", "texture": "unicorn_cloud"},
+    "unicorn_candy_block": {"identifier": "mine_structure:unicorn_candy_block", "texture": "unicorn_candy"},
+    "unicorn_star_block": {"identifier": "mine_structure:unicorn_star_block", "texture": "unicorn_star"},
+}
+
+WEARABLES = {
+    "unicorn_horn_headband": {"identifier": "mine_structure:unicorn_horn_headband", "slot": "slot.armor.head", "bone": "head"},
+    "unicorn_wings": {"identifier": "mine_structure:unicorn_wings", "slot": "slot.armor.chest", "bone": "body"},
 }
 
 FURNITURE_BBMODEL_TEXTURE_BY_ROOT = {
@@ -1059,6 +1078,109 @@ def validate_food(food_id, config, failures):
             failures.append(f"scripts/main.js is missing {snippet} for {food_id}")
 
 
+def validate_tool(tool_id, config, failures):
+    expected_identifier = config["identifier"]
+    icon_shortname = config["icon_shortname"]
+    item_path = BEHAVIOR_PACK / "items" / f"{tool_id}.item.json"
+    icon_path = RESOURCE_PACK / "textures" / "items" / f"{tool_id}.png"
+    item_texture_path = RESOURCE_PACK / "textures" / "item_texture.json"
+
+    if not item_path.is_file():
+        failures.append(f"missing item for {tool_id}: {item_path.relative_to(PROJECT_ROOT)}")
+    validate_png(icon_path, failures, expected_size=(16, 16))
+
+    if item_path.is_file():
+        item = load_json(item_path)
+        components = item.get("minecraft:item", {}).get("components", {})
+        if item.get("minecraft:item", {}).get("description", {}).get("identifier") != expected_identifier:
+            failures.append(f"{tool_id} item identifier mismatch")
+        if components.get("minecraft:icon", {}).get("texture") != icon_shortname:
+            failures.append(f"{tool_id} item icon does not reference {icon_shortname}")
+
+    if item_texture_path.is_file():
+        if icon_shortname not in load_json(item_texture_path).get("texture_data", {}):
+            failures.append(f"item_texture.json is missing texture_data.{icon_shortname}")
+
+    script = (BEHAVIOR_PACK / "scripts" / "main.js").read_text(encoding="utf-8")
+    for snippet in (expected_identifier, "itemUse"):
+        if snippet not in script:
+            failures.append(f"scripts/main.js is missing {snippet} for {tool_id}")
+
+
+def validate_wearable(sid, config, failures):
+    expected_identifier = config["identifier"]
+    expected_geometry = f"geometry.{sid}"
+    item_path = BEHAVIOR_PACK / "items" / f"{sid}.item.json"
+    attachable_path = RESOURCE_PACK / "attachables" / f"{sid}.attachable.json"
+    geometry_path = RESOURCE_PACK / "models" / "entity" / f"{sid}.geo.json"
+    icon_path = RESOURCE_PACK / "textures" / "items" / f"{sid}.png"
+    atlas_path = RESOURCE_PACK / "textures" / "entity" / sid / f"{sid}.png"
+    item_texture_path = RESOURCE_PACK / "textures" / "item_texture.json"
+
+    for path in [item_path, attachable_path, geometry_path]:
+        if not path.is_file():
+            failures.append(f"missing file for {sid}: {path.relative_to(PROJECT_ROOT)}")
+    validate_png(icon_path, failures, expected_size=(16, 16))
+    validate_png(atlas_path, failures, expected_size=(64, 64))
+
+    if item_path.is_file():
+        item = load_json(item_path)
+        components = item.get("minecraft:item", {}).get("components", {})
+        if item.get("minecraft:item", {}).get("description", {}).get("identifier") != expected_identifier:
+            failures.append(f"{sid} item identifier mismatch")
+        if components.get("minecraft:wearable", {}).get("slot") != config["slot"]:
+            failures.append(f"{sid} wearable slot is not {config['slot']}")
+
+    if attachable_path.is_file():
+        desc = load_json(attachable_path).get("minecraft:attachable", {}).get("description", {})
+        if desc.get("identifier") != expected_identifier:
+            failures.append(f"{sid} attachable identifier mismatch")
+        if desc.get("geometry", {}).get("default") != expected_geometry:
+            failures.append(f"{sid} attachable geometry does not reference {expected_geometry}")
+
+    if geometry_path.is_file():
+        geo = load_json(geometry_path).get("minecraft:geometry", [{}])[0]
+        if geo.get("description", {}).get("identifier") != expected_geometry:
+            failures.append(f"{sid} geometry identifier mismatch")
+        bone_names = {b.get("name") for b in geo.get("bones", [])}
+        if config["bone"] not in bone_names:
+            failures.append(f"{sid} geometry is missing player bone '{config['bone']}'")
+
+    if item_texture_path.is_file():
+        if sid not in load_json(item_texture_path).get("texture_data", {}):
+            failures.append(f"item_texture.json is missing texture_data.{sid}")
+
+
+def validate_block(block_id, config, failures):
+    expected_identifier = config["identifier"]
+    texture = config["texture"]
+    block_path = BEHAVIOR_PACK / "blocks" / f"{block_id}.block.json"
+    terrain_path = RESOURCE_PACK / "textures" / "terrain_texture.json"
+    texture_path = RESOURCE_PACK / "textures" / "blocks" / f"{texture}.png"
+
+    if not block_path.is_file():
+        failures.append(f"missing block for {block_id}: {block_path.relative_to(PROJECT_ROOT)}")
+    validate_png(texture_path, failures, expected_size=(16, 16))
+
+    if block_path.is_file():
+        block = load_json(block_path)
+        desc = block.get("minecraft:block", {}).get("description", {})
+        if desc.get("identifier") != expected_identifier:
+            failures.append(f"{block_id} block identifier mismatch")
+        instances = block.get("minecraft:block", {}).get("components", {}).get("minecraft:material_instances", {})
+        if instances.get("*", {}).get("texture") != texture:
+            failures.append(f"{block_id} material_instances texture is not {texture}")
+
+    if terrain_path.is_file():
+        terrain = load_json(terrain_path).get("texture_data", {})
+        if texture not in terrain:
+            failures.append(f"terrain_texture.json is missing texture_data.{texture}")
+        elif terrain[texture].get("textures") != f"textures/blocks/{texture}":
+            failures.append(f"terrain_texture.json {texture} path mismatch")
+    else:
+        failures.append("missing terrain_texture.json")
+
+
 def main():
     failures = []
 
@@ -1070,6 +1192,15 @@ def main():
 
     for food_id, config in FOODS.items():
         validate_food(food_id, config, failures)
+
+    for tool_id, config in TOOLS.items():
+        validate_tool(tool_id, config, failures)
+
+    for block_id, config in BLOCKS.items():
+        validate_block(block_id, config, failures)
+
+    for wearable_id, config in WEARABLES.items():
+        validate_wearable(wearable_id, config, failures)
 
     for sink_id, config in SINKS.items():
         validate_sink(sink_id, config, failures)

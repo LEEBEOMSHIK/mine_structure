@@ -1,0 +1,17 @@
+{
+  "resource_pack_name": "mine_structure",
+  "texture_name": "atlas.terrain",
+  "padding": 8,
+  "num_mip_levels": 4,
+  "texture_data": {
+    "unicorn_cloud": {
+      "textures": "textures/blocks/unicorn_cloud"
+    },
+    "unicorn_candy": {
+      "textures": "textures/blocks/unicorn_candy"
+    },
+    "unicorn_star": {
+      "textures": "textures/blocks/unicorn_star"
+    }
+  }
+}

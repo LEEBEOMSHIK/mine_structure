@@ -1,0 +1,28 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:block": {
+    "description": {
+      "identifier": "mine_structure:unicorn_star_block",
+      "menu_category": {
+        "category": "construction"
+      }
+    },
+    "components": {
+      "minecraft:display_name": "별 블록",
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 0.5
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 1.0
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "unicorn_star",
+          "render_method": "opaque"
+        }
+      },
+      "minecraft:map_color": "#4E4480",
+      "minecraft:friction": 0.6
+    }
+  }
+}
