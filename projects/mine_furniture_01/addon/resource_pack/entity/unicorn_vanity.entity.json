@@ -1,0 +1,30 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_vanity",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_vanity/unicorn_vanity_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_vanity"
+      },
+      "animations": {
+        "on": "animation.unicorn_vanity.on",
+        "off": "animation.unicorn_vanity.off",
+        "light_ctrl": "controller.animation.unicorn_vanity.light"
+      },
+      "scripts": {
+        "animate": [
+          "light_ctrl"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.unicorn_vanity"
+      ]
+    }
+  }
+}

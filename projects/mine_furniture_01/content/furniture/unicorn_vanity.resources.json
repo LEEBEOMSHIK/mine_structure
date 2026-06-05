@@ -1,0 +1,23 @@
+{
+  "identifier": "mine_structure:unicorn_vanity",
+  "content_type": "furniture_entity",
+  "mechanic": "variant_light",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_vanity.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_vanity.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_vanity.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_vanity/unicorn_vanity_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_vanity.render_controllers.json",
+    "animation": "../../addon/resource_pack/animations/unicorn_vanity.animation.json",
+    "animation_controller": "../../addon/resource_pack/animation_controllers/unicorn_vanity.animation_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_vanity.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}

@@ -39,6 +39,10 @@ KIDS = {
     "unicorn_fridge": {"mechanic": "fridge"},
     "unicorn_laptop": {"mechanic": "variant_lid"},
     "unicorn_phone": {"mechanic": "variant_light"},
+    "unicorn_tv": {"mechanic": "variant_light"},
+    "unicorn_arcade": {"mechanic": "variant_light"},
+    "unicorn_vanity": {"mechanic": "variant_light"},
+    "unicorn_king_bed": {"mechanic": "rideable_simple"},
 }
 
 FOODS = {
@@ -936,6 +940,13 @@ def validate_kids(sid, config, failures):
         for snippet in (expected_identifier, "storeOrRetrieveItem"):
             if snippet not in script:
                 failures.append(f"scripts/main.js is missing {snippet} for {sid}")
+
+    elif mechanic == "rideable_simple":
+        rideable = components.get("minecraft:rideable")
+        if not rideable:
+            failures.append(f"{sid} is missing minecraft:rideable")
+        elif "player" not in rideable.get("family_types", []):
+            failures.append(f"{sid} rideable family_types does not include player")
 
     elif mechanic == "rideable_bunk":
         groups = entity.get("component_groups", {})

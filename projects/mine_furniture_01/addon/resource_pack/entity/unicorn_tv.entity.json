@@ -1,0 +1,30 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_tv",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_tv/unicorn_tv_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_tv"
+      },
+      "animations": {
+        "on": "animation.unicorn_tv.on",
+        "off": "animation.unicorn_tv.off",
+        "light_ctrl": "controller.animation.unicorn_tv.light"
+      },
+      "scripts": {
+        "animate": [
+          "light_ctrl"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.unicorn_tv"
+      ]
+    }
+  }
+}

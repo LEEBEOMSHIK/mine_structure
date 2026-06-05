@@ -1,0 +1,30 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_arcade",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_arcade/unicorn_arcade_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_arcade"
+      },
+      "animations": {
+        "on": "animation.unicorn_arcade.on",
+        "off": "animation.unicorn_arcade.off",
+        "light_ctrl": "controller.animation.unicorn_arcade.light"
+      },
+      "scripts": {
+        "animate": [
+          "light_ctrl"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.unicorn_arcade"
+      ]
+    }
+  }
+}
