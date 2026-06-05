@@ -46,6 +46,8 @@
 | `mine_structure:unicorn_phone_item` | held item | 손에 드는 핸드폰(3D attachable), in-game test 대기 | `items/unicorn_phone_item.md` |
 | `mine_structure:unicorn_tv` / `unicorn_arcade` / `unicorn_vanity` | furniture entity | TV/아케이드/화장대(화면·전구 토글), in-game test 대기 | `furniture/unicorn_room_furniture.md` |
 | `mine_structure:unicorn_king_bed` | furniture entity | 킹사이즈 침대(단층, rideable 2인), in-game test 대기 | `furniture/unicorn_room_furniture.md` |
+| `mine_structure:unicorn_bathtub` 외 | furniture/mob | 욕조/오븐/전자레인지/토스터/로봇청소기, in-game test 대기 | `furniture/unicorn_bath_kitchen.md` |
+| `mine_structure:unicorn_swing` 외 | furniture entity | 놀이터(그네/미끄럼틀/시소), in-game test 대기 | `furniture/unicorn_playground.md` |
 | `mine_structure:unicorn_horn_headband` | wearable | 입는 코스튬(뿔 머리띠), in-game test 대기(실험) | `wearables/unicorn_costume.md` |
 | `mine_structure:unicorn_elytra` | wearable glider | 커스텀 엘리트라(바닐라 별개, 활공+접힘/펴짐), in-game test 대기(실험) | `wearables/unicorn_costume.md` |
 

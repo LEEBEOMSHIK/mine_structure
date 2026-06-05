@@ -1,0 +1,20 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_toaster",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_toaster/unicorn_toaster_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_toaster"
+      },
+      "render_controllers": [
+        "controller.render.unicorn_toaster"
+      ]
+    }
+  }
+}

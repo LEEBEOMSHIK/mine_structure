@@ -1,0 +1,60 @@
+{
+  "format_version": "1.20.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_seesaw",
+      "is_spawnable": true,
+      "is_summonable": true,
+      "is_experimental": false
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": [
+          "mine_structure_furniture",
+          "unicorn_seesaw"
+        ]
+      },
+      "minecraft:collision_box": {
+        "width": 1.8,
+        "height": 0.7
+      },
+      "minecraft:health": {
+        "value": 12,
+        "max": 12
+      },
+      "minecraft:physics": {
+        "has_gravity": false,
+        "has_collision": true
+      },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      },
+      "minecraft:rideable": {
+        "seat_count": 2,
+        "family_types": [
+          "player"
+        ],
+        "interact_text": "action.interact.ride",
+        "seats": [
+          {
+            "position": [
+              -0.7,
+              0.45,
+              0
+            ],
+            "lock_rider_rotation": 0
+          },
+          {
+            "position": [
+              0.7,
+              0.45,
+              0
+            ],
+            "lock_rider_rotation": 0
+          }
+        ]
+      }
+    }
+  }
+}

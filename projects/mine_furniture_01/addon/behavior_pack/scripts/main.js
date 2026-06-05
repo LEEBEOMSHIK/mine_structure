@@ -12,6 +12,7 @@ const ICE_CREAM_TREATS = [
   "minecraft:pumpkin_pie",
   "minecraft:honey_bottle",
 ];
+const TOASTER_ID = "mine_structure:unicorn_toaster";
 const GACHA_ID = "mine_structure:unicorn_gacha_machine";
 const GACHA_REWARDS = [
   "minecraft:cake",
@@ -347,6 +348,12 @@ world.afterEvents.playerInteractWithEntity.subscribe((event) => {
   if (target.typeId === ICE_CREAM_ID) {
     system.run(() => {
       dispenseTreat(event.player, target);
+    });
+  }
+
+  if (target.typeId === TOASTER_ID) {
+    system.run(() => {
+      giveItem(event.player, target, new ItemStack("minecraft:bread", 1), "random.pop");
     });
   }
 

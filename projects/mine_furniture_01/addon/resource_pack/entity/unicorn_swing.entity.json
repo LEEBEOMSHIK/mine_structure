@@ -1,0 +1,28 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_swing",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_swing/unicorn_swing_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_swing"
+      },
+      "animations": {
+        "rock": "animation.unicorn_swing.rock"
+      },
+      "scripts": {
+        "animate": [
+          "rock"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.unicorn_swing"
+      ]
+    }
+  }
+}

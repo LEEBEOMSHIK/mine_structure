@@ -1,0 +1,30 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_microwave",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_microwave/unicorn_microwave_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_microwave"
+      },
+      "animations": {
+        "on": "animation.unicorn_microwave.on",
+        "off": "animation.unicorn_microwave.off",
+        "light_ctrl": "controller.animation.unicorn_microwave.light"
+      },
+      "scripts": {
+        "animate": [
+          "light_ctrl"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.unicorn_microwave"
+      ]
+    }
+  }
+}

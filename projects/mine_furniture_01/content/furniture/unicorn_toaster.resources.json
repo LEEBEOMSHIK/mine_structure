@@ -1,0 +1,21 @@
+{
+  "identifier": "mine_structure:unicorn_toaster",
+  "content_type": "furniture_entity",
+  "mechanic": "script_give",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_toaster.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_toaster.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_toaster.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_toaster/unicorn_toaster_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_toaster.render_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_toaster.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}

@@ -43,6 +43,14 @@ KIDS = {
     "unicorn_arcade": {"mechanic": "variant_light"},
     "unicorn_vanity": {"mechanic": "variant_light"},
     "unicorn_king_bed": {"mechanic": "rideable_simple"},
+    "unicorn_bathtub": {"mechanic": "variant_light"},
+    "unicorn_oven": {"mechanic": "variant_light"},
+    "unicorn_microwave": {"mechanic": "variant_light"},
+    "unicorn_toaster": {"mechanic": "script_give"},
+    "unicorn_robot_vacuum": {"mechanic": "wander"},
+    "unicorn_swing": {"mechanic": "rideable"},
+    "unicorn_slide": {"mechanic": "rideable_simple"},
+    "unicorn_seesaw": {"mechanic": "rideable_simple"},
 }
 
 FOODS = {
@@ -940,6 +948,12 @@ def validate_kids(sid, config, failures):
         for snippet in (expected_identifier, "storeOrRetrieveItem"):
             if snippet not in script:
                 failures.append(f"scripts/main.js is missing {snippet} for {sid}")
+
+    elif mechanic == "wander":
+        for comp in ("minecraft:movement", "minecraft:navigation.walk",
+                     "minecraft:behavior.random_stroll"):
+            if comp not in components:
+                failures.append(f"{sid} (wander) is missing {comp}")
 
     elif mechanic == "rideable_simple":
         rideable = components.get("minecraft:rideable")
