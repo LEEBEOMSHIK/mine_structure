@@ -1,0 +1,28 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_cruise",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_cruise/unicorn_cruise_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_cruise"
+      },
+      "animations": {
+        "wave": "animation.unicorn_cruise.wave"
+      },
+      "scripts": {
+        "animate": [
+          "wave"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.unicorn_cruise"
+      ]
+    }
+  }
+}

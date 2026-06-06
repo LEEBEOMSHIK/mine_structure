@@ -1,0 +1,21 @@
+{
+  "identifier": "mine_structure:unicorn_bookshelf",
+  "content_type": "furniture_entity",
+  "mechanic": "script_store",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_bookshelf.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_bookshelf.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_bookshelf.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_bookshelf/unicorn_bookshelf_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_bookshelf.render_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_bookshelf.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}

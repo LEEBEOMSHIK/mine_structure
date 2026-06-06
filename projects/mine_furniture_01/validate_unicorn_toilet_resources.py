@@ -51,6 +51,13 @@ KIDS = {
     "unicorn_swing": {"mechanic": "rideable"},
     "unicorn_slide": {"mechanic": "rideable_simple"},
     "unicorn_seesaw": {"mechanic": "rideable_simple"},
+    "unicorn_sofa": {"mechanic": "rideable_simple"},
+    "unicorn_fireplace": {"mechanic": "variant_light"},
+    "unicorn_fan": {"mechanic": "variant_spin"},
+    "unicorn_bookshelf": {"mechanic": "script_store"},
+    "unicorn_wardrobe": {"mechanic": "script_store"},
+    "unicorn_piano": {"mechanic": "script_play"},
+    "unicorn_cruise": {"mechanic": "boat"},
 }
 
 FOODS = {
@@ -946,6 +953,41 @@ def validate_kids(sid, config, failures):
             failures.append(f"{sid} client entity does not register door_open animation")
         script = (BEHAVIOR_PACK / "scripts" / "main.js").read_text(encoding="utf-8")
         for snippet in (expected_identifier, "storeOrRetrieveItem"):
+            if snippet not in script:
+                failures.append(f"scripts/main.js is missing {snippet} for {sid}")
+
+    elif mechanic == "boat":
+        rideable = components.get("minecraft:rideable")
+        if not rideable:
+            failures.append(f"{sid} is missing minecraft:rideable")
+        else:
+            if rideable.get("controlling_seat") != 0:
+                failures.append(f"{sid} rideable controlling_seat is not 0")
+            if "player" not in rideable.get("family_types", []):
+                failures.append(f"{sid} rideable family_types does not include player")
+        for comp in ("minecraft:behavior.controlled_by_player", "minecraft:movement", "minecraft:buoyant"):
+            if comp not in components:
+                failures.append(f"{sid} (boat) is missing {comp}")
+
+    elif mechanic == "variant_spin":
+        groups = entity.get("component_groups", {})
+        for state, value in (("mine_structure:light_off", 0), ("mine_structure:light_on", 1)):
+            if groups.get(state, {}).get("minecraft:variant", {}).get("value") != value:
+                failures.append(f"{sid} {state} does not set variant {value}")
+        if "light_ctrl" not in desc.get("scripts", {}).get("animate", []):
+            failures.append(f"{sid} client scripts.animate is missing light_ctrl")
+        anim_path = RESOURCE_PACK / "animations" / f"{sid}.animation.json"
+        if anim_path.is_file():
+            on = load_json(anim_path).get("animations", {}).get(f"animation.{sid}.on", {})
+            if "blades" not in str(on.get("bones", {})):
+                failures.append(f"{sid} on animation does not spin the blades bone")
+        else:
+            failures.append(f"{sid} is missing animation file")
+
+    elif mechanic in ("script_store", "script_play"):
+        script = (BEHAVIOR_PACK / "scripts" / "main.js").read_text(encoding="utf-8")
+        marker = "storeOrRetrieveItem" if mechanic == "script_store" else "note.harp"
+        for snippet in (expected_identifier, marker):
             if snippet not in script:
                 failures.append(f"scripts/main.js is missing {snippet} for {sid}")
 

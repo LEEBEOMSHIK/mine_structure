@@ -13,6 +13,12 @@ const ICE_CREAM_TREATS = [
   "minecraft:honey_bottle",
 ];
 const TOASTER_ID = "mine_structure:unicorn_toaster";
+const BOOKSHELF_ID = "mine_structure:unicorn_bookshelf";
+const BOOKSHELF_PROPERTY = "bookshelf_items";
+const WARDROBE_ID = "mine_structure:unicorn_wardrobe";
+const WARDROBE_PROPERTY = "wardrobe_items";
+const PIANO_ID = "mine_structure:unicorn_piano";
+const PIANO_PITCHES = [0.6, 0.7, 0.8, 0.95, 1.1, 1.25, 1.5, 1.8];
 const GACHA_ID = "mine_structure:unicorn_gacha_machine";
 const GACHA_REWARDS = [
   "minecraft:cake",
@@ -354,6 +360,31 @@ world.afterEvents.playerInteractWithEntity.subscribe((event) => {
   if (target.typeId === TOASTER_ID) {
     system.run(() => {
       giveItem(event.player, target, new ItemStack("minecraft:bread", 1), "random.pop");
+    });
+  }
+
+  if (target.typeId === BOOKSHELF_ID) {
+    system.run(() => {
+      storeOrRetrieveItem(event.player, target, BOOKSHELF_PROPERTY, 12);
+    });
+  }
+
+  if (target.typeId === WARDROBE_ID) {
+    system.run(() => {
+      storeOrRetrieveItem(event.player, target, WARDROBE_PROPERTY, 18);
+    });
+  }
+
+  if (target.typeId === PIANO_ID) {
+    system.run(() => {
+      const pitch = PIANO_PITCHES[Math.floor(Math.random() * PIANO_PITCHES.length)];
+      try {
+        target.dimension.playSound("note.harp", target.location, { pitch });
+      } catch (error) { /* cosmetic */ }
+      try {
+        const loc = target.location;
+        target.dimension.spawnParticle("minecraft:note_particle", { x: loc.x, y: loc.y + 1.4, z: loc.z });
+      } catch (error) { /* cosmetic */ }
     });
   }
 

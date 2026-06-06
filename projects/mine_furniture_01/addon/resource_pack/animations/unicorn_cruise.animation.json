@@ -1,0 +1,40 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.unicorn_cruise.wave": {
+      "loop": true,
+      "animation_length": 1.6,
+      "bones": {
+        "flag": {
+          "rotation": {
+            "0.0": [
+              0,
+              0,
+              0
+            ],
+            "0.4": [
+              0,
+              10,
+              0
+            ],
+            "0.8": [
+              0,
+              0,
+              0
+            ],
+            "1.2": [
+              0,
+              -10,
+              0
+            ],
+            "1.6": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      }
+    }
+  }
+}

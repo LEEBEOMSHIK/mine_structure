@@ -1,0 +1,21 @@
+{
+  "identifier": "mine_structure:unicorn_piano",
+  "content_type": "furniture_entity",
+  "mechanic": "script_play",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_piano.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_piano.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_piano.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_piano/unicorn_piano_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_piano.render_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_piano.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}

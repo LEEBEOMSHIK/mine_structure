@@ -1,0 +1,106 @@
+{
+  "format_version": "1.20.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_fireplace",
+      "is_spawnable": true,
+      "is_summonable": true,
+      "is_experimental": false
+    },
+    "component_groups": {
+      "mine_structure:light_off": {
+        "minecraft:variant": {
+          "value": 0
+        },
+        "minecraft:interact": {
+          "interactions": [
+            {
+              "interact_text": "action.interact.light_fire",
+              "swing": true,
+              "play_sounds": "random.click",
+              "on_interact": {
+                "event": "mine_structure:turn_light_on",
+                "target": "self"
+              }
+            }
+          ]
+        }
+      },
+      "mine_structure:light_on": {
+        "minecraft:variant": {
+          "value": 1
+        },
+        "minecraft:interact": {
+          "interactions": [
+            {
+              "interact_text": "action.interact.put_out",
+              "swing": true,
+              "play_sounds": "random.click",
+              "on_interact": {
+                "event": "mine_structure:turn_light_off",
+                "target": "self"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": [
+          "mine_structure_furniture",
+          "unicorn_fireplace"
+        ]
+      },
+      "minecraft:collision_box": {
+        "width": 1.1,
+        "height": 1.1
+      },
+      "minecraft:health": {
+        "value": 12,
+        "max": 12
+      },
+      "minecraft:physics": {
+        "has_gravity": false,
+        "has_collision": true
+      },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      }
+    },
+    "events": {
+      "minecraft:entity_spawned": {
+        "add": {
+          "component_groups": [
+            "mine_structure:light_off"
+          ]
+        }
+      },
+      "mine_structure:turn_light_on": {
+        "remove": {
+          "component_groups": [
+            "mine_structure:light_off"
+          ]
+        },
+        "add": {
+          "component_groups": [
+            "mine_structure:light_on"
+          ]
+        }
+      },
+      "mine_structure:turn_light_off": {
+        "remove": {
+          "component_groups": [
+            "mine_structure:light_on"
+          ]
+        },
+        "add": {
+          "component_groups": [
+            "mine_structure:light_off"
+          ]
+        }
+      }
+    }
+  }
+}

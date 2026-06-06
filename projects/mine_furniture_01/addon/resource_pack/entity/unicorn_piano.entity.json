@@ -1,0 +1,20 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_piano",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_piano/unicorn_piano_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_piano"
+      },
+      "render_controllers": [
+        "controller.render.unicorn_piano"
+      ]
+    }
+  }
+}
