@@ -1,0 +1,28 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_carousel",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_carousel/unicorn_carousel_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_carousel"
+      },
+      "animations": {
+        "spin": "animation.unicorn_carousel.spin"
+      },
+      "scripts": {
+        "animate": [
+          "spin"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.unicorn_carousel"
+      ]
+    }
+  }
+}

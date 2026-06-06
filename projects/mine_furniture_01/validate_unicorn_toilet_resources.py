@@ -58,6 +58,9 @@ KIDS = {
     "unicorn_wardrobe": {"mechanic": "script_store"},
     "unicorn_piano": {"mechanic": "script_play"},
     "unicorn_cruise": {"mechanic": "boat"},
+    "unicorn_carousel": {"mechanic": "rideable_simple"},
+    "unicorn_ferris_wheel": {"mechanic": "variant_spin"},
+    "unicorn_balloon": {"mechanic": "rideable_simple"},
 }
 
 FOODS = {

@@ -1,0 +1,28 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_balloon",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_balloon/unicorn_balloon_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_balloon"
+      },
+      "animations": {
+        "bob": "animation.unicorn_balloon.bob"
+      },
+      "scripts": {
+        "animate": [
+          "bob"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.unicorn_balloon"
+      ]
+    }
+  }
+}

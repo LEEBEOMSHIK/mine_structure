@@ -1,0 +1,38 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.unicorn_ferris_wheel.off": {
+      "loop": "hold_on_last_frame",
+      "animation_length": 0.1,
+      "bones": {
+        "blades": {
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "animation.unicorn_ferris_wheel.on": {
+      "loop": true,
+      "animation_length": 0.7,
+      "bones": {
+        "blades": {
+          "rotation": {
+            "0.0": [
+              0,
+              0,
+              0
+            ],
+            "0.7": [
+              0,
+              0,
+              360
+            ]
+          }
+        }
+      }
+    }
+  }
+}
