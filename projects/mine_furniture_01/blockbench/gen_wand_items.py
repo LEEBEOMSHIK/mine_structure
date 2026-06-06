@@ -24,7 +24,7 @@ WANDS = {
         "grip": (244, 184, 216),
         "star_a": (245, 210, 120),   # gold star
         "star_b": (252, 226, 160),   # lighter gold for the rotated layer
-        "core": (255, 250, 255),
+        "core": (120, 215, 230),     # cyan gem
         "seed": 7711,
     },
     "unicorn_transform_wand": {
@@ -32,7 +32,7 @@ WANDS = {
         "grip": (200, 160, 240),
         "star_a": (250, 150, 200),   # pink star
         "star_b": (150, 200, 245),   # sky-blue rotated layer -> rainbow feel
-        "core": (255, 250, 255),
+        "core": (200, 130, 240),     # amethyst gem
         "seed": 7722,
     },
 }
@@ -65,8 +65,10 @@ def build_model(sid, cfg):
           rotation=[0, 0, 0], pivot=[0, 5.6, 0])
     b.add(sid, "star_b", [-1.6, 4.0, -0.35], [3.2, 3.2, 0.7], "star_b",
           rotation=[0, 0, 45], pivot=[0, 5.6, 0])
-    # glowing core in the centre of the star
-    b.add(sid, "core", [-0.7, 4.9, -0.55], [1.4, 1.4, 1.1], "core")
+    # small glowing gem set on the front of the star (45 deg -> diamond
+    # silhouette, raised forward so it reads as a jewel rather than a flat patch)
+    b.add(sid, "core", [-0.65, 4.95, -0.95], [1.3, 1.3, 1.0], "core",
+          rotation=[0, 0, 45], pivot=[0, 5.6, -0.45])
     assemble(sid, b, [{"name": sid, "parent": None, "pivot": [0, 0, 0]}], atlas_rel, src)
 
 
