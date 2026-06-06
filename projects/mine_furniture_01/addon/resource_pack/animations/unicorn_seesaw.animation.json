@@ -1,0 +1,40 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.unicorn_seesaw.tilt": {
+      "loop": true,
+      "animation_length": 4.0,
+      "bones": {
+        "plank": {
+          "rotation": {
+            "0.0": [
+              0,
+              0,
+              0
+            ],
+            "1.0": [
+              7,
+              0,
+              0
+            ],
+            "2.0": [
+              0,
+              0,
+              0
+            ],
+            "3.0": [
+              -7,
+              0,
+              0
+            ],
+            "4.0": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      }
+    }
+  }
+}

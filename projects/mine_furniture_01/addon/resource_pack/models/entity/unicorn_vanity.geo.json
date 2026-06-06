@@ -7,10 +7,10 @@
 				"texture_width": 64,
 				"texture_height": 64,
 				"visible_bounds_width": 1.8,
-				"visible_bounds_height": 1.7,
+				"visible_bounds_height": 1.6,
 				"visible_bounds_offset": [
 					0,
-					0.53,
+					0.52,
 					0
 				]
 			},
@@ -1081,7 +1081,7 @@
 						},
 						{
 							"origin": [
-								4.4,
+								3.5,
 								7,
 								1.9
 							],
@@ -1155,7 +1155,7 @@
 						},
 						{
 							"origin": [
-								4.4,
+								3.5,
 								11,
 								1.9
 							],
@@ -1229,7 +1229,7 @@
 						},
 						{
 							"origin": [
-								4.4,
+								3.5,
 								14.5,
 								1.9
 							],
@@ -1304,7 +1304,7 @@
 						{
 							"origin": [
 								-1.5,
-								16.2,
+								15.6,
 								1.9
 							],
 							"size": [
@@ -1378,7 +1378,7 @@
 						{
 							"origin": [
 								1.0,
-								16.2,
+								15.6,
 								1.9
 							],
 							"size": [

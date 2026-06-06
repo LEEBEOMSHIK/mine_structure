@@ -224,7 +224,7 @@ class Builder:
         self.bones.setdefault(name, [])
         self.children.setdefault(name, [])
 
-    def add(self, bone, name, frm, size, cell, face_cells=None):
+    def add(self, bone, name, frm, size, cell, face_cells=None, rotation=None, pivot=None):
         self.bone(bone)
         face_cells = face_cells or {}
         geo_uv, bb_uv = {}, {}
@@ -232,22 +232,30 @@ class Builder:
             px, py = self.cellmap[face_cells.get(f, cell)]
             geo_uv[f] = {"uv": [px, py], "uv_size": [16, 16]}
             bb_uv[f] = {"uv": [px, py, px + 16, py + 16], "texture": 0}
-        self.bones[bone].append({
+        to = [frm[0] + size[0], frm[1] + size[1], frm[2] + size[2]]
+        center = [(frm[i] + to[i]) / 2 for i in range(3)]
+        rot_pivot = pivot if pivot is not None else center
+        geo_cube = {
             "origin": [round(v, 3) for v in frm],
             "size": [round(v, 3) for v in size],
             "uv": geo_uv,
-        })
-        to = [frm[0] + size[0], frm[1] + size[1], frm[2] + size[2]]
-        center = [(frm[i] + to[i]) / 2 for i in range(3)]
+        }
+        if rotation:
+            geo_cube["pivot"] = [round(v, 3) for v in rot_pivot]
+            geo_cube["rotation"] = rotation
+        self.bones[bone].append(geo_cube)
         cid = new_uuid()
-        self.elements.append({
+        element = {
             "name": name, "box_uv": False, "render_order": "default", "locked": False,
             "export": True, "scope": 0, "allow_mirror_modeling": True,
             "from": [round(v, 3) for v in frm], "to": [round(v, 3) for v in to],
             "autouv": 0, "color": self._color % 8,
-            "origin": [round(v, 3) for v in center], "uv_offset": [0, 0],
+            "origin": [round(v, 3) for v in rot_pivot], "uv_offset": [0, 0],
             "faces": bb_uv, "type": "cube", "uuid": cid,
-        })
+        }
+        if rotation:
+            element["rotation"] = rotation
+        self.elements.append(element)
         self._color += 1
         self.children[bone].append(cid)
         return cid

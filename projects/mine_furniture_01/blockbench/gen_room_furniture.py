@@ -209,8 +209,8 @@ def build_vanity():
     b.add("body", "perfume1", [-5, 6, -1], [1, 1.6, 1], "accent")
     b.add("body", "perfume2", [4, 6, -0.6], [0.8, 1.3, 0.8], "knob")
     # mirror bulbs (toggled) around the frame
-    bulbs = [(-4.4, 7), (-4.4, 11), (-4.4, 14.5), (4.4, 7), (4.4, 11), (4.4, 14.5),
-             (-1.5, 16.2), (1.0, 16.2)]
+    bulbs = [(-4.4, 7), (-4.4, 11), (-4.4, 14.5), (3.5, 7), (3.5, 11), (3.5, 14.5),
+             (-1.5, 15.6), (1.0, 15.6)]
     for i, (bx, by) in enumerate(bulbs):
         b.add("glow", "bulb%d" % i, [bx, by, 1.9], [0.9, 0.9, 0.5], "bulb")
     assemble(sid, b, [{"name": sid, "parent": None, "pivot": [0, 0, 0]},
@@ -226,19 +226,21 @@ def build_king_bed():
              ("accent", (245, 210, 120), "solid")]
     rel, src, cm = make_atlas(sid, specs, 6504)
     b = Builder(cm)
-    b.add("frame", "base", [-12.5, 0, -8.5], [25, 3, 17], "shell")
-    b.add("frame", "mattress", [-12, 3, -8], [24, 4, 16], "mattress")
-    b.add("frame", "headboard", [-12.5, 3, 7.6], [25, 11, 1.4], "shell")
-    b.add("frame", "head_accent", [-12, 12, 7.7], [24, 1.5, 1.2], "accent")
-    b.add("frame", "pillow_l", [-10.5, 7, 3.5], [9, 2.5, 5], "pillow")
-    b.add("frame", "pillow_r", [1.5, 7, 3.5], [9, 2.5, 5], "pillow")
-    b.add("frame", "blanket", [-12, 7, -8], [24, 1, 11], "blanket")
-    b.add("frame", "star_l", [-11, 12.5, 7.8], [1.6, 1.6, 0.6], "accent")
-    b.add("frame", "star_r", [9.4, 12.5, 7.8], [1.6, 1.6, 0.6], "accent")
+    # king size: wide (x 24) AND long (z 26)
+    b.add("frame", "base", [-12.5, 0, -13], [25, 3, 26], "shell")
+    b.add("frame", "mattress", [-12, 3, -12.5], [24, 4, 25], "mattress")
+    b.add("frame", "footboard", [-12.5, 3, -13], [25, 5, 1.4], "shell")
+    b.add("frame", "headboard", [-12.5, 3, 11.6], [25, 11, 1.4], "shell")
+    b.add("frame", "head_accent", [-12, 12, 11.7], [24, 1.5, 1.2], "accent")
+    b.add("frame", "pillow_l", [-10.5, 7, 7], [9, 2.5, 5], "pillow")
+    b.add("frame", "pillow_r", [1.5, 7, 7], [9, 2.5, 5], "pillow")
+    b.add("frame", "blanket", [-12, 7, -12], [24, 1, 17], "blanket")
+    b.add("frame", "star_l", [-11, 12.5, 11.8], [1.6, 1.6, 0.6], "accent")
+    b.add("frame", "star_r", [9.4, 12.5, 11.8], [1.6, 1.6, 0.6], "accent")
     assemble(sid, b, [{"name": sid, "parent": None, "pivot": [0, 0, 0]},
                       {"name": "frame", "parent": sid, "pivot": [0, 0, 0]}], rel, src)
-    rideable_wiring(sid, [{"position": [-0.5, 0.55, 0], "lock_rider_rotation": 0},
-                          {"position": [0.5, 0.55, 0], "lock_rider_rotation": 0}], 1.8, 0.7)
+    rideable_wiring(sid, [{"position": [-0.5, 0.55, -0.2], "lock_rider_rotation": 0},
+                          {"position": [0.5, 0.55, -0.2], "lock_rider_rotation": 0}], 1.8, 0.7)
 
 
 def main():

@@ -1,7 +1,7 @@
 {
   "identifier": "mine_structure:unicorn_bathtub",
   "content_type": "furniture_entity",
-  "mechanic": "variant_light",
+  "mechanic": "variant_fill",
   "behavior_pack": {
     "entity": "../../addon/behavior_pack/entities/unicorn_bathtub.entity.json"
   },

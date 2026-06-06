@@ -17,7 +17,7 @@
             {
               "interact_text": "action.interact.fill_water",
               "swing": true,
-              "play_sounds": "random.click",
+              "play_sounds": "random.splash",
               "on_interact": {
                 "event": "mine_structure:turn_light_on",
                 "target": "self"
@@ -35,7 +35,7 @@
             {
               "interact_text": "action.interact.drain_water",
               "swing": true,
-              "play_sounds": "random.click",
+              "play_sounds": "random.splash",
               "on_interact": {
                 "event": "mine_structure:turn_light_off",
                 "target": "self"
@@ -54,7 +54,7 @@
       },
       "minecraft:collision_box": {
         "width": 1.1,
-        "height": 0.7
+        "height": 0.95
       },
       "minecraft:health": {
         "value": 12,

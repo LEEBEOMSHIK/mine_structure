@@ -43,7 +43,7 @@ KIDS = {
     "unicorn_arcade": {"mechanic": "variant_light"},
     "unicorn_vanity": {"mechanic": "variant_light"},
     "unicorn_king_bed": {"mechanic": "rideable_simple"},
-    "unicorn_bathtub": {"mechanic": "variant_light"},
+    "unicorn_bathtub": {"mechanic": "variant_fill"},
     "unicorn_oven": {"mechanic": "variant_light"},
     "unicorn_microwave": {"mechanic": "variant_light"},
     "unicorn_toaster": {"mechanic": "script_give"},
@@ -955,6 +955,21 @@ def validate_kids(sid, config, failures):
         for snippet in (expected_identifier, "storeOrRetrieveItem"):
             if snippet not in script:
                 failures.append(f"scripts/main.js is missing {snippet} for {sid}")
+
+    elif mechanic == "variant_fill":
+        groups = entity.get("component_groups", {})
+        for state, value in (("mine_structure:light_off", 0), ("mine_structure:light_on", 1)):
+            if groups.get(state, {}).get("minecraft:variant", {}).get("value") != value:
+                failures.append(f"{sid} {state} does not set variant {value}")
+        if "light_ctrl" not in desc.get("scripts", {}).get("animate", []):
+            failures.append(f"{sid} client scripts.animate is missing light_ctrl")
+        anim_path = RESOURCE_PACK / "animations" / f"{sid}.animation.json"
+        if anim_path.is_file():
+            on = load_json(anim_path).get("animations", {}).get(f"animation.{sid}.on", {})
+            if "glow" not in str(on.get("bones", {})):
+                failures.append(f"{sid} on animation does not fill the glow bone")
+        else:
+            failures.append(f"{sid} is missing animation file")
 
     elif mechanic == "boat":
         rideable = components.get("minecraft:rideable")

@@ -175,40 +175,62 @@ def build_car():
         ("window", (158, 212, 240), "solid"),
         ("wheel", (88, 82, 108), "solid"),
         ("light", (255, 230, 140), "solid"),
+        ("trim", (245, 210, 120), "solid"),
+        ("tail", (228, 80, 96), "solid"),
         ("rainbow", None, "horn"),
     ]
     atlas_rel, src, cm = make_atlas(sid, specs, 6201)
     b = Builder(cm)
     B = "body"
-    # chassis + cabin + hood (front = -Z)
-    b.add(B, "chassis", [-7, 2.5, -12], [14, 4, 24], "body")
-    b.add(B, "hood", [-6, 5.5, -12], [12, 2, 9], "body")
-    b.add(B, "cabin", [-6, 6.5, -3], [12, 5, 11], "body")
-    b.add(B, "roof", [-6.5, 11.5, -2], [13, 1, 9], "body")
-    b.add(B, "windshield", [-5.5, 7.5, -3.6], [11, 4.5, 1], "window")
-    b.add(B, "window_l", [-6.4, 7.5, -2], [0.8, 4, 9], "window")
-    b.add(B, "window_r", [5.6, 7.5, -2], [0.8, 4, 9], "window")
-    # headlight "eyes" on the front
-    b.add(B, "light_l", [-5, 5.5, -12.4], [2.2, 2.2, 0.6], "light")
-    b.add(B, "light_r", [2.8, 5.5, -12.4], [2.2, 2.2, 0.6], "light")
-    # seat
-    b.add(B, "seat", [-3, 7, 0.5], [6, 1, 4], "window")
+    # chassis + side skirt + cabin + hood/trunk (front = -Z)
+    b.add(B, "chassis", [-7, 2.5, -13], [14, 3.5, 26], "body")
+    b.add(B, "skirt", [-7.2, 2, -11], [14.4, 1, 22], "trim")
+    b.add(B, "hood", [-6, 5.5, -13], [12, 2, 8], "body")
+    b.add(B, "trunk", [-6, 5.5, 8], [12, 2.5, 5], "body")
+    b.add(B, "cabin", [-6, 6, -4.5], [12, 5, 12], "body")
+    b.add(B, "roof", [-6.5, 11, -3.5], [13, 1, 10], "body")
+    b.add(B, "windshield", [-5.5, 7, -4.6], [11, 4, 0.6], "window")
+    b.add(B, "rearwindow", [-5.5, 7, 7], [11, 4, 0.6], "window")
+    b.add(B, "window_l", [-6.3, 7, -3.5], [0.6, 4, 10.5], "window")
+    b.add(B, "window_r", [5.7, 7, -3.5], [0.6, 4, 10.5], "window")
+    b.add(B, "door_l", [-6.25, 3, -3], [0.4, 2.6, 8], "trim")
+    b.add(B, "door_r", [5.85, 3, -3], [0.4, 2.6, 8], "trim")
+    # fenders over each wheel
+    for nm, fx, fz in [("ff_l", -7.4, -9.5), ("ff_r", 5.6, -9.5), ("fr_l", -7.4, 4.5), ("fr_r", 5.6, 4.5)]:
+        b.add(B, nm, [fx, 5, fz], [1.8, 1, 5], "body")
+    # headlights + grille smile + front bumper
+    b.add(B, "light_l", [-5, 5.5, -13.3], [2.2, 2, 0.5], "light")
+    b.add(B, "light_r", [2.8, 5.5, -13.3], [2.2, 2, 0.5], "light")
+    b.add(B, "grille", [-3, 4, -13.3], [6, 1, 0.4], "trim")
+    b.add(B, "bumper_f", [-6.5, 3, -13.5], [13, 1.6, 1], "trim")
+    # taillights + rear bumper
+    b.add(B, "tail_l", [-5, 6, 12.9], [2.2, 1.6, 0.5], "tail")
+    b.add(B, "tail_r", [2.8, 6, 12.9], [2.2, 1.6, 0.5], "tail")
+    b.add(B, "bumper_b", [-6.5, 3, 12.5], [13, 1.6, 1], "trim")
+    b.add(B, "plate", [-1.5, 3.4, -13.6], [3, 1, 0.2], "window")
+    # rear spoiler
+    b.add(B, "spoiler", [-5, 11.2, 11.5], [10, 0.5, 2], "trim")
+    b.add(B, "spoiler_l", [-4.5, 10, 11.8], [0.8, 1.4, 0.8], "body")
+    b.add(B, "spoiler_r", [3.7, 10, 11.8], [0.8, 1.4, 0.8], "body")
+    # interior: seat + steering wheel
+    b.add(B, "seat", [-3, 7, 0], [6, 1, 4], "trim")
+    b.add(B, "steering", [-1.2, 7.5, -3], [2.4, 2.4, 0.4], "wheel")
     # unicorn horn on the hood
-    b.add(B, "horn1", [-0.9, 7.5, -9], [1.8, 2, 1.8], "rainbow")
-    b.add(B, "horn2", [-0.6, 9.5, -8.8], [1.2, 1.6, 1.2], "rainbow")
-    # four wheels (own bones to spin)
-    b.add("wheel_fl", "wheel_fl", [-8.5, 0, -9], [2, 4, 4], "wheel")
-    b.add("wheel_fr", "wheel_fr", [6.5, 0, -9], [2, 4, 4], "wheel")
-    b.add("wheel_bl", "wheel_bl", [-8.5, 0, 5], [2, 4, 4], "wheel")
-    b.add("wheel_br", "wheel_br", [6.5, 0, 5], [2, 4, 4], "wheel")
+    b.add(B, "horn1", [-0.9, 7.5, -10], [1.8, 2, 1.8], "rainbow")
+    b.add(B, "horn2", [-0.6, 9.5, -9.8], [1.2, 1.6, 1.2], "rainbow")
+    # four wheels (own bones to spin) with hubcaps
+    for nm, wx, wz in [("wheel_fl", -8.5, -9.5), ("wheel_fr", 6.5, -9.5),
+                       ("wheel_bl", -8.5, 4.5), ("wheel_br", 6.5, 4.5)]:
+        b.add(nm, nm, [wx, 0, wz], [2, 4.5, 4.5], "wheel")
+        b.add(nm, nm + "_cap", [wx - 0.2 if wx < 0 else wx + 2, 1.4, wz + 1.4], [0.3, 1.7, 1.7], "trim")
 
     bone_defs = [
         {"name": sid, "parent": None, "pivot": [0, 0, 0]},
         {"name": B, "parent": sid, "pivot": [0, 0, 0]},
-        {"name": "wheel_fl", "parent": sid, "pivot": [-7.5, 2, -7]},
-        {"name": "wheel_fr", "parent": sid, "pivot": [7.5, 2, -7]},
-        {"name": "wheel_bl", "parent": sid, "pivot": [-7.5, 2, 7]},
-        {"name": "wheel_br", "parent": sid, "pivot": [7.5, 2, 7]},
+        {"name": "wheel_fl", "parent": sid, "pivot": [-7.5, 2.25, -7.25]},
+        {"name": "wheel_fr", "parent": sid, "pivot": [7.5, 2.25, -7.25]},
+        {"name": "wheel_bl", "parent": sid, "pivot": [-7.5, 2.25, 6.75]},
+        {"name": "wheel_br", "parent": sid, "pivot": [7.5, 2.25, 6.75]},
     ]
     assemble(sid, b, bone_defs, atlas_rel, src)
 

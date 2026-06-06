@@ -125,57 +125,100 @@ def build_fireplace():
              ("accent", (244, 160, 200), "solid")]
     rel, src, cm = make_atlas(sid, specs, 6802)
     b = Builder(cm)
+    # surround (with brick courses via accent stripes) + recessed firebox
     b.add("body", "body", [-7, 0, -3], [14, 12, 6], "shell")
-    b.add("body", "inner", [-4.5, 1, -3.2], [9, 7, 0.5], "bezel")
-    b.add("body", "hearth", [-5, 0, -3.2], [10, 1, 3], "bezel")
-    b.add("body", "log1", [-3.5, 1, -2], [3, 1.4, 2.5], "log")
-    b.add("body", "log2", [0.5, 1, -2], [3, 1.4, 2.5], "log")
-    b.add("body", "mantel", [-7.5, 12, -3.5], [15, 1.5, 7], "shell")
-    b.add("body", "trim", [-7, 11.4, -3], [14, 0.6, 0.6], "accent")
-    b.add("glow", "flame1", [-3.5, 1.5, -2.2], [7, 5, 1], "flame")
-    b.add("glow", "flame2", [-2, 4.5, -2.2], [4, 3, 1], "flame")
+    b.add("body", "brick1", [-7, 3.4, -3.05], [14, 0.4, 0.1], "accent")
+    b.add("body", "brick2", [-7, 7.4, -3.05], [14, 0.4, 0.1], "accent")
+    b.add("body", "opening", [-4.5, 1, -3.2], [9, 8, 0.5], "bezel")
+    b.add("body", "firebox", [-4.5, 1, -3.0], [9, 8, 2.6], "bezel")
+    b.add("body", "hearth", [-5.5, 0, -3.4], [11, 1, 3.4], "bezel")
+    # andirons + logs (stacked)
+    b.add("body", "andiron_l", [-3.8, 1, -2], [0.6, 2, 2.4], "log")
+    b.add("body", "andiron_r", [3.2, 1, -2], [0.6, 2, 2.4], "log")
+    b.add("body", "log1", [-3.5, 1.2, -2], [3, 1.4, 2.4], "log")
+    b.add("body", "log2", [0.5, 1.2, -2], [3, 1.4, 2.4], "log")
+    b.add("body", "log3", [-1.6, 2.4, -1.8], [3.2, 1.4, 2], "log")
+    # mantel + decor
+    b.add("body", "mantel", [-7.5, 11.8, -3.6], [15, 1.5, 7], "shell")
+    b.add("body", "mantel_trim", [-7.5, 11.4, -3.6], [15, 0.5, 0.5], "accent")
+    b.add("body", "vase_l", [-6, 13.3, -2.5], [1.4, 2, 1.4], "accent")
+    b.add("body", "vase_r", [4.6, 13.3, -2.5], [1.2, 1.6, 1.2], "log")
+    # flames (glow bone): layered flames + embers
+    b.add("glow", "ember", [-4, 1.1, -2], [8, 0.8, 2.2], "flame")
+    b.add("glow", "flame1", [-3.5, 1.5, -2.1], [7, 4.5, 1.4], "flame")
+    b.add("glow", "flame2", [-2.2, 4.5, -2.1], [4.4, 3, 1.2], "flame")
+    b.add("glow", "flame3", [-1, 6.8, -2.1], [2, 2, 1], "flame")
     assemble(sid, b, [{"name": sid, "parent": None, "pivot": [0, 0, 0]},
                       {"name": "body", "parent": sid, "pivot": [0, 0, 0]},
-                      {"name": "glow", "parent": sid, "pivot": [0, 3, -2]}], rel, src)
+                      {"name": "glow", "parent": sid, "pivot": [0, 2, -2]}], rel, src)
     variant_light_wiring(sid, "action.interact.light_fire", "action.interact.put_out", 1.1, 1.1)
 
 
 def build_fan():
     sid = "unicorn_fan"
     specs = [("shell", (216, 200, 240), "solid"), ("accent", (245, 210, 120), "solid"),
-             ("blade", (190, 226, 250), "solid"), ("hub", (244, 160, 200), "solid")]
+             ("blade", (190, 226, 250), "solid"), ("hub", (244, 160, 200), "solid"),
+             ("cage", (228, 224, 240), "solid")]
     rel, src, cm = make_atlas(sid, specs, 6803)
     b = Builder(cm)
-    b.add("body", "base", [-2.5, 0, -2.5], [5, 1, 5], "shell")
-    b.add("body", "pole", [-0.75, 1, -0.75], [1.5, 8, 1.5], "shell")
-    b.add("body", "motor", [-1.5, 9, -1.5], [3, 2.4, 2], "accent")
-    # blades (rotate around z); a "+" of two thin slats reads as 4 blades
-    b.add("blades", "blade_v", [-0.5, 6.5, -2.4], [1, 6.5, 0.3], "blade")
-    b.add("blades", "blade_h", [-3.2, 9.7, -2.4], [6.5, 1, 0.3], "blade")
-    b.add("blades", "hub", [-0.7, 9.4, -2.6], [1.4, 1.4, 0.5], "hub")
+    cx, cy, cz = 0.0, 11.0, -2.3  # fan-head centre (front = -Z)
+    # stand: weighted base + pole + motor housing
+    b.add("body", "base", [-3, 0, -3], [6, 1, 6], "shell")
+    b.add("body", "base_top", [-2, 1, -2], [4, 0.8, 4], "accent")
+    b.add("body", "pole", [-0.7, 1.8, -0.7], [1.4, 7.5, 1.4], "shell")
+    b.add("body", "motor", [-1.8, 9.3, 0], [3.6, 3.2, 2.2], "shell")
+    b.add("body", "motor_cap", [-1.4, 9.7, 2.1], [2.8, 2.4, 0.6], "accent")
+    # round safety cage: a dense ring (segments touch) + cross bars (spokes)
+    import math
+    for i in range(20):
+        a = math.radians(i * 18)
+        bx = cx - 0.55 + 3.5 * math.cos(a)
+        by = cy - 0.55 + 3.5 * math.sin(a)
+        b.add("body", "cage%d" % i, [bx, by, cz - 0.35], [1.1, 1.1, 0.35], "cage")
+    b.add("body", "cage_barh", [cx - 3.8, cy - 0.35, cz - 0.3], [7.6, 0.7, 0.3], "cage")
+    b.add("body", "cage_barv", [cx - 0.35, cy - 3.8, cz - 0.3], [0.7, 7.6, 0.3], "cage")
+    b.add("body", "cage_hub", [cx - 0.8, cy - 0.8, cz - 0.45], [1.6, 1.6, 0.3], "cage")
+    # blades (their own bone; spins around z). 4 pitched blades at 0/90/180/270.
+    for i, ang in enumerate((0, 90, 180, 270)):
+        b.add("blades", "blade%d" % i, [cx - 0.6, cy + 0.3, cz - 0.1], [1.2, 3.2, 0.3],
+              "blade", rotation=[18, 0, ang], pivot=[cx, cy, cz])
+    b.add("blades", "hub", [cx - 0.9, cy - 0.9, cz - 0.2], [1.8, 1.8, 0.6], "hub")
     assemble(sid, b, [{"name": sid, "parent": None, "pivot": [0, 0, 0]},
                       {"name": "body", "parent": sid, "pivot": [0, 0, 0]},
-                      {"name": "blades", "parent": sid, "pivot": [0, 9.7, -2.3]}], rel, src)
-    variant_spin_wiring(sid, "action.interact.fan_on", "action.interact.fan_off", 0.6, 1.2)
+                      {"name": "blades", "parent": sid, "pivot": [cx, cy, cz]}], rel, src)
+    variant_spin_wiring(sid, "action.interact.fan_on", "action.interact.fan_off", 0.6, 1.4)
 
 
 def build_bookshelf():
     sid = "unicorn_bookshelf"
     specs = [("shell", (210, 190, 230), "solid"), ("plank", (236, 210, 180), "solid"),
              ("book_a", (244, 140, 170), "solid"), ("book_b", (150, 210, 240), "solid"),
-             ("book_c", (160, 224, 170), "solid"), ("book_d", (245, 210, 120), "solid")]
+             ("book_c", (160, 224, 170), "solid"), ("book_d", (245, 210, 120), "solid"),
+             ("plant", (120, 200, 150), "solid")]
     rel, src, cm = make_atlas(sid, specs, 6804)
     b = Builder(cm)
-    b.add("body", "frame", [-6, 0, -3], [12, 16, 6], "shell")
-    b.add("body", "back", [-5.5, 0.5, 2.3], [11, 15, 0.4], "plank")
+    # carcass: sides + top crown + base + back panel
+    b.add("body", "side_l", [-6, 0, -3], [1, 17, 6], "shell")
+    b.add("body", "side_r", [5, 0, -3], [1, 17, 6], "shell")
+    b.add("body", "bottom", [-5, 0, -3], [10, 1.2, 6], "shell")
+    b.add("body", "crown", [-6.5, 17, -3.3], [13, 1.2, 6.6], "shell")
+    b.add("body", "crown_trim", [-6.5, 16.6, -3.3], [13, 0.4, 0.4], "book_d")
+    b.add("body", "back", [-5, 1, 2.4], [10, 16, 0.3], "plank")
     books = ["book_a", "book_b", "book_c", "book_d"]
-    for s, shelf_y in enumerate((1, 6, 11)):
-        b.add("body", "shelf%d" % s, [-5.5, shelf_y - 0.6, -3], [11, 0.6, 5.5], "plank")
+    heights = [3.6, 4.2, 3.0, 3.8, 4.0, 3.2, 4.2, 3.4, 3.9]
+    for s, shelf_y in enumerate((1.2, 5.2, 9.2, 13.2)):
+        b.add("body", "shelf%d" % s, [-5, shelf_y - 0.5, -3], [10, 0.6, 5.5], "plank")
         for i in range(9):
-            b.add("body", "book_%d_%d" % (s, i), [-5.2 + i * 1.15, shelf_y, -2], [1, 4, 2.5], books[(s + i) % 4])
+            h = heights[(s * 2 + i) % len(heights)]
+            b.add("body", "book_%d_%d" % (s, i), [-4.8 + i * 1.05, shelf_y, -2], [0.95, h, 2.6],
+                  books[(s + i) % 4])
+    # top decoration: a little potted plant + a clock
+    b.add("body", "pot", [-4.5, 17.2, -0.5], [2, 1.4, 2], "book_d")
+    b.add("body", "plant", [-4.2, 18.6, -0.2], [1.4, 2, 1.4], "plant")
+    b.add("body", "clock", [2.5, 17.2, -0.5], [2, 2, 0.6], "book_b")
     assemble(sid, b, [{"name": sid, "parent": None, "pivot": [0, 0, 0]},
                       {"name": "body", "parent": sid, "pivot": [0, 0, 0]}], rel, src)
-    script_entity(sid, "script_store", 0.9, 1.1)
+    script_entity(sid, "script_store", 0.9, 1.2)
 
 
 def build_wardrobe():

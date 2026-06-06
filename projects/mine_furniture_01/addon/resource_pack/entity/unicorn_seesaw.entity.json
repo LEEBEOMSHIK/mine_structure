@@ -12,6 +12,14 @@
       "geometry": {
         "default": "geometry.unicorn_seesaw"
       },
+      "animations": {
+        "tilt": "animation.unicorn_seesaw.tilt"
+      },
+      "scripts": {
+        "animate": [
+          "tilt"
+        ]
+      },
       "render_controllers": [
         "controller.render.unicorn_seesaw"
       ]
