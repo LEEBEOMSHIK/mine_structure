@@ -50,6 +50,7 @@
 | `mine_structure:unicorn_swing` 외 | furniture entity | 놀이터(그네/미끄럼틀/시소), in-game test 대기 | `furniture/unicorn_playground.md` |
 | `mine_structure:unicorn_sofa` 외 | furniture entity | 거실(소파/벽난로/선풍기/책장/옷장/피아노), in-game test 대기 | `furniture/unicorn_living_furniture.md` |
 | `mine_structure:unicorn_cruise` | vehicle entity | 타고 모는 크루즈 보트(물 위 운전, 4인), in-game test 대기 | `furniture/unicorn_cruise.md` |
+| `mine_structure:unicorn_transform_wand` | tool item | 변신 마법봉(동물→랜덤 동물), in-game test 대기 | `items/unicorn_transform_wand.md` |
 | `mine_structure:unicorn_horn_headband` | wearable | 입는 코스튬(뿔 머리띠), in-game test 대기(실험) | `wearables/unicorn_costume.md` |
 | `mine_structure:unicorn_elytra` | wearable glider | 커스텀 엘리트라(바닐라 별개, 활공+접힘/펴짐), in-game test 대기(실험) | `wearables/unicorn_costume.md` |
 

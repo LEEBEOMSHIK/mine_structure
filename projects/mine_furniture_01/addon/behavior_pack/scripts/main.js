@@ -19,6 +19,13 @@ const WARDROBE_ID = "mine_structure:unicorn_wardrobe";
 const WARDROBE_PROPERTY = "wardrobe_items";
 const PIANO_ID = "mine_structure:unicorn_piano";
 const PIANO_PITCHES = [0.6, 0.7, 0.8, 0.95, 1.1, 1.25, 1.5, 1.8];
+const TRANSFORM_WAND_ID = "mine_structure:unicorn_transform_wand";
+const TRANSFORM_ANIMALS = [
+  "minecraft:pig", "minecraft:cow", "minecraft:sheep", "minecraft:chicken",
+  "minecraft:rabbit", "minecraft:cat", "minecraft:wolf", "minecraft:fox",
+  "minecraft:horse", "minecraft:llama", "minecraft:goat", "minecraft:mooshroom",
+  "minecraft:ocelot", "minecraft:panda", "minecraft:turtle", "minecraft:parrot",
+];
 const GACHA_ID = "mine_structure:unicorn_gacha_machine";
 const GACHA_REWARDS = [
   "minecraft:cake",
@@ -331,9 +338,36 @@ function toggleSinkWater(sink) {
   sink.dimension.playSound(next ? "bucket.fill_water" : "bucket.empty_water", sink.location);
 }
 
+function transformAnimal(target) {
+  const dimension = target.dimension;
+  const location = target.location;
+  let next = target.typeId;
+  while (next === target.typeId) {
+    next = TRANSFORM_ANIMALS[Math.floor(Math.random() * TRANSFORM_ANIMALS.length)];
+  }
+  try {
+    dimension.spawnParticle("minecraft:totem_particle", { x: location.x, y: location.y + 0.8, z: location.z });
+  } catch (error) { /* cosmetic */ }
+  try {
+    dimension.playSound("random.orb", location);
+  } catch (error) { /* cosmetic */ }
+  dimension.spawnEntity(next, location);
+  target.remove();
+}
+
 world.afterEvents.playerInteractWithEntity.subscribe((event) => {
   const target = event.target;
   if (!target) {
+    return;
+  }
+
+  // transform wand: zap an animal -> a random different animal
+  if (event.itemStack && event.itemStack.typeId === TRANSFORM_WAND_ID) {
+    if (TRANSFORM_ANIMALS.includes(target.typeId)) {
+      system.run(() => {
+        transformAnimal(target);
+      });
+    }
     return;
   }
 

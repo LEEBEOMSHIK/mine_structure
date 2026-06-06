@@ -69,7 +69,10 @@ FOODS = {
 }
 
 TOOLS = {
-    "unicorn_wand": {"identifier": "mine_structure:unicorn_wand", "icon_shortname": "unicorn_wand"},
+    "unicorn_wand": {"identifier": "mine_structure:unicorn_wand", "icon_shortname": "unicorn_wand",
+                     "script_marker": "itemUse"},
+    "unicorn_transform_wand": {"identifier": "mine_structure:unicorn_transform_wand",
+                               "icon_shortname": "unicorn_transform_wand", "script_marker": "transformAnimal"},
 }
 
 HELD_ITEMS = {
@@ -1224,7 +1227,7 @@ def validate_tool(tool_id, config, failures):
             failures.append(f"item_texture.json is missing texture_data.{icon_shortname}")
 
     script = (BEHAVIOR_PACK / "scripts" / "main.js").read_text(encoding="utf-8")
-    for snippet in (expected_identifier, "itemUse"):
+    for snippet in (expected_identifier, config.get("script_marker", "itemUse")):
         if snippet not in script:
             failures.append(f"scripts/main.js is missing {snippet} for {tool_id}")
 

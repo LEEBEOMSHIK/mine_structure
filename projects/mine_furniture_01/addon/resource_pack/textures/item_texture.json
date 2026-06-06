@@ -31,6 +31,9 @@
     },
     "unicorn_phone_item": {
       "textures": "textures/items/unicorn_phone_item"
+    },
+    "unicorn_transform_wand": {
+      "textures": "textures/items/unicorn_transform_wand"
     }
   }
 }

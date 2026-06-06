@@ -122,12 +122,32 @@ def wand():
     save(img, "unicorn_wand.png")
 
 
+def transform_wand():
+    img = new()
+    # purple handle (diagonal)
+    for i in range(7):
+        x, y = 3 + i, 14 - i
+        img.putpixel((x, y), (170, 120, 210, 255))
+        if x + 1 < 16:
+            img.putpixel((x + 1, y), (130, 88, 170, 255))
+    # big 5-point rainbow star near the top
+    star = [(10, 1), (9, 3), (11, 3), (7, 4), (13, 4), (8, 5), (10, 5), (12, 5),
+            (9, 6), (11, 6), (8, 7), (12, 7), (10, 4)]
+    for i, (x, y) in enumerate(star):
+        if 0 <= x < 16 and 0 <= y < 16:
+            img.putpixel((x, y), RAINBOW[i % len(RAINBOW)])
+    for sx, sy in [(6, 2), (13, 1), (5, 6), (14, 6)]:
+        img.putpixel((sx, sy), WHITE)
+    save(img, "unicorn_transform_wand.png")
+
+
 def main():
     cupcake()
     lollipop()
     rainbow_drink()
     star_candy()
     wand()
+    transform_wand()
 
 
 if __name__ == "__main__":

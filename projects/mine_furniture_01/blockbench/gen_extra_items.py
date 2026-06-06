@@ -46,7 +46,8 @@ FOODS = [
 
 ICONS = ["unicorn_horn_blade", "unicorn_cookie", "unicorn_cupcake", "unicorn_lollipop",
          "unicorn_rainbow_drink", "unicorn_star_candy", "unicorn_wand",
-         "unicorn_horn_headband", "unicorn_elytra", "unicorn_phone_item"]
+         "unicorn_horn_headband", "unicorn_elytra", "unicorn_phone_item",
+         "unicorn_transform_wand"]
 
 
 def main():
@@ -65,6 +66,21 @@ def main():
                 "minecraft:max_stack_size": 1,
                 "minecraft:hand_equipped": True,
                 "minecraft:cooldown": {"category": "unicorn_wand", "duration": 2.0},
+            },
+        },
+    })
+
+    # transform wand (not a food): right-click an animal to morph it (scripts/main.js)
+    write(os.path.join(BP_ITEMS, "unicorn_transform_wand.item.json"), {
+        "format_version": "1.20.10",
+        "minecraft:item": {
+            "description": {"identifier": "mine_structure:unicorn_transform_wand", "menu_category": {"category": "equipment"}},
+            "components": {
+                "minecraft:display_name": {"value": "변신 마법봉"},
+                "minecraft:icon": {"texture": "unicorn_transform_wand"},
+                "minecraft:max_stack_size": 1,
+                "minecraft:hand_equipped": True,
+                "minecraft:cooldown": {"category": "unicorn_transform_wand", "duration": 1.0},
             },
         },
     })
