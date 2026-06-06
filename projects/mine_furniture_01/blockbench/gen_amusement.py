@@ -8,6 +8,7 @@ Reuses gen_kids_furniture (Builder/make_atlas/assemble) and gen_room_furniture
 (common_components/render_controller/resources/write); ferris wheel reuses
 gen_living_furniture.variant_spin_wiring (the "blades" spin-toggle).
 """
+import math
 import os
 
 from gen_kids_furniture import Builder, assemble, make_atlas
@@ -115,8 +116,16 @@ def build_ferris():
               rotation=[0, 0, ang], pivot=[0, HUB_Y, 0])
         b.add("blades", "cabin%d" % i, [-2, HUB_Y + R - 1.0, -1.6], [4, 3, 3.2], cabins[i % 3],
               rotation=[0, 0, ang], pivot=[0, HUB_Y, 0])
-        b.add("blades", "rim%d" % i, [-1.2, HUB_Y + R - 0.6, -0.6], [2.4, 1, 1.2], "frame",
-              rotation=[0, 0, ang - 22.5], pivot=[0, HUB_Y, 0])
+    # outer rim: tangential bars joining each pair of adjacent spoke ends into an octagon
+    for i in range(8):
+        a0, a1 = math.radians(i * 45), math.radians((i + 1) * 45)
+        p0 = (R * math.sin(a0), HUB_Y + R * math.cos(a0))
+        p1 = (R * math.sin(a1), HUB_Y + R * math.cos(a1))
+        mx, my = (p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2
+        length = math.hypot(p1[0] - p0[0], p1[1] - p0[1]) + 0.8
+        deg = math.degrees(math.atan2(p1[1] - p0[1], p1[0] - p0[0]))
+        b.add("blades", "rim%d" % i, [mx - length / 2, my - 0.5, -0.7], [length, 1.0, 1.4], "frame",
+              rotation=[0, 0, deg], pivot=[mx, my, 0])
     b.add("blades", "star", [-1, HUB_Y - 1, 1.5], [2, 2, 0.8], "rainbow")
     assemble(sid, b, [{"name": sid, "parent": None, "pivot": [0, 0, 0]},
                       {"name": "base", "parent": sid, "pivot": [0, 0, 0]},
@@ -142,9 +151,9 @@ def build_balloon():
         b.add("bob", "env%d" % i, [x0, y0, x0], [w, (layers[i + 1][1] - y0) if i + 1 < len(layers) else 2.5, w], color)
     b.add("bob", "neck", [-2, 11.5, -2], [4, 3, 4], "balloon_a")
     b.add("bob", "finial", [-1, 32.5, -1], [2, 2, 2], "rainbow")
-    # ropes from the envelope neck down to the basket
+    # ropes from the basket rim up into the envelope body (reach y14 so they touch)
     for rx, rz in ((-3.2, -3.2), (2.4, -3.2), (-3.2, 2.4), (2.4, 2.4)):
-        b.add("bob", "rope_%d_%d" % (int(rx), int(rz)), [rx, 5, rz], [0.6, 7, 0.6], "rope")
+        b.add("bob", "rope_%d_%d" % (int(rx), int(rz)), [rx, 5, rz], [0.6, 9.5, 0.6], "rope")
     # basket
     b.add("bob", "basket", [-4, 0, -4], [8, 5, 8], "basket")
     b.add("bob", "basket_rim", [-4.3, 4.6, -4.3], [8.6, 0.8, 8.6], "rope")
