@@ -54,6 +54,10 @@
 | `mine_structure:unicorn_carousel` | furniture entity | 회전목마(탑승 4인 + 항상 회전), in-game test 대기 | `furniture/unicorn_amusement.md` |
 | `mine_structure:unicorn_ferris_wheel` | furniture entity | 관람차(우클릭 회전 토글), in-game test 대기 | `furniture/unicorn_amusement.md` |
 | `mine_structure:unicorn_balloon` | furniture entity | 열기구(탑승 1인 + 둥실), in-game test 대기 | `furniture/unicorn_amusement.md` |
+| `mine_structure:unicorn_castle_tent` | furniture entity | 성 텐트(들어가 앉기, 1인), in-game test 대기 | `furniture/unicorn_imagination.md` |
+| `mine_structure:unicorn_dollhouse` | furniture entity | 인형의 집(창문 불빛 토글), in-game test 대기 | `furniture/unicorn_imagination.md` |
+| `mine_structure:unicorn_toy_box` | furniture entity | 장난감 상자(보관/꺼내기), in-game test 대기 | `furniture/unicorn_imagination.md` |
+| `mine_structure:unicorn_easel` | furniture entity | 이젤(캔버스 그림 토글), in-game test 대기 | `furniture/unicorn_imagination.md` |
 | `mine_structure:unicorn_horn_headband` | wearable | 입는 코스튬(뿔 머리띠), in-game test 대기(실험) | `wearables/unicorn_costume.md` |
 | `mine_structure:unicorn_elytra` | wearable glider | 커스텀 엘리트라(바닐라 별개, 활공+접힘/펴짐), in-game test 대기(실험) | `wearables/unicorn_costume.md` |
 

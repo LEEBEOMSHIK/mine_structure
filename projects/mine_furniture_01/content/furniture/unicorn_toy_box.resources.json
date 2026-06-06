@@ -1,0 +1,21 @@
+{
+  "identifier": "mine_structure:unicorn_toy_box",
+  "content_type": "furniture_entity",
+  "mechanic": "script_store",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_toy_box.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_toy_box.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_toy_box.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_toy_box/unicorn_toy_box_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_toy_box.render_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_toy_box.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}

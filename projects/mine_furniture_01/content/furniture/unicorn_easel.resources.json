@@ -1,0 +1,23 @@
+{
+  "identifier": "mine_structure:unicorn_easel",
+  "content_type": "furniture_entity",
+  "mechanic": "variant_light",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_easel.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_easel.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_easel.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_easel/unicorn_easel_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_easel.render_controllers.json",
+    "animation": "../../addon/resource_pack/animations/unicorn_easel.animation.json",
+    "animation_controller": "../../addon/resource_pack/animation_controllers/unicorn_easel.animation_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_easel.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}

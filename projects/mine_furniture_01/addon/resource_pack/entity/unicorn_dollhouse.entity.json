@@ -1,0 +1,30 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_dollhouse",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_dollhouse/unicorn_dollhouse_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_dollhouse"
+      },
+      "animations": {
+        "on": "animation.unicorn_dollhouse.on",
+        "off": "animation.unicorn_dollhouse.off",
+        "light_ctrl": "controller.animation.unicorn_dollhouse.light"
+      },
+      "scripts": {
+        "animate": [
+          "light_ctrl"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.unicorn_dollhouse"
+      ]
+    }
+  }
+}

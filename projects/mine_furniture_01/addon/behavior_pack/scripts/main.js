@@ -17,6 +17,8 @@ const BOOKSHELF_ID = "mine_structure:unicorn_bookshelf";
 const BOOKSHELF_PROPERTY = "bookshelf_items";
 const WARDROBE_ID = "mine_structure:unicorn_wardrobe";
 const WARDROBE_PROPERTY = "wardrobe_items";
+const TOY_BOX_ID = "mine_structure:unicorn_toy_box";
+const TOY_BOX_PROPERTY = "toy_box_items";
 const PIANO_ID = "mine_structure:unicorn_piano";
 const PIANO_PITCHES = [0.6, 0.7, 0.8, 0.95, 1.1, 1.25, 1.5, 1.8];
 const TRANSFORM_WAND_ID = "mine_structure:unicorn_transform_wand";
@@ -440,6 +442,12 @@ world.afterEvents.playerInteractWithEntity.subscribe((event) => {
   if (target.typeId === WARDROBE_ID) {
     system.run(() => {
       storeOrRetrieveItem(event.player, target, WARDROBE_PROPERTY, 18);
+    });
+  }
+
+  if (target.typeId === TOY_BOX_ID) {
+    system.run(() => {
+      storeOrRetrieveItem(event.player, target, TOY_BOX_PROPERTY, 12);
     });
   }
 

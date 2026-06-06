@@ -1,0 +1,23 @@
+{
+  "identifier": "mine_structure:unicorn_dollhouse",
+  "content_type": "furniture_entity",
+  "mechanic": "variant_light",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_dollhouse.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_dollhouse.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_dollhouse.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_dollhouse/unicorn_dollhouse_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_dollhouse.render_controllers.json",
+    "animation": "../../addon/resource_pack/animations/unicorn_dollhouse.animation.json",
+    "animation_controller": "../../addon/resource_pack/animation_controllers/unicorn_dollhouse.animation_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_dollhouse.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}
