@@ -1,0 +1,23 @@
+{
+  "identifier": "mine_structure:unicorn_transform_wand",
+  "content_type": "held_item",
+  "display_name": "변신 마법봉",
+  "behavior_pack": {
+    "item": "../../addon/behavior_pack/items/unicorn_transform_wand.item.json"
+  },
+  "resource_pack": {
+    "attachable": "../../addon/resource_pack/attachables/unicorn_transform_wand.attachable.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_transform_wand.geo.json",
+    "animation": "../../addon/resource_pack/animations/unicorn_transform_wand.animation.json",
+    "icon": "../../addon/resource_pack/textures/items/unicorn_transform_wand.png",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_transform_wand/unicorn_transform_wand_atlas.png"
+  },
+  "blockbench_source": "../../blockbench/unicorn_transform_wand.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_hand_pose_tuned": false,
+    "in_game_tested": false
+  }
+}

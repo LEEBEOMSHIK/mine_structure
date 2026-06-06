@@ -1,0 +1,46 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:attachable": {
+    "description": {
+      "identifier": "mine_structure:unicorn_transform_wand",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_transform_wand/unicorn_transform_wand_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_transform_wand"
+      },
+      "scripts": {
+        "pre_animation": [
+          "v.main_hand = c.item_slot == 'main_hand';",
+          "v.off_hand = c.item_slot == 'off_hand';"
+        ],
+        "animate": [
+          {
+            "first_person_main_hand": "v.main_hand && c.is_first_person"
+          },
+          {
+            "third_person_main_hand": "v.main_hand && !c.is_first_person"
+          },
+          {
+            "first_person_off_hand": "v.off_hand && c.is_first_person"
+          },
+          {
+            "third_person_off_hand": "v.off_hand && !c.is_first_person"
+          }
+        ]
+      },
+      "animations": {
+        "first_person_main_hand": "animation.unicorn_transform_wand.first_person_main_hand",
+        "third_person_main_hand": "animation.unicorn_transform_wand.third_person_main_hand",
+        "first_person_off_hand": "animation.unicorn_transform_wand.first_person_off_hand",
+        "third_person_off_hand": "animation.unicorn_transform_wand.first_person_off_hand"
+      },
+      "render_controllers": [
+        "controller.render.item_default"
+      ]
+    }
+  }
+}

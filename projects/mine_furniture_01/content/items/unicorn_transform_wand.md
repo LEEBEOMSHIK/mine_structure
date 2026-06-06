@@ -5,7 +5,7 @@
 ## Registry
 
 - Identifier: `mine_structure:unicorn_transform_wand`
-- Content type: tool item (2D 아이콘)
+- Content type: tool item (2D 아이콘 + 손에 드는 3D 모델/attachable)
 - Menu category: equipment
 - Status: add-on 파일 생성 완료, 인게임 테스트 대기.
 
@@ -17,13 +17,18 @@
   2. 기존 동물을 `remove`
   3. totem 파티클 + `random.orb` 소리로 변신 연출
 - **대상 제한**: `TRANSFORM_ANIMALS`에 포함된 **바닐라 동물만** 변신한다(플레이어·몬스터·우리 가구/탈것/펫 엔티티는 영향 없음).
+- 3D 모델: 손에 들면 attachable로 입체 막대 마법봉이 보인다. 보라색 손잡이 + 그립 밴드 2개 + 별 헤드(분홍·하늘색 큐브를 45도로 겹쳐 무지개 별 느낌) + 가운데 발광 코어. 손 포즈는 인게임 튜닝 대기.
 
 ## Add-on Files
 
 - `addon/behavior_pack/items/unicorn_transform_wand.item.json`
 - `addon/resource_pack/textures/items/unicorn_transform_wand.png` (16×16 아이콘) + `item_texture.json` 등록
+- `addon/resource_pack/attachables/unicorn_transform_wand.attachable.json` (손에 든 3D 모델)
+- `addon/resource_pack/models/entity/unicorn_transform_wand.geo.json` + `.../textures/entity/unicorn_transform_wand/unicorn_transform_wand_atlas.png`
+- `addon/resource_pack/animations/unicorn_transform_wand.animation.json` (1·3인칭 손 포즈)
 - 로직: `addon/behavior_pack/scripts/main.js`(`TRANSFORM_ANIMALS`, `transformAnimal`)
-- 생성: `blockbench/gen_item_icons.py`, `blockbench/gen_extra_items.py`
+- 생성: `blockbench/gen_item_icons.py`, `blockbench/gen_extra_items.py`(아이콘/item.json), `blockbench/gen_wand_items.py`(3D 모델/attachable)
+- Blockbench 소스: `blockbench/unicorn_transform_wand.bbmodel`
 
 ## 테스트
 

@@ -39,7 +39,7 @@
 | `mine_structure:unicorn_fridge` | furniture entity | 냉장고(문 열기+저장/꺼내기), in-game test 대기 | `furniture/unicorn_vehicles_pets.md` |
 | `mine_structure:unicorn_cookie` | food item | 유니콘 쿠키(허기 회복 + 체력 회복), in-game test 대기 | `foods/unicorn_cookie.md` |
 | `mine_structure:unicorn_cupcake` 외 3종 | food item | 효과 음식 세트(컵케이크/막대사탕/무지개음료/별사탕), in-game test 대기 | `foods/unicorn_treats.md` |
-| `mine_structure:unicorn_wand` | tool item | 마법 지팡이(파티클+부스트), in-game test 대기 | `items/unicorn_wand.md` |
+| `mine_structure:unicorn_wand` | tool item | 마법 지팡이(파티클+부스트, 손에 3D 막대 모델), in-game test 대기 | `items/unicorn_wand.md` |
 | `mine_structure:unicorn_cloud_block` 외 2종 | block | 건축 블록(구름/사탕/별), in-game test 대기 | `blocks/unicorn_blocks.md` |
 | `mine_structure:unicorn_laptop` | furniture entity | 노트북(뚜껑 열기/닫기, 디테일 키보드), in-game test 대기 | `furniture/unicorn_laptop.md` |
 | `mine_structure:unicorn_phone` | furniture entity | 핸드폰(받침대 거치, 화면 켜기/끄기), in-game test 대기 | `furniture/unicorn_phone.md` |
@@ -50,7 +50,7 @@
 | `mine_structure:unicorn_swing` 외 | furniture entity | 놀이터(그네/미끄럼틀/시소), in-game test 대기 | `furniture/unicorn_playground.md` |
 | `mine_structure:unicorn_sofa` 외 | furniture entity | 거실(소파/벽난로/선풍기/책장/옷장/피아노), in-game test 대기 | `furniture/unicorn_living_furniture.md` |
 | `mine_structure:unicorn_cruise` | vehicle entity | 타고 모는 크루즈 보트(물 위 운전, 4인), in-game test 대기 | `furniture/unicorn_cruise.md` |
-| `mine_structure:unicorn_transform_wand` | tool item | 변신 마법봉(동물→랜덤 동물), in-game test 대기 | `items/unicorn_transform_wand.md` |
+| `mine_structure:unicorn_transform_wand` | tool item | 변신 마법봉(동물→랜덤 동물, 손에 3D 막대 모델), in-game test 대기 | `items/unicorn_transform_wand.md` |
 | `mine_structure:unicorn_horn_headband` | wearable | 입는 코스튬(뿔 머리띠), in-game test 대기(실험) | `wearables/unicorn_costume.md` |
 | `mine_structure:unicorn_elytra` | wearable glider | 커스텀 엘리트라(바닐라 별개, 활공+접힘/펴짐), in-game test 대기(실험) | `wearables/unicorn_costume.md` |
 

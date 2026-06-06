@@ -70,9 +70,10 @@ FOODS = {
 
 TOOLS = {
     "unicorn_wand": {"identifier": "mine_structure:unicorn_wand", "icon_shortname": "unicorn_wand",
-                     "script_marker": "itemUse"},
+                     "script_marker": "itemUse", "attachable": True},
     "unicorn_transform_wand": {"identifier": "mine_structure:unicorn_transform_wand",
-                               "icon_shortname": "unicorn_transform_wand", "script_marker": "transformAnimal"},
+                               "icon_shortname": "unicorn_transform_wand", "script_marker": "transformAnimal",
+                               "attachable": True},
 }
 
 HELD_ITEMS = {
@@ -1230,6 +1231,29 @@ def validate_tool(tool_id, config, failures):
     for snippet in (expected_identifier, config.get("script_marker", "itemUse")):
         if snippet not in script:
             failures.append(f"scripts/main.js is missing {snippet} for {tool_id}")
+
+    # optional 3D in-hand model (attachable + geometry + atlas), like the held items
+    if config.get("attachable"):
+        expected_geometry = f"geometry.{tool_id}"
+        attachable_path = RESOURCE_PACK / "attachables" / f"{tool_id}.attachable.json"
+        geometry_path = RESOURCE_PACK / "models" / "entity" / f"{tool_id}.geo.json"
+        atlas_path = RESOURCE_PACK / "textures" / "entity" / tool_id / f"{tool_id}_atlas.png"
+        for path in (attachable_path, geometry_path):
+            if not path.is_file():
+                failures.append(f"missing file for {tool_id}: {path.relative_to(PROJECT_ROOT)}")
+        validate_png(atlas_path, failures, expected_size=(64, 64))
+        if item_path.is_file() and not load_json(item_path).get(
+                "minecraft:item", {}).get("components", {}).get("minecraft:hand_equipped"):
+            failures.append(f"{tool_id} item is missing minecraft:hand_equipped for the 3D model")
+        if attachable_path.is_file():
+            desc = load_json(attachable_path).get("minecraft:attachable", {}).get("description", {})
+            if desc.get("identifier") != expected_identifier:
+                failures.append(f"{tool_id} attachable identifier mismatch")
+            if desc.get("geometry", {}).get("default") != expected_geometry:
+                failures.append(f"{tool_id} attachable geometry mismatch")
+        if geometry_path.is_file() and load_json(geometry_path).get(
+                "minecraft:geometry", [{}])[0].get("description", {}).get("identifier") != expected_geometry:
+            failures.append(f"{tool_id} geometry identifier mismatch")
 
 
 def validate_elytra(failures):

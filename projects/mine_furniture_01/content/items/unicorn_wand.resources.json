@@ -1,0 +1,23 @@
+{
+  "identifier": "mine_structure:unicorn_wand",
+  "content_type": "held_item",
+  "display_name": "유니콘 마법 지팡이",
+  "behavior_pack": {
+    "item": "../../addon/behavior_pack/items/unicorn_wand.item.json"
+  },
+  "resource_pack": {
+    "attachable": "../../addon/resource_pack/attachables/unicorn_wand.attachable.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_wand.geo.json",
+    "animation": "../../addon/resource_pack/animations/unicorn_wand.animation.json",
+    "icon": "../../addon/resource_pack/textures/items/unicorn_wand.png",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_wand/unicorn_wand_atlas.png"
+  },
+  "blockbench_source": "../../blockbench/unicorn_wand.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_hand_pose_tuned": false,
+    "in_game_tested": false
+  }
+}
