@@ -480,6 +480,16 @@ resource pack 측 JSON 연결을 교차검증했다. 결과:
 - 최신 테스트용 패키지:
   - `dist/mine_furniture_01-20260606-220526/mine_furniture_01.mcaddon`
 
+## 4.30 마법봉 보석 코어 + 손에 든 동안 반짝이 파티클 (2026-06-07)
+
+- Blockbench로 모델을 띄워 확인한 뒤(MCP 재연결), 별 중앙의 큰 흰 코어를 **작은 보석(z 45도 마름모, 별 앞으로 돌출)** 으로 교체. 지팡이=청록, 변신봉=자수정 보라. 정면=별 가운데 작은 보석, 측면=입체 돌출로 확인.
+- **손에 든 동안 보석이 반짝이도록** 커스텀 파티클 추가. Bedrock attachable 파티클은 버전 의존이 커서 **Script 주기 spawn** 방식 채택: `scripts/main.js`에 `system.runInterval(...,12)`(약 0.6초)로 메인핸드에 wand가 있는 플레이어의 보석 위치(시선 기준 근사)에 색별 파티클 emit.
+  - 커스텀 파티클 `mine_structure:wand_sparkle_cyan`(청록) / `wand_sparkle_amethyst`(자수정) — 흰색 4점 반짝이 텍스처(`textures/particle/wand_sparkle.png`) 1장을 `particle_appearance_tinting`으로 색만 다르게. 위로 떠오르며 0.9초 후 소멸.
+  - 생성기 `gen_wand_items.py`에 `build_particles()` 추가. RP `particles/` 폴더는 매니페스트 자동 인식.
+- 사용 시(우클릭) 파티클은 기존대로 유지(지팡이=토템, 변신=토템). 검증 PASS.
+- 최신 테스트용 패키지:
+  - `dist/mine_furniture_01-20260607-031542/mine_furniture_01.mcaddon`
+
 ## 5. 다음 작업 (NEXT)
 
 - ~~1. Blockbench MCP 연결 및 tool 확인~~ — 완료 (2026-05-31).
@@ -550,7 +560,7 @@ resource pack 측 JSON 연결을 교차검증했다. 결과:
     - `unicorn_piano` — 우클릭 시 음 소리/노트 파티클.
 23. 인게임에서 `/summon mine_structure:unicorn_cruise`(물 위) — 타고 직접 모는지(WASD 조종), 물에 뜨는지(부력), 좌석 4개 탑승, 깃발 흔들림 확인. 안 되면 navigation/movement/buoyant/controlled_by_player 조합·좌석 위치 보정.
 24. 인게임에서 `/give @s mine_structure:unicorn_transform_wand` — 동물(돼지/소/양 등)을 우클릭하면 랜덤 동물로 바뀌는지(+파티클/소리) 확인(스크립트 → behavior pack + 베타 API). 변신 대상/결과 동물 목록은 `TRANSFORM_ANIMALS`에서 조정.
-25. 인게임에서 두 마법봉을 손에 들어 **3D 막대 모델**이 보이는지(별 헤드 실루엣 포함), 1·3인칭 손 포즈가 자연스러운지 확인. 어색하면 `blockbench/gen_wand_items.py`의 `pose(rot,pos,scale)` 값으로 보정.
+25. 인게임에서 두 마법봉을 손에 들어 **3D 막대 모델**이 보이는지(별 헤드+보석 코어), 1·3인칭 손 포즈가 자연스러운지, **들고 있는 동안 보석에서 반짝이 파티클**(청록/자수정)이 약 0.6초마다 손 근처에 뜨는지 확인. 손 포즈는 `gen_wand_items.py`의 `pose(...)`, 파티클 위치/주기는 `main.js`의 sparkle `runInterval`(오프셋·`12`틱)로 보정.
 
 ## 6. 주의
 

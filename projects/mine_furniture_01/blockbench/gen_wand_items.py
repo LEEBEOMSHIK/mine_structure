@@ -11,11 +11,20 @@ item shows as a 3D wand while held. Hold poses need in-game tuning.
 import json
 import os
 
+from PIL import Image
+
 from gen_kids_furniture import Builder, assemble, make_atlas
 
 BASE = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
 RP = os.path.join(BASE, "addon", "resource_pack")
 CONTENT_ITEMS = os.path.join(BASE, "content", "items")
+
+# sparkle particles emitted from the gem while the wand is held (Script-driven).
+# A single white sparkle texture, tinted per wand to match the gem colour.
+PARTICLES = {
+    "wand_sparkle_cyan": (120, 215, 230),
+    "wand_sparkle_amethyst": (200, 130, 240),
+}
 
 # sid -> (display_name, handle_rgb, grip_rgb, star_a_rgb, star_b_rgb, core_rgb, seed)
 WANDS = {
@@ -140,11 +149,60 @@ def resources(sid, display):
 DISPLAY = {"unicorn_wand": "유니콘 마법 지팡이", "unicorn_transform_wand": "변신 마법봉"}
 
 
+def build_sparkle_texture():
+    # 8x8 four-point white sparkle; per-wand colour comes from particle tinting
+    img = Image.new("RGBA", (8, 8), (0, 0, 0, 0))
+    white = (255, 255, 255, 255)
+    soft = (255, 255, 255, 150)
+    for i in range(8):
+        img.putpixel((4, i), white if 2 <= i <= 5 else soft)
+        img.putpixel((i, 4), white if 2 <= i <= 5 else soft)
+    for x, y in ((3, 3), (4, 3), (3, 4), (4, 4)):
+        img.putpixel((x, y), white)
+    out = os.path.join(RP, "textures", "particle", "wand_sparkle.png")
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    img.save(out)
+    print("wrote", out)
+
+
+def build_particles():
+    build_sparkle_texture()
+    for pid, rgb in PARTICLES.items():
+        color = [round(c / 255, 3) for c in rgb] + [1.0]
+        write(os.path.join(RP, "particles", pid + ".particle.json"), {
+            "format_version": "1.10.0",
+            "particle_effect": {
+                "description": {
+                    "identifier": "mine_structure:" + pid,
+                    "basic_render_parameters": {
+                        "material": "particles_alpha",
+                        "texture": "textures/particle/wand_sparkle",
+                    },
+                },
+                "components": {
+                    "minecraft:emitter_rate_instant": {"num_particles": 1},
+                    "minecraft:emitter_lifetime_once": {"active_time": 0.05},
+                    "minecraft:particle_lifetime_expression": {"max_lifetime": 0.9},
+                    "minecraft:particle_initial_speed": 0.2,
+                    "minecraft:particle_motion_dynamic": {"linear_acceleration": [0, 1.1, 0]},
+                    "minecraft:particle_appearance_billboard": {
+                        "size": [0.09, 0.09],
+                        "facing_camera_mode": "rotate_xyz",
+                        "uv": {"texture_width": 8, "texture_height": 8, "uv": [0, 0], "uv_size": [8, 8]},
+                    },
+                    "minecraft:particle_appearance_tinting": {"color": color},
+                    "minecraft:particle_initial_spin": {"rotation": "Math.random(0, 360)"},
+                },
+            },
+        })
+
+
 def main():
     for sid, cfg in WANDS.items():
         build_model(sid, cfg)
         wiring(sid)
         resources(sid, DISPLAY[sid])
+    build_particles()
 
 
 if __name__ == "__main__":

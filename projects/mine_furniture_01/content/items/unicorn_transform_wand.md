@@ -17,7 +17,8 @@
   2. 기존 동물을 `remove`
   3. totem 파티클 + `random.orb` 소리로 변신 연출
 - **대상 제한**: `TRANSFORM_ANIMALS`에 포함된 **바닐라 동물만** 변신한다(플레이어·몬스터·우리 가구/탈것/펫 엔티티는 영향 없음).
-- 3D 모델: 손에 들면 attachable로 입체 막대 마법봉이 보인다. 보라색 손잡이 + 그립 밴드 2개 + 별 헤드(분홍·하늘색 큐브를 45도로 겹쳐 무지개 별 느낌) + 가운데 발광 코어. 손 포즈는 인게임 튜닝 대기.
+- 3D 모델: 손에 들면 attachable로 입체 막대 마법봉이 보인다. 보라색 손잡이 + 그립 밴드 2개 + 별 헤드(분홍·하늘색 큐브를 45도로 겹쳐 무지개 별 느낌) + 가운데 **작은 자수정 보석**(45도 마름모, 별 앞으로 돌출). 손 포즈는 인게임 튜닝 대기.
+- 반짝임 파티클: 들고 있는 동안 `scripts/main.js`의 `system.runInterval(...,12)`가 약 0.6초마다 보석 위치에 커스텀 파티클 `mine_structure:wand_sparkle_amethyst`(자수정 보라 반짝이)을 띄운다.
 
 ## Add-on Files
 
@@ -26,7 +27,8 @@
 - `addon/resource_pack/attachables/unicorn_transform_wand.attachable.json` (손에 든 3D 모델)
 - `addon/resource_pack/models/entity/unicorn_transform_wand.geo.json` + `.../textures/entity/unicorn_transform_wand/unicorn_transform_wand_atlas.png`
 - `addon/resource_pack/animations/unicorn_transform_wand.animation.json` (1·3인칭 손 포즈)
-- 로직: `addon/behavior_pack/scripts/main.js`(`TRANSFORM_ANIMALS`, `transformAnimal`)
+- `addon/resource_pack/particles/wand_sparkle_amethyst.particle.json` + `.../textures/particle/wand_sparkle.png` (반짝이 파티클)
+- 로직: `addon/behavior_pack/scripts/main.js`(`TRANSFORM_ANIMALS`, `transformAnimal` + 보석 반짝임 `runInterval`)
 - 생성: `blockbench/gen_item_icons.py`, `blockbench/gen_extra_items.py`(아이콘/item.json), `blockbench/gen_wand_items.py`(3D 모델/attachable)
 - Blockbench 소스: `blockbench/unicorn_transform_wand.bbmodel`
 

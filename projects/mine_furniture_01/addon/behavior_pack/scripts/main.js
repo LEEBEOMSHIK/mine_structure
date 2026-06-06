@@ -71,6 +71,11 @@ const FRIDGE_PROPERTY = "fridge_items";
 const FRIDGE_MAX_SLOTS = 18;
 const PEGASUS_ID = "mine_structure:unicorn_pegasus";
 const WAND_ID = "mine_structure:unicorn_wand";
+// sparkle particle emitted from the gem while a wand is held in the main hand
+const WAND_SPARKLE = {
+  [WAND_ID]: "mine_structure:wand_sparkle_cyan",
+  [TRANSFORM_WAND_ID]: "mine_structure:wand_sparkle_amethyst",
+};
 const PHONE_ITEM_ID = "mine_structure:unicorn_phone_item";
 const PHONE_FLASHLIGHT_PROPERTY = "phone_flashlight";
 const PHONE_RINGTONE = [1.0, 1.18, 1.33, 1.0];
@@ -295,6 +300,35 @@ system.runInterval(() => {
     }
   }
 }, 3);
+
+// while a wand is held, the gem twinkles: spawn one tinted sparkle near the
+// held wand head roughly every 0.6s (approximated from the player's view).
+system.runInterval(() => {
+  for (const player of world.getAllPlayers()) {
+    const held = getMainhand(player);
+    if (!held) {
+      continue;
+    }
+    const particle = WAND_SPARKLE[held.typeId];
+    if (!particle) {
+      continue;
+    }
+    const head = player.getHeadLocation();
+    const dir = player.getViewDirection();
+    // right vector on the horizontal plane (view x world-up), to nudge toward the hand
+    const rlen = Math.hypot(dir.z, dir.x) || 1;
+    const loc = {
+      x: head.x + dir.x * 0.5 + (-dir.z / rlen) * 0.3,
+      y: head.y + dir.y * 0.5 + 0.15,
+      z: head.z + dir.z * 0.5 + (dir.x / rlen) * 0.3,
+    };
+    try {
+      player.dimension.spawnParticle(particle, loc);
+    } catch {
+      // player may be mid-teleport/unloaded chunk; skip this tick
+    }
+  }
+}, 12);
 
 function rideBunkTop(player, bunk) {
   // the player has just auto-mounted the bottom seat; swap the seat order so the

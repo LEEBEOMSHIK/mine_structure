@@ -13,7 +13,8 @@
 
 - 아이템 컴포넌트: `minecraft:display_name`, `minecraft:icon`, `max_stack_size 1`, `minecraft:hand_equipped`, `minecraft:cooldown`(category `unicorn_wand`, 2초).
 - 사용: `scripts/main.js`의 `world.afterEvents.itemUse`가 지팡이 우클릭 시 플레이어에게 Jump Boost II + Speed I(6초)를 부여하고 토템 파티클 + `random.orb` 소리를 낸다.
-- 3D 모델: 손에 들면 attachable로 입체 막대 지팡이가 보인다. 슬림한 라벤더 손잡이 + 그립 밴드 2개 + 별 헤드(정사각 큐브 2개를 45도로 겹쳐 별 실루엣) + 가운데 발광 코어. 인벤토리 아이콘(2D)과 우클릭 동작은 그대로다. 손 포즈는 인게임 튜닝 대기.
+- 3D 모델: 손에 들면 attachable로 입체 막대 지팡이가 보인다. 슬림한 라벤더 손잡이 + 그립 밴드 2개 + 별 헤드(정사각 큐브 2개를 45도로 겹쳐 별 실루엣) + 가운데 **작은 청록 보석**(45도 마름모, 별 앞으로 돌출). 인벤토리 아이콘(2D)과 우클릭 동작은 그대로다. 손 포즈는 인게임 튜닝 대기.
+- 반짝임 파티클: 들고 있는 동안 `scripts/main.js`의 `system.runInterval(...,12)`가 약 0.6초마다 보석 위치(플레이어 시선 기준 근사)에 커스텀 파티클 `mine_structure:wand_sparkle_cyan`(청록 반짝이)을 띄운다.
 
 ## Add-on Files
 
@@ -23,7 +24,8 @@
 - `../../addon/resource_pack/attachables/unicorn_wand.attachable.json` (손에 든 3D 모델)
 - `../../addon/resource_pack/models/entity/unicorn_wand.geo.json` + `.../textures/entity/unicorn_wand/unicorn_wand_atlas.png`
 - `../../addon/resource_pack/animations/unicorn_wand.animation.json` (1·3인칭 손 포즈)
-- 사용 로직: `../../addon/behavior_pack/scripts/main.js` (`itemUse` 핸들러)
+- `../../addon/resource_pack/particles/wand_sparkle_cyan.particle.json` + `.../textures/particle/wand_sparkle.png` (반짝이 파티클)
+- 사용 로직: `../../addon/behavior_pack/scripts/main.js` (`itemUse` 핸들러 + 보석 반짝임 `runInterval`)
 - 생성: `../../blockbench/gen_item_icons.py`(아이콘), `../../blockbench/gen_wand_items.py`(3D 모델/attachable)
 - Blockbench 소스: `../../blockbench/unicorn_wand.bbmodel`
 
