@@ -1,0 +1,23 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Unicorn Pastel Girls",
+    "uuid": "157e22ca-263a-5922-b274-62cff8186ba8",
+    "version": [
+      1,
+      0,
+      0
+    ]
+  },
+  "modules": [
+    {
+      "type": "skin_pack",
+      "uuid": "039b954c-38df-51f5-bb72-b8744db152a6",
+      "version": [
+        1,
+        0,
+        0
+      ]
+    }
+  ]
+}

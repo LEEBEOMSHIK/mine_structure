@@ -1,0 +1,18 @@
+{
+  "skins": [
+    {
+      "localization_name": "unicorn_pastel",
+      "geometry": "geometry.humanoid.custom",
+      "texture": "unicorn_pastel.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "unicorn_pastel_mint",
+      "geometry": "geometry.humanoid.custom",
+      "texture": "unicorn_pastel_mint.png",
+      "type": "free"
+    }
+  ],
+  "serialize_name": "UnicornPastelGirls",
+  "localization_name": "UnicornPastelGirls"
+}
