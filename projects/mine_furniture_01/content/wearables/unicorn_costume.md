@@ -18,7 +18,7 @@
 
 - item: `minecraft:wearable`(slot.armor.chest) + `minecraft:glider`(활공) + `minecraft:durability`(432) + 아이콘/이름.
 - attachable(`attachables/unicorn_elytra.attachable.json`): 커스텀 geometry/texture + `render_controllers: ["controller.render.armor"]` + `scripts.animate: ["glide"]`.
-- geometry(`models/entity/unicorn_elytra.geo.json`): `body`(플레이어 몸 본) 하위에 `left_wing`/`right_wing` 본. **각 날개는 큐브 더미가 아니라 얇은 평면 1장**이고, 날개 모양은 텍스처에 **알파 컷아웃(투명 가장자리)**으로 그린다. 외형은 **나비 날개**: 둥근 forewing(분홍→라벤더 그라데이션) + hindwing(하늘→민트), 몸통에서 방사하는 진보라 **날개맥**, 각 lobe의 **eyespot(눈알 무늬)**, 가장자리 진한 띠 + 연노랑 점박이. 해상도 32×64(atlas 128). `gen_custom_elytra.py`의 `butterfly_edge` 실루엣 + `draw_wing`(그라데이션/날개맥/점)+ `spot`(eyespot). 옆면 슬리버 면은 투명 픽셀로 매핑해 보이지 않게 했다. Blockbench 원본 `../../blockbench/unicorn_elytra.bbmodel`.
+- geometry(`models/entity/unicorn_elytra.geo.json`): `body`(플레이어 몸 본) 하위에 `left_wing`/`right_wing` 본. **각 날개는 큐브 더미가 아니라 얇은 평면 1장**이고, 날개 모양은 텍스처에 **알파 컷아웃(투명 가장자리)**으로 그린다. 외형은 **나비 날개**(참고 `game/mine_reference/005.png`): 각 쪽이 **forewing(위 큰 lobe) + hindwing(아래 작은 lobe)** 2조각(총 4 cube)으로, 등에서 위·아래·바깥으로 펼쳐진다. forewing 분홍→보라, hindwing 라벤더→진보라 그라데이션 + 뿌리에서 방사하는 진보라 **날개맥** + 각 lobe **eyespot(눈알 무늬)** + 가장자리 띠/연노랑 점. atlas 128. `gen_custom_elytra.py`의 `draw_lobe`(forewing 둥근 부채 / hindwing 둥근 타원) + `spot`(eyespot). `right_wing`/`left_wing` 본이 q.is_gliding으로 접힘(±12°)/펴짐(±52°). 옆면 슬리버 면은 투명 픽셀로 매핑해 보이지 않게 했다. Blockbench 원본 `../../blockbench/unicorn_elytra.bbmodel`.
 - 애니메이션: `controller.animation.unicorn_elytra.glide`가 `q.is_gliding`으로 `folded`(접힘, 등에 붙음)↔`spread`(펴짐)를 전환.
 - 생성: `../../blockbench/gen_custom_elytra.py`
 

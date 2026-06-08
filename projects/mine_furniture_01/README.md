@@ -529,16 +529,15 @@ resource pack 측 JSON 연결을 교차검증했다. 결과:
 - 검증 PASS. 최신 패키지:
   - `dist/mine_furniture_01-20260608-130716/mine_furniture_01.mcaddon`
 
-## 4.34 커스텀 날개를 나비 날개로 변경 (2026-06-08)
+## 4.34 커스텀 날개를 나비 날개로 변경 → 4조각 나비 날개 재구성 (2026-06-08)
 
 - `unicorn_elytra`(커스텀 글라이더)를 천사 깃털 → **나비 날개**로 재디자인.
-  - 실루엣 `butterfly_edge`: 둥근 **forewing**(위, 큰 lobe) + **hindwing**(아래, 작은 lobe + 꼬리), 사이에 살짝 잘록.
-  - 텍스처 `draw_wing`: forewing 분홍→라벤더, hindwing 하늘→민트 그라데이션 + 몸통에서 방사하는 진보라 **날개맥** + 가장자리 진한 띠/연노랑 점박이. `spot()`으로 각 lobe에 **eyespot(눈알 무늬)**.
-  - 해상도 32×64(atlas 128) 유지. 아이콘: 파스텔 나비 날개 한 쌍 + 가운데 몸통. 표시 이름 "나비 날개".
-  - 평면 두께 0.05(겹침 없음), 글라이더/접힘·펴짐 구조 유지.
-  - Blockbench로 접힘/펴짐 확인.
+- **4조각 구조(참고 `game/mine_reference/005.png`)**: 기존엔 세로로 긴 평면 1장이라 나비 같지 않고 "한 면"으로 보였다. 등에 펼쳐진 진짜 나비처럼, 각 쪽을 **forewing(위, 큰 lobe) + hindwing(아래, 작은 lobe)** 2조각으로 나눠 `right_wing`/`left_wing` 본 아래에 두고 위·아래·바깥으로 펼쳤다(총 4 cube).
+  - `draw_lobe`: forewing은 둥근 부채(위 둥글게), hindwing은 둥근 타원 lobe. forewing 분홍→보라, hindwing 라벤더→진보라 그라데이션 + 뿌리에서 방사하는 진보라 **날개맥** + 가장자리 띠/연노랑 점 + `spot()` **eyespot**.
+  - UV 영역 분리(forewing/hindwing), atlas 128. 평면 두께 0.05. 표시 이름 "나비 날개".
+  - 글라이더/접힘·펴짐 유지(접힘 ±12°, 펴짐 ±52° → 나비처럼 활짝). Blockbench로 펼친 모습 확인.
 - 검증 PASS. 최신 패키지:
-  - `dist/mine_furniture_01-20260608-132640/mine_furniture_01.mcaddon`
+  - `dist/mine_furniture_01-20260608-134734/mine_furniture_01.mcaddon`
 
 ## 5. 다음 작업 (NEXT)
 
