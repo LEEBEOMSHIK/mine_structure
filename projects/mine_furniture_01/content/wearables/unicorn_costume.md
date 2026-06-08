@@ -1,13 +1,13 @@
 # unicorn_costume (입는 코스튬)
 
-캐릭터에 착용하면 보이는 드레스업. **머리띠**는 커스텀 attachable(실험적), **날개**는 바닐라 elytra 리텍스처로 처리한다.
+캐릭터에 착용하면 보이는 드레스업. **머리띠**는 커스텀 attachable(실험적), **날개**는 바닐라 elytra와 별개인 커스텀 글라이더(**천사 날개** 외형)로 처리한다.
 
 ## Registry
 
 | Identifier | 이름 | 방식 |
 |------------|------|------|
 | `mine_structure:unicorn_horn_headband` | 유니콘 뿔 머리띠 | wearable(head) + attachable, 본 `head` |
-| `mine_structure:unicorn_elytra` | 유니콘 엘리트라 | wearable(chest) + glider + 커스텀 날개 모델 (바닐라 elytra와 별개) |
+| `mine_structure:unicorn_elytra` | 천사 날개 | wearable(chest) + glider + 커스텀 천사 날개 모델 (바닐라 elytra와 별개) |
 
 - Content type: wearable item
 - Status: add-on 파일 생성 완료, **인게임 검증 대기(실험적)**.
@@ -18,7 +18,7 @@
 
 - item: `minecraft:wearable`(slot.armor.chest) + `minecraft:glider`(활공) + `minecraft:durability`(432) + 아이콘/이름.
 - attachable(`attachables/unicorn_elytra.attachable.json`): 커스텀 geometry/texture + `render_controllers: ["controller.render.armor"]` + `scripts.animate: ["glide"]`.
-- geometry(`models/entity/unicorn_elytra.geo.json`): `body`(플레이어 몸 본) 하위에 `left_wing`/`right_wing` 본. **각 날개는 큐브 더미가 아니라 얇은 평면 1장**이고, 날개 모양은 텍스처에 **알파 컷아웃(투명 가장자리)**으로 그려 실루엣을 부드럽게 처리한다(바닐라 elytra와 같은 방식). 옆면 슬리버 면은 투명 픽셀로 매핑해 보이지 않게 했다. Blockbench 원본 `../../blockbench/unicorn_elytra.bbmodel`.
+- geometry(`models/entity/unicorn_elytra.geo.json`): `body`(플레이어 몸 본) 하위에 `left_wing`/`right_wing` 본. **각 날개는 큐브 더미가 아니라 얇은 평면 1장**이고, 날개 모양은 텍스처에 **알파 컷아웃(투명 가장자리)**으로 그린다. 외형은 **천사 날개**: 흰 깃털 베이스 + 연한 라벤더 깃털 음영(능선=흰 하이라이트, 경계=라벤더), 어깨에서 부채처럼 뻗는 깃털 결, 외곽/하단은 **날카로운 톱니(sawtooth) 뾰족 깃털 끝**(형태 참고 `game/mine_reference/002.png`). `gen_custom_elytra.py`의 `angel_edge` 실루엣 + `draw_wing` 깃털 결/톱니. 옆면 슬리버 면은 투명 픽셀로 매핑해 보이지 않게 했다. Blockbench 원본 `../../blockbench/unicorn_elytra.bbmodel`.
 - 애니메이션: `controller.animation.unicorn_elytra.glide`가 `q.is_gliding`으로 `folded`(접힘, 등에 붙음)↔`spread`(펴짐)를 전환.
 - 생성: `../../blockbench/gen_custom_elytra.py`
 

@@ -26,10 +26,13 @@ BP_ITEMS = os.path.join(BASE, "addon", "behavior_pack", "items")
 HERE = os.path.dirname(__file__)
 SID = "unicorn_elytra"
 IDENT = "mine_structure:" + SID
-RAINBOW = [
-    (255, 150, 176), (255, 190, 120), (255, 232, 138), (150, 224, 176),
-    (140, 198, 246), (196, 158, 240), (246, 160, 220),
-]
+# angel-wing feather palette (white + soft pastel lavender). The SHAPE follows the
+# ref 002.png: sharp jagged sawtooth feather tips fanning from the shoulder.
+RIDGE = (255, 255, 255)      # white highlight down each feather ridge
+F_LIGHT = (246, 242, 252)    # near-white
+F_MID = (228, 222, 244)      # soft lavender body
+F_DEEP = (194, 184, 222)     # lavender feather shadow
+F_EDGE = (170, 158, 206)     # darkest edge / spine
 ATLAS_REL = os.path.join("textures", "entity", SID, SID + ".png")
 # wing painted into a WWxWH region of the 64x64 atlas (1:2, elytra-like proportions)
 WW, WH = 16, 32
@@ -46,29 +49,53 @@ def shade(c, amt):
     return tuple(max(0, min(255, v + amt)) for v in c)
 
 
+def angel_edge(ty):
+    """Outer x-limit of the wing at vertical fraction ty (0 top .. 1 bottom):
+    narrow rounded shoulder, bulging coverts, max width, then long primary
+    feathers sweeping in. Kept below WW so the curved silhouette reads clearly."""
+    if ty < 0.14:
+        return 6.0 + 4.0 * (ty / 0.14) ** 0.5         # full rounded shoulder (no notch)
+    if ty < 0.42:
+        u = (ty - 0.14) / 0.28
+        return 10.0 + 4.5 * math.sin(u * math.pi * 0.5)  # widen to ~14.5
+    if ty < 0.62:
+        return 14.5                                    # max width (full coverts)
+    u = (ty - 0.62) / 0.38
+    return 14.5 - 12.5 * (u ** 0.8)                     # long primaries taper to ~2
+
+
 def draw_wing(img):
-    """Jet / cicada wing into the WWxWH region (transparent outside): narrow at the
-    shoulder (top), fanning WIDER toward the bottom, inner edge straight along the
-    spine, with a curved swept outer edge, a rounded bottom and a couple of veins.
-    Smooth because the silhouette is an alpha cutout."""
+    """White feathered wing into the WWxWH region (transparent outside). SHAPE per
+    ref 002.png: feathers fan from the shoulder (0,0) with SHARP SAWTOOTH pointed
+    tips along the outer/lower edge. Each feather has a bright white ridge down its
+    centre and soft lavender edges. Spine is the straight inner edge (x=0)."""
+    fcount = 7
     for y in range(WH):
         ty = y / (WH - 1)
-        redge = 1.5 + 14.5 * (ty ** 0.85)          # narrow top -> wide bottom
-        if ty > 0.86:
-            redge -= (ty - 0.86) * 70              # round off the bottom-outer corner
+        redge = angel_edge(ty)
+        if ty > 0.28:                                  # sharp sawtooth feather points
+            seg = (y % 3) / 3.0
+            redge -= seg * 3.4
         redge = max(0.0, min(WW - 1, redge))
         for x in range(WW):
-            if x <= redge:
-                col = RAINBOW[(y // 3) % len(RAINBOW)]
-                if redge - x < 1.3:
-                    col = shade(col, -45)           # crisp swept outer edge
-                elif x < 1:
-                    col = shade(col, -22)           # inner spine edge
-                elif abs(x - 0.5 * y) < 0.6 or abs(x - 0.28 * y) < 0.6:
-                    col = shade(col, -28)           # radiating veins (cicada/jet)
-                elif (x + y) % 15 == 0:
-                    col = (255, 255, 255)            # sparkle
-                img.putpixel((x, y), col + (255,))
+            if x > redge:
+                continue
+            tipfrac = x / redge if redge > 0 else 0.0
+            ang = math.atan2(y + 1, x + 0.5)           # fan angle from the shoulder
+            fi = (ang / (math.pi / 2)) * fcount
+            frac = fi - math.floor(fi)
+            d = abs(frac - 0.5) * 2.0                   # 0 = feather ridge .. 1 = feather edge
+            if d > 0.78:
+                col = F_DEEP                           # crisp lavender line between feathers
+            elif d < 0.28:
+                col = RIDGE                            # bright white ridge down the feather
+            else:
+                col = F_LIGHT                          # clean near-white feather body
+            if tipfrac > 0.84:                         # soft pastel toward the pointed tips
+                col = F_MID
+            if x < 1:                                  # inner spine edge
+                col = F_EDGE
+            img.putpixel((x, y), col + (255,))
 
 
 def textures():
@@ -79,16 +106,23 @@ def textures():
     atlas.save(out)
     print("wrote", out)
 
+    # icon: a pair of icy crystal wings flaring up-and-out, jagged tips
     icon = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
-    for y in range(3, 14):
-        col = RAINBOW[(y - 3) % len(RAINBOW)] + (255,)
-        for x in range(3, 7):
-            icon.putpixel((x, y), col)
-        for x in range(9, 13):
-            icon.putpixel((x, y), col)
-    for y in range(3, 14):
-        icon.putpixel((7, y), (236, 210, 130, 255))
-        icon.putpixel((8, y), (236, 210, 130, 255))
+    cx = 8
+    for y in range(2, 14):
+        ty = (y - 2) / 11
+        half = 1 + int(5.5 * math.sin(min(1.0, ty * 1.1) * math.pi * 0.6))
+        if y % 2 == 1:                       # jagged sawtooth outer edge
+            half = max(1, half - 1)
+        for dx in range(1, half + 1):
+            edge = dx >= half - 1
+            ridge = dx <= 1
+            col = F_EDGE if edge else (RIDGE if ridge else F_LIGHT)
+            icon.putpixel((cx - 1 - dx, y), col + (255,))
+            icon.putpixel((cx + dx, y), col + (255,))
+    # soft golden halo dot on top
+    icon.putpixel((cx - 1, 1), (255, 236, 150, 255))
+    icon.putpixel((cx, 1), (255, 236, 150, 255))
     icon_out = os.path.join(RP, "textures", "items", SID + ".png")
     icon.save(icon_out)
     print("wrote", icon_out)
@@ -96,8 +130,8 @@ def textures():
 
 # flat wing quads sized like the vanilla elytra (narrow + tall, close to the spine);
 # thin in Z so the two big faces (north/south) show the painted wing.
-RIGHT = {"from": [1, 6, 2.2], "size": [9, 18, 0.3], "pivot": [1, 23, 2.3]}
-LEFT = {"from": [-10, 6, 2.2], "size": [9, 18, 0.3], "pivot": [-1, 23, 2.3]}
+RIGHT = {"from": [1, 4, 2.2], "size": [11, 21, 0.3], "pivot": [1, 25, 2.3]}
+LEFT = {"from": [-12, 4, 2.2], "size": [11, 21, 0.3], "pivot": [-1, 25, 2.3]}
 
 
 def geo_faces(mirror):
@@ -207,7 +241,7 @@ def item():
         "minecraft:item": {
             "description": {"identifier": IDENT, "menu_category": {"category": "equipment"}},
             "components": {
-                "minecraft:display_name": {"value": "유니콘 엘리트라"},
+                "minecraft:display_name": {"value": "천사 날개"},
                 "minecraft:icon": {"texture": SID},
                 "minecraft:max_stack_size": 1,
                 "minecraft:wearable": {"slot": "slot.armor.chest"},
