@@ -308,10 +308,15 @@ def animations():
                 "loop": "hold_on_last_frame", "animation_length": 0.25,
                 "bones": {"right_wing": {"rotation": [0, -12, 0]}, "left_wing": {"rotation": [0, 12, 0]}},
             },
-            # gliding: butterfly wings spread wide
+            # gliding: butterfly wings spread wide AND flap up/down in a loop
             "animation." + SID + ".spread": {
-                "loop": "hold_on_last_frame", "animation_length": 0.25,
-                "bones": {"right_wing": {"rotation": [0, -52, 0]}, "left_wing": {"rotation": [0, 52, 0]}},
+                "loop": True, "animation_length": 0.7,
+                "bones": {
+                    "right_wing": {"rotation": {
+                        "0.0": [0, -50, -2], "0.35": [0, -38, -30], "0.7": [0, -50, -2]}},
+                    "left_wing": {"rotation": {
+                        "0.0": [0, 50, 2], "0.35": [0, 38, 30], "0.7": [0, 50, 2]}},
+                },
             },
         },
     })
