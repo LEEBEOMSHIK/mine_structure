@@ -27,15 +27,27 @@ HERE = os.path.dirname(__file__)
 SID = "unicorn_elytra"
 IDENT = "mine_structure:" + SID
 
-# pastel butterfly palette
-FORE_IN = (255, 192, 226)    # forewing inner (pink)
-FORE_OUT = (188, 120, 224)   # forewing outer (purple)
-HIND_IN = (206, 178, 246)    # hindwing inner (lavender)
-HIND_OUT = (150, 120, 214)   # hindwing outer (deep purple)
-VEIN = (104, 68, 150)        # dark vein / body
-BAND = (88, 56, 134)         # dark outer edge band
-DOT = (255, 250, 206)        # pale-gold edge dots / eyespot ring
-EYE = (74, 46, 124)          # eyespot centre
+# pastel RAINBOW butterfly palette: each wing graded through the rainbow inner->outer,
+# divided by white veins/edges (stained-glass look) with a dark body.
+RAINBOW = [
+    (255, 158, 176),   # pink-red
+    (255, 196, 150),   # orange
+    (255, 240, 158),   # yellow
+    (168, 226, 168),   # green
+    (150, 202, 246),   # blue
+    (202, 166, 240),   # violet
+]
+LINE = (255, 255, 255)       # white veins / edge band (stained-glass dividers)
+BODY = (96, 64, 142)         # dark body / inner spine
+EYE_C = (236, 120, 190)      # eyespot centre (pink)
+
+
+def rainbow(t):
+    t = max(0.0, min(1.0, t)) * (len(RAINBOW) - 1)
+    i = int(t)
+    if i >= len(RAINBOW) - 1:
+        return RAINBOW[-1]
+    return lerp(RAINBOW[i], RAINBOW[i + 1], t - i)
 
 ATLAS_REL = os.path.join("textures", "entity", SID, SID + ".png")
 ATLAS_SIZE = 128
@@ -57,7 +69,7 @@ def lerp(a, b, t):
 
 
 def spot(img, cx, cy, r):
-    """Eyespot: dark centre + pale ring + dark rim, clipped to painted pixels."""
+    """Eyespot: pink centre + white ring + dark rim, clipped to painted pixels."""
     for yy in range(int(cy - r), int(cy + r + 1)):
         for xx in range(int(cx - r), int(cx + r + 1)):
             if not (0 <= xx < ATLAS_SIZE and 0 <= yy < ATLAS_SIZE):
@@ -66,23 +78,23 @@ def spot(img, cx, cy, r):
                 continue
             d = math.hypot(xx - cx, yy - cy)
             if d <= r * 0.45:
-                img.putpixel((xx, yy), EYE + (255,))
+                img.putpixel((xx, yy), EYE_C + (255,))
             elif d <= r * 0.78:
-                img.putpixel((xx, yy), DOT + (255,))
+                img.putpixel((xx, yy), LINE + (255,))
             elif d <= r:
-                img.putpixel((xx, yy), BAND + (255,))
+                img.putpixel((xx, yy), BODY + (255,))
 
 
-def draw_lobe(img, ox, oy, rw, rh, inner, outer, mode):
-    """Paint one butterfly lobe into the (ox,oy,rw,rh) region. Inner edge (x=ox)
-    is the straight body attachment; the outer edge is a rounded butterfly curve.
-    `mode` 'fore' = broad rounded top tapering to the root at the bottom; 'hind' =
-    a rounded lobe fullest in the middle."""
+def draw_lobe(img, ox, oy, rw, rh, mode):
+    """Paint one RAINBOW butterfly lobe into the (ox,oy,rw,rh) region. Inner edge
+    (x=ox) is the straight body attachment; the outer edge is a rounded butterfly
+    curve. Colour runs through the rainbow inner->outer, split by white veins and a
+    white edge band (stained-glass look). 'fore' = broad rounded top; 'hind' =
+    rounded lobe."""
     veins = 4
     for vy in range(rh):
         tv = vy / (rh - 1)                              # 0 = top .. 1 = bottom(root)
         if mode == "fore":
-            # rounded fan: widest in the upper-mid, narrower at the very top and root
             peak = max(0.0, 1.0 - abs(tv - 0.30) / 0.74)
             redge = rw * (0.16 + 0.82 * peak ** 0.55)
         else:
@@ -93,54 +105,49 @@ def draw_lobe(img, ox, oy, rw, rh, inner, outer, mode):
             if vx > redge:
                 continue
             tip = vx / redge if redge > 0 else 0.0
-            col = lerp(inner, outer, tip)
-            # veins fan out from the wing root (bottom-inner corner)
-            ang = math.atan2((rh - vy) + 1.0, vx + 1.0)
+            col = rainbow(tip)                          # rainbow inner -> outer
+            ang = math.atan2((rh - vy) + 1.0, vx + 1.0)  # veins fan from the root
             fi = (ang / (math.pi / 2)) * veins
             fr = fi - math.floor(fi)
-            if fr < 0.08 or fr > 0.92:
-                col = VEIN
-            if tip > 0.9:                               # dark outer band
-                col = BAND
-            elif tip > 0.8 and vy % 5 == 0:            # pale edge dots
-                col = DOT
-            if vx < 1:                                  # body edge
-                col = VEIN
+            if fr < 0.07 or fr > 0.93:
+                col = LINE                              # white vein dividers
+            if tip > 0.9:                               # white outer edge band
+                col = LINE
+            if vx < 1:                                  # dark body edge
+                col = BODY
             img.putpixel((ox + vx, oy + vy), col + (255,))
     spot(img, ox + int(rw * 0.42), oy + int(rh * 0.40), max(2.5, rw * 0.17))
 
 
 def textures():
     atlas = Image.new("RGBA", (ATLAS_SIZE, ATLAS_SIZE), (0, 0, 0, 0))
-    draw_lobe(atlas, FORE_UV[0], FORE_UV[1], FORE_UV[2], FORE_UV[3], FORE_IN, FORE_OUT, "fore")
-    draw_lobe(atlas, HIND_UV[0], HIND_UV[1], HIND_UV[2], HIND_UV[3], HIND_IN, HIND_OUT, "hind")
+    draw_lobe(atlas, FORE_UV[0], FORE_UV[1], FORE_UV[2], FORE_UV[3], "fore")
+    draw_lobe(atlas, HIND_UV[0], HIND_UV[1], HIND_UV[2], HIND_UV[3], "hind")
     out = os.path.join(RP, ATLAS_REL)
     os.makedirs(os.path.dirname(out), exist_ok=True)
     atlas.save(out)
     print("wrote", out)
 
-    # icon: a pair of pastel butterfly wings (forewing + hindwing) + body
+    # icon: a pair of rainbow butterfly wings (forewing + hindwing) + dark body
     icon = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
     cx = 8
     for y in range(1, 9):                               # forewing pair (upper)
         u = (y - 1) / 7
         half = 1 + int(5.5 * math.sin((1 - u) * math.pi * 0.62))
-        base = lerp(FORE_IN, FORE_OUT, 0.5)
         for dx in range(1, half + 1):
-            col = BAND if dx >= half else base
+            col = LINE if dx >= half else rainbow(dx / max(1, half))
             icon.putpixel((cx - 1 - dx, y), col + (255,))
             icon.putpixel((cx + dx, y), col + (255,))
     for y in range(8, 15):                              # hindwing pair (lower)
         u = (y - 8) / 6
         half = 1 + int(4.5 * math.sin((1 - abs(u - 0.4)) * math.pi * 0.5))
-        base = lerp(HIND_IN, HIND_OUT, 0.5)
         for dx in range(1, half + 1):
-            col = BAND if dx >= half else base
+            col = LINE if dx >= half else rainbow(dx / max(1, half))
             icon.putpixel((cx - 1 - dx, y), col + (255,))
             icon.putpixel((cx + dx, y), col + (255,))
     for by in range(1, 15):                             # dark body down the middle
-        icon.putpixel((cx - 1, by), VEIN + (255,))
-        icon.putpixel((cx, by), VEIN + (255,))
+        icon.putpixel((cx - 1, by), BODY + (255,))
+        icon.putpixel((cx, by), BODY + (255,))
     icon_out = os.path.join(RP, "textures", "items", SID + ".png")
     icon.save(icon_out)
     print("wrote", icon_out)
