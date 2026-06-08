@@ -11,3 +11,7 @@ Thumbs.db
 
 __pycache__/
 *.pyc
+
+# Temp preview / scratch files (leading underscore), e.g. _preview.bbmodel, _face.png
+_*.bbmodel
+_*.png

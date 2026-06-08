@@ -37,6 +37,18 @@ projects/mine_skins_01/
    └─ preview_<sid>_{front,back,side}.png      # 미리보기(확인용, 팩에는 미포함)
 ```
 
+## 전신 미리보기 (스킨 + 스커트)
+
+```
+python gen_preview.py [skin_sid]   # 기본 unicorn_pastel
+```
+→ `_preview.bbmodel` 생성(임시, gitignore). Blockbench에서 열면 **플레이어 모델에 스킨 +
+무지개 A라인 스커트 의상**을 함께 입은 전신을 볼 수 있다(스킨 텍스처 id 0, 스커트 atlas id 1
+임베드). 스킨/스커트를 다시 생성한 뒤 언제든 재실행하면 된다.
+
+> 임시 파일 규칙: `_`로 시작하는 `.bbmodel`/`.png`(예: `_preview.bbmodel`, `_face.png`)는
+> 루트 `.gitignore`로 무시된다. 확인용으로만 쓰고 커밋하지 않는다.
+
 ## 빌드 / 적용
 
 ```
