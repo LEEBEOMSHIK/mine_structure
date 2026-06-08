@@ -12,6 +12,7 @@ Spec (from reference 001.png, rewritten):
 Outputs PNG skins + front/back/side previews + manifest/skins.json/texts.
 """
 import json
+import math
 import os
 import uuid
 
@@ -101,19 +102,22 @@ def star(img, cx, cy, c):
     px(img, cx - 1, cy, c); px(img, cx + 1, cy, c); px(img, cx, cy, c)
 
 
-def skirt_face(img, name, n=6):
-    """Fill a 4- or 8-wide body/leg face with the rainbow frill, with a soft
-    scalloped shade at the bottom of each colour band for a frill look."""
+def frill(img, name, start, bands):
+    """Draw a layered ruffle into a face starting at row `start`. Each colour in
+    `bands` takes 2 rows: a bright highlight on top + the base colour below, and a
+    scalloped (alternating dark) hem at the bottom of each band -> a 3D frill look."""
     x0, y0, w, h = FACES[name]
-    for i in range(h):
-        c = SKIRT[(i * len(SKIRT)) // h]
-        rect(img, x0, y0 + i, w, 1, c)
-    # subtle frill scallops: darken every other column at band edges
-    for i in range(h):
-        c = SKIRT[(i * len(SKIRT)) // h]
-        if i > 0 and SKIRT[((i - 1) * len(SKIRT)) // h] != c:
-            for xx in range(x0, x0 + w, 2):
-                px(img, xx, y0 + i, shade(c, -22))
+    y = start
+    for c in bands:
+        if y >= h:
+            break
+        rect(img, x0, y0 + y, w, 1, shade(c, 20))            # lit top of the ruffle
+        if y + 1 < h:
+            rect(img, x0, y0 + y + 1, w, 1, c)               # body of the ruffle
+            for xx in range(x0 + 1, x0 + w, 2):              # scalloped shadow hem
+                px(img, xx, y0 + y + 1, shade(c, -34))
+        y += 2
+    return y
 
 
 # ---------------------------------------------------------------- head
@@ -147,49 +151,44 @@ def draw_head(img, p):
 
 
 # ---------------------------------------------------------------- body
-def rainbow_arch(img, cx, cy):
-    # tiny rainbow arc (5 wide) over a little cloud, centred at (cx, cy)
-    arc = [PINK, YEL, MINT, BLUE]
-    for k, c in enumerate(arc):
-        px(img, cx - 2 + 0, cy + k, c)        # left leg of arch
-        px(img, cx + 2 - 0, cy + k, c)        # right leg
-    for k, c in enumerate(arc):
-        px(img, cx - 2, cy + k, c); px(img, cx + 2, cy + k, c)
-    rect(img, cx - 1, cy - 1, 3, 1, PINK)     # top of arch
-    px(img, cx - 2, cy, PINK); px(img, cx + 2, cy, PINK)
-    # little cloud under the arch
-    rect(img, cx - 2, cy + 4, 5, 1, WHITE)
-    px(img, cx - 1, cy + 3, WHITE); px(img, cx + 1, cy + 3, WHITE)
+def rainbow_arch(img, fx, fy):
+    """A clear rainbow semicircle (pink/yellow/mint/blue rings) on a small white
+    cloud. fx,fy = top-left of body_front; motif sits high on the chest."""
+    ax = fx + 4                                   # arch centre x
+    by = fy + 5                                   # arch baseline y
+    for r, c in [(4, PINK), (3, YEL), (2, MINT), (1, BLUE)]:
+        for a in range(0, 181, 8):
+            rad = math.radians(a)
+            px(img, ax + int(round(r * math.cos(rad))), by - int(round(r * math.sin(rad))), c)
+    # small white cloud under the arch
+    rect(img, ax - 3, by + 1, 7, 1, WHITE)
+    px(img, ax - 2, by, WHITE); px(img, ax + 1, by, WHITE)
+    px(img, ax - 4, by + 2, WHITE); px(img, ax + 4, by + 2, WHITE)
+    rect(img, ax - 3, by + 2, 7, 1, shade(WHITE, -12))
 
 
 def draw_body(img, p):
-    # base: white bodice on top, rainbow skirt on the lower rows
+    # white bodice (rows 0-5) + first skirt frill tier (rows 6-11, pink/yellow/mint)
     for f in ("body_front", "body_back", "body_right", "body_left"):
         x0, y0, w, h = FACES[f]
-        rect(img, x0, y0, w, 6, WHITE)             # bodice (white)
-        rect(img, x0, y0 + 5, w, 1, p["trim"])     # waist trim
-        for i in range(6):                         # skirt frill (rows 6..11)
-            rect(img, x0, y0 + 6 + i, w, 1, SKIRT[(i * len(SKIRT)) // 6])
+        rect(img, x0, y0, w, 6, WHITE)             # bodice
+        for xx in range(x0, x0 + w):               # soft side shading on the bodice
+            px(img, xx, y0 + 1, shade(WHITE, -6))
+        rect(img, x0, y0 + 5, w, 1, p["trim"])     # waistband
+        frill(img, f, 6, [SKIRT[0], SKIRT[1], SKIRT[2]])
     fill(img, "body_top", WHITE)
-    fill(img, "body_bottom", SKIRT[-1])
+    fill(img, "body_bottom", SKIRT[2])
     fx, fy, _, _ = FACES["body_front"]
     rect(img, fx, fy, 8, 1, p["trim"])             # neckline
-    rainbow_arch(img, fx + 4, fy + 2)              # chest rainbow + cloud
-    # back: collar + big heart + vertical rainbow ribbon
+    rainbow_arch(img, fx, fy)                       # chest rainbow + cloud
+    # back: collar + heart + ribbon bow
     bx, by, _, _ = FACES["body_back"]
     rect(img, bx, by, 8, 1, p["trim"])
     heart(img, bx + 4, by + 2, PINK)
-    for i in range(6):                             # ribbon tail down the back skirt
-        px(img, bx + 3, by + 5 + i, SKIRT[(i * len(SKIRT)) // 6])
-        px(img, bx + 4, by + 5 + i, shade(SKIRT[(i * len(SKIRT)) // 6], -18))
-    # jacket overlay: a frill ruffle layer at the skirt hem (front/back/sides)
+    px(img, bx + 2, by + 1, PINK); px(img, bx + 5, by + 1, PINK)   # bow loops
+    # jacket overlay: lower frill tiers (blue, lavender) -> protrudes for depth
     for f in ("jacket_front", "jacket_back", "jacket_right", "jacket_left"):
-        x0, y0, w, h = FACES[f]
-        for i in range(4):                         # bottom 4 rows = frill
-            c = SKIRT[min(len(SKIRT) - 1, 1 + (i * len(SKIRT)) // 4)]
-            rect(img, x0, y0 + 8 + i, w, 1, c)
-        for xx in range(x0, x0 + w, 2):            # scalloped hem shading
-            px(img, xx, y0 + 11, shade(SKIRT[-1], -26))
+        frill(img, f, 7, [SKIRT[3], SKIRT[4]])
 
 
 # ---------------------------------------------------------------- arms
@@ -218,15 +217,19 @@ def draw_leg(img, side, p):
     pre = "rleg" if side == "r" else "lleg"
     for f in ("front", "back", "right", "left"):
         x0, y0, w, h = FACES[pre + "_" + f]
-        rect(img, x0, y0, w, 2, SKIRT[-1])         # skirt hem continues onto upper leg
-        rect(img, x0, y0 + 2, w, 4, SKIN)          # bare leg
-        rect(img, x0, y0 + 6, w, 4, WHITE)         # white knee sock
-        rect(img, x0, y0 + 6, w, 1, p["trim"])     # sock cuff
-        rect(img, x0, y0 + 10, w, 2, LAV)          # lavender shoe
-    fill(img, pre + "_top", SKIRT[-1])
+        rect(img, x0, y0, w, 1, shade(SKIRT[4], 20))   # skirt frill hem (lit)
+        rect(img, x0, y0 + 1, w, 1, SKIRT[4])
+        rect(img, x0, y0 + 2, w, 4, SKIN)              # bare leg
+        px(img, x0, y0 + 2, SKIN_SH); px(img, x0 + w - 1, y0 + 2, SKIN_SH)  # leg shading
+        rect(img, x0, y0 + 6, w, 4, WHITE)             # white knee sock
+        rect(img, x0, y0 + 6, w, 1, p["trim"])         # sock cuff
+        rect(img, x0, y0 + 9, w, 1, shade(WHITE, -10))
+        rect(img, x0, y0 + 10, w, 2, LAV)              # lavender shoe
+        rect(img, x0, y0 + 10, w, 1, shade(LAV, 22))   # shoe highlight
+    fill(img, pre + "_top", SKIRT[4])
     # heart + star on the front of the sock
     fx, fy, _, _ = FACES[pre + "_front"]
-    px(img, fx + 1, fy + 7, PINK); px(img, fx + 2, fy + 7, PINK)
+    px(img, fx + 1, fy + 7, PINK)
     star(img, fx + 2, fy + 8, YEL)
 
 
