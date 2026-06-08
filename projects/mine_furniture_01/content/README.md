@@ -60,5 +60,6 @@
 | `mine_structure:unicorn_easel` | furniture entity | 이젤(캔버스 그림 토글), in-game test 대기 | `furniture/unicorn_imagination.md` |
 | `mine_structure:unicorn_horn_headband` | wearable | 입는 코스튬(뿔 머리띠), in-game test 대기(실험) | `wearables/unicorn_costume.md` |
 | `mine_structure:unicorn_elytra` | wearable glider | 나비 날개(커스텀 글라이더, 바닐라 별개, 활공+접힘/펴짐), in-game test 대기(실험) | `wearables/unicorn_costume.md` |
+| `mine_structure:unicorn_rainbow_skirt` | wearable | 입체 A라인 무지개 프릴 스커트(다리 슬롯, 허리 좁고 아래로 넓어짐), in-game test 대기(실험) | `wearables/unicorn_costume.md` |
 
 새 콘텐츠를 추가할 때는 이 표에 ID, 분류, 상태, 상세 문서 경로를 먼저 등록한다.

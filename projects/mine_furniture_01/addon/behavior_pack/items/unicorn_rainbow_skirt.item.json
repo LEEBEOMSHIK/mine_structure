@@ -1,0 +1,26 @@
+{
+	"format_version": "1.20.10",
+	"minecraft:item": {
+		"description": {
+			"identifier": "mine_structure:unicorn_rainbow_skirt",
+			"menu_category": {
+				"category": "equipment"
+			}
+		},
+		"components": {
+			"minecraft:display_name": {
+				"value": "무지개 프릴 스커트"
+			},
+			"minecraft:icon": {
+				"texture": "unicorn_rainbow_skirt"
+			},
+			"minecraft:max_stack_size": 1,
+			"minecraft:wearable": {
+				"slot": "slot.armor.legs"
+			},
+			"minecraft:durability": {
+				"max_durability": 240
+			}
+		}
+	}
+}

@@ -174,16 +174,15 @@ def draw_body(img, p):
     # legs -> the skirt is centred on the hand line, not halfway up the torso.
     for f in ("body_front", "body_back", "body_right", "body_left"):
         x0, y0, w, h = FACES[f]
-        rect(img, x0, y0, w, 10, WHITE)            # long white bodice
-        for xx in range(x0, x0 + w):               # soft side shading
-            px(img, xx, y0 + 1, shade(WHITE, -6))
+        rect(img, x0, y0, w, 2, SKIN)              # bare shoulders / chest top (off-shoulder)
+        rect(img, x0, y0 + 1, w, 1, p["trim"])     # dress neckline band
+        rect(img, x0, y0 + 2, w, 8, WHITE)         # white bodice
         rect(img, x0, y0 + 9, w, 1, p["trim"])     # waistband at the hand line
         frill(img, f, 10, [SKIRT[0]])              # first frill (pink) at the hem
-    fill(img, "body_top", WHITE)
+    fill(img, "body_top", SKIN)
     fill(img, "body_bottom", SKIRT[0])
     fx, fy, _, _ = FACES["body_front"]
-    rect(img, fx, fy, 8, 1, p["trim"])             # neckline
-    rainbow_arch(img, fx, fy)                       # chest rainbow + cloud
+    rainbow_arch(img, fx, fy + 1)                   # chest rainbow + cloud
     # back: collar + heart + ribbon bow
     bx, by, _, _ = FACES["body_back"]
     rect(img, bx, by, 8, 1, p["trim"])
@@ -196,23 +195,28 @@ def draw_body(img, p):
 
 # ---------------------------------------------------------------- arms
 def draw_arm(img, side, p):
+    # off-shoulder: bare shoulder/upper arm, puffed sleeve lower down, then hand
     pre = "rarm" if side == "r" else "larm"
     for f in ("front", "back", "right", "left"):
         x0, y0, w, h = FACES[pre + "_" + f]
-        rect(img, x0, y0, w, 8, WHITE)             # white sleeve
-        rect(img, x0, y0 + 7, w, 1, p["trim"])     # lavender cuff line
-        rect(img, x0, y0 + 8, w, 4, SKIN)          # hand
-    fill(img, pre + "_top", WHITE)
-    # frill cuff via the sleeve overlay (rows 7..9)
+        rect(img, x0, y0, w, 3, SKIN)              # bare shoulder (off-shoulder)
+        px(img, x0, y0 + 1, SKIN_SH); px(img, x0 + w - 1, y0 + 1, SKIN_SH)
+        rect(img, x0, y0 + 3, w, 4, WHITE)         # puffed white sleeve
+        rect(img, x0, y0 + 3, w, 1, p["trim"])     # sleeve top trim
+        rect(img, x0, y0 + 7, w, 1, p["trim"])     # cuff line
+        rect(img, x0, y0 + 8, w, 4, SKIN)          # forearm/hand
+    fill(img, pre + "_top", SKIN)
+    # frill cuff via the sleeve overlay (rows 6..8)
     preo = "rarmo" if side == "r" else "larmo"
     for f in ("front", "back", "right", "left"):
         x0, y0, w, h = FACES[preo + "_" + f]
+        rect(img, x0, y0 + 6, w, 1, shade(LAV, 18))
         rect(img, x0, y0 + 7, w, 1, LAV)
-        for xx in range(x0, x0 + w, 2):
-            px(img, xx, y0 + 8, shade(LAV, -26))
-    # one yellow star on the outer upper sleeve
+        for xx in range(x0 + 1, x0 + w, 2):
+            px(img, xx, y0 + 7, shade(LAV, -28))
+    # one yellow star on the sleeve
     sx, sy, _, _ = FACES[pre + "_front"]
-    star(img, sx + 1, sy + 3, YEL)
+    star(img, sx + 2, sy + 5, YEL)
 
 
 # ---------------------------------------------------------------- legs

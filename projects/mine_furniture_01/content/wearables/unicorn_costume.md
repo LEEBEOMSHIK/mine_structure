@@ -18,7 +18,18 @@
 
 - item: `minecraft:wearable`(slot.armor.chest) + `minecraft:glider`(활공) + `minecraft:durability`(432) + 아이콘/이름.
 - attachable(`attachables/unicorn_elytra.attachable.json`): 커스텀 geometry/texture + `render_controllers: ["controller.render.armor"]` + `scripts.animate: ["glide"]`.
-- geometry(`models/entity/unicorn_elytra.geo.json`): `body`(플레이어 몸 본) 하위에 `left_wing`/`right_wing` 본. **각 날개는 큐브 더미가 아니라 얇은 평면 1장**이고, 날개 모양은 텍스처에 **알파 컷아웃(투명 가장자리)**으로 그린다. 외형은 **나비 날개**(참고 `game/mine_reference/005.png`): 각 쪽이 **forewing(위 큰 lobe) + hindwing(아래 작은 lobe)** 2조각(총 4 cube)으로, 등에서 위·아래·바깥으로 펼쳐진다. **아이 친화 무지개색**: 각 날개가 안쪽(분홍/주황)→바깥(노랑/초록/파랑/보라) 무지개 그라데이션(`rainbow()`) + 흰 **날개맥/테두리**(스테인드글라스) + 각 lobe **eyespot(분홍, 흰 ring)** + 진보라 몸통. atlas 128. `gen_custom_elytra.py`의 `draw_lobe`(forewing 둥근 부채 / hindwing 둥근 타원) + `spot`(eyespot). `right_wing`/`left_wing` 본이 q.is_gliding으로 접힘(±12°)/펴짐. **펴짐(글라이딩) 상태는 loop 애니로 날개가 나비처럼 펄럭임**(아래로 펼침↔위로 모음, 0.7초 주기). ⚠️ attachable loop 재생은 버전 의존, 인게임 검증 필요. 옆면 슬리버 면은 투명 픽셀로 매핑해 보이지 않게 했다. Blockbench 원본 `../../blockbench/unicorn_elytra.bbmodel`.
+- geometry(`models/entity/unicorn_elytra.geo.json`): `body`(플레이어 몸 본) 하위에 `left_wing`/`right_wing` 본. **각 날개는 큐브 더미가 아니라 얇은 평면 1장**이고, 날개 모양은 텍스처에 **알파 컷아웃(투명 가장자리)**으로 그린다. 외형은 **나비 날개**(참고 `game/mine_reference/005.png`): 각 쪽이 **forewing(위 큰 lobe) + hindwing(아래 작은 lobe)** 2조각(총 4 cube)으로, 등에서 위·아래·바깥으로 펼쳐진다. **아이 친화 무지개색**: 각 날개가 안쪽(분홍/주황)→바깥(노랑/초록/파랑/보라) 무지개 그라데이션(`rainbow()`) + 흰 **날개맥/테두리**(스테인드글라스) + 각 lobe **eyespot(분홍, 흰 ring)** + 진보라 몸통. atlas 128. `gen_custom_elytra.py`의 `draw_lobe`(forewing 둥근 부채 / hindwing 둥근 타원) + `spot`(eyespot). `right_wing`/`left_wing` 본이 q.is_gliding으로 접힘(±12°)/펴짐. **펴짐(글라이딩) 상태는 loop 애니로 날개가 나비처럼 펄럭임**(아래로 펼침↔위로 모음, 0.7초 주기). ⚠️ attachable loop 재생은 버전 의존, 인게임 검증 필요.
+
+## 입체 A라인 무지개 스커트 (`unicorn_rainbow_skirt`)
+
+스킨(텍스처)으론 못 만드는 **입체 A라인 스커트**를 입는 attachable로 제작. 마인크래프트 스킨은 모델 고정이라 큐브 너비를 못 바꾸므로, 별도 큐브 모델로 허리는 좁고 무릎으로 갈수록 넓어지는 튜튜를 표현한다.
+
+- item: `minecraft:wearable`(slot.armor.legs) + durability + 아이콘.
+- geometry(`models/entity/unicorn_rainbow_skirt.geo.json`): 플레이어 `body` 본 하위에 **5단 콘 큐브**(위→아래로 폭 증가: 핑크→연노랑→민트→베이비블루→라벤더). 각 단은 위 하이라이트 + 아래 scallop 그림자로 프릴 명암.
+- attachable: `render_controllers: ["controller.render.armor"]`, `entity_alphatest`.
+- 생성: `../../blockbench/gen_skirt.py`. Blockbench 원본 `../../blockbench/unicorn_rainbow_skirt.bbmodel`.
+- 스킨(파스텔 유니콘 원피스, `mine_skins_01`)과 함께 입으면: 어깨 드러난 흰 상의 + 입체 무지개 A라인 스커트.
+- ⚠️ armor-slot attachable + 커스텀 geometry는 버전 의존 — 인게임 검증 필요. 옆면 슬리버 면은 투명 픽셀로 매핑해 보이지 않게 했다. Blockbench 원본 `../../blockbench/unicorn_elytra.bbmodel`.
 - 애니메이션: `controller.animation.unicorn_elytra.glide`가 `q.is_gliding`으로 `folded`(접힘, 등에 붙음)↔`spread`(펴짐)를 전환.
 - 생성: `../../blockbench/gen_custom_elytra.py`
 

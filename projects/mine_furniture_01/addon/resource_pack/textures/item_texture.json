@@ -34,6 +34,9 @@
     },
     "unicorn_transform_wand": {
       "textures": "textures/items/unicorn_transform_wand"
+    },
+    "unicorn_rainbow_skirt": {
+      "textures": "textures/items/unicorn_rainbow_skirt"
     }
   }
 }

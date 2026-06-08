@@ -95,6 +95,7 @@ BLOCKS = {
 
 WEARABLES = {
     "unicorn_horn_headband": {"identifier": "mine_structure:unicorn_horn_headband", "slot": "slot.armor.head", "bone": "head"},
+    "unicorn_rainbow_skirt": {"identifier": "mine_structure:unicorn_rainbow_skirt", "slot": "slot.armor.legs", "bone": "body"},
 }
 
 FURNITURE_BBMODEL_TEXTURE_BY_ROOT = {

@@ -1,0 +1,20 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:attachable": {
+		"description": {
+			"identifier": "mine_structure:unicorn_rainbow_skirt",
+			"materials": {
+				"default": "entity_alphatest"
+			},
+			"textures": {
+				"default": "textures/entity/unicorn_rainbow_skirt/unicorn_rainbow_skirt"
+			},
+			"geometry": {
+				"default": "geometry.unicorn_rainbow_skirt"
+			},
+			"render_controllers": [
+				"controller.render.armor"
+			]
+		}
+	}
+}
