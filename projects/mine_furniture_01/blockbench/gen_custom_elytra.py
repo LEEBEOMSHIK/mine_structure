@@ -26,16 +26,23 @@ BP_ITEMS = os.path.join(BASE, "addon", "behavior_pack", "items")
 HERE = os.path.dirname(__file__)
 SID = "unicorn_elytra"
 IDENT = "mine_structure:" + SID
-# angel-wing feather palette (white + soft pastel lavender). The SHAPE follows the
-# ref 002.png: sharp jagged sawtooth feather tips fanning from the shoulder.
-RIDGE = (255, 255, 255)      # white highlight down each feather ridge
-F_LIGHT = (246, 242, 252)    # near-white
-F_MID = (228, 222, 244)      # soft lavender body
-F_DEEP = (194, 184, 222)     # lavender feather shadow
-F_EDGE = (170, 158, 206)     # darkest edge / spine
+# angel-wing feather palette (white + soft pastel lavender). Each feather is shaded
+# like the ref 002.png crystal feathers: bright leading highlight grading to a darker
+# trailing edge, sharp pointed tips, crisp dark separations between feathers.
+RIDGE = (255, 255, 255)      # bright leading highlight of each feather
+F_LIGHT = (240, 236, 250)    # near-white body
+F_MID = (206, 196, 234)      # lavender mid
+F_DEEP = (162, 148, 206)     # deeper lavender trailing shadow (more contrast)
+F_EDGE = (126, 110, 176)     # darkest separation / spine
 ATLAS_REL = os.path.join("textures", "entity", SID, SID + ".png")
-# wing painted into a WWxWH region of the 64x64 atlas (1:2, elytra-like proportions)
-WW, WH = 16, 32
+# higher-res wing: painted into a WWxWH region of a 128x128 atlas (2x the old res)
+ATLAS_SIZE = 128
+WW, WH = 32, 64
+
+
+def lerp(a, b, t):
+    t = max(0.0, min(1.0, t))
+    return tuple(int(round(a[i] + (b[i] - a[i]) * t)) for i in range(3))
 
 
 def write_json(path, data):
@@ -50,51 +57,53 @@ def shade(c, amt):
 
 
 def angel_edge(ty):
-    """Outer x-limit at vertical fraction ty (0 top .. 1 bottom). A FAN wing (ref
-    002.png): narrow at the shoulder up top, fanning wider toward the bottom, then
-    pulling in to a point. Kept well below WW so the wing silhouette is clearly NOT
-    a rectangle; the per-row sawtooth in draw_wing then cuts the feather points."""
+    """Outer x-limit at vertical fraction ty (0 top .. 1 bottom), scaled to WW. A
+    FAN wing (ref 002.png): narrow at the shoulder, fanning wide, tapering to a
+    point. Well below WW so the silhouette is clearly a wing, not a rectangle."""
     if ty < 0.72:
-        return 1.5 + 12.0 * (ty / 0.72) ** 0.7         # narrow shoulder -> wide fan
+        return 3.0 + 24.0 * (ty / 0.72) ** 0.72        # narrow shoulder -> wide fan
     u = (ty - 0.72) / 0.28
-    return 13.5 - 11.5 * (u ** 0.75)                    # taper the bottom to a point
+    return 27.0 - 24.0 * (u ** 0.75)                    # taper the bottom to a point
 
 
 def draw_wing(img):
-    """White feathered wing into the WWxWH region (transparent outside). SHAPE per
-    ref 002.png: feathers fan from the shoulder (0,0) with SHARP SAWTOOTH pointed
-    tips along the outer/lower edge. Each feather has a bright white ridge down its
-    centre and soft lavender edges. Spine is the straight inner edge (x=0)."""
-    fcount = 7
+    """Hi-res feathered wing into the WWxWH region (transparent outside). Feathers
+    fan from the shoulder; each feather is shaded like the ref 002.png crystal
+    feathers: a bright leading-edge highlight grading smoothly to a darker trailing
+    edge, with a crisp dark separation between feathers and luminous pointed tips.
+    Spine is the straight inner edge (x=0)."""
+    fcount = 8
     for y in range(WH):
         ty = y / (WH - 1)
         redge = angel_edge(ty)
-        seg = (y % 3) / 3.0                             # sharp sawtooth along the WHOLE edge
-        redge -= seg * 3.6
+        seg = (y % 6) / 6.0                             # fine sawtooth feather points (hi-res)
+        redge -= seg * 6.0
         redge = max(0.0, min(WW - 1, redge))
         for x in range(WW):
             if x > redge:
                 continue
             tipfrac = x / redge if redge > 0 else 0.0
-            ang = math.atan2(y + 1, x + 0.5)           # fan angle from the shoulder
+            ang = math.atan2(y + 1, x + 1.0)           # fan angle from the shoulder
             fi = (ang / (math.pi / 2)) * fcount
-            frac = fi - math.floor(fi)
-            d = abs(frac - 0.5) * 2.0                   # 0 = feather ridge .. 1 = feather edge
-            if d > 0.78:
-                col = F_DEEP                           # crisp lavender line between feathers
-            elif d < 0.28:
-                col = RIDGE                            # bright white ridge down the feather
+            frac = fi - math.floor(fi)                  # 0 = leading edge .. 1 = trailing edge
+            # crystal-feather shading: bright leading highlight -> darker trailing edge
+            if frac < 0.14:
+                col = RIDGE                            # bright leading highlight
+            elif frac > 0.92:
+                col = F_EDGE                           # crisp dark separation line
             else:
-                col = F_LIGHT                          # clean near-white feather body
-            if tipfrac > 0.84:                         # soft pastel toward the pointed tips
-                col = F_MID
+                col = lerp(F_LIGHT, F_DEEP, (frac - 0.14) / 0.78)
+            if tipfrac > 0.84:                         # luminous pointed tips
+                col = lerp(col, RIDGE, 0.55)
+            elif tipfrac < 0.14:                       # subtle root shading
+                col = lerp(col, F_DEEP, 0.45)
             if x < 1:                                  # inner spine edge
                 col = F_EDGE
             img.putpixel((x, y), col + (255,))
 
 
 def textures():
-    atlas = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
+    atlas = Image.new("RGBA", (ATLAS_SIZE, ATLAS_SIZE), (0, 0, 0, 0))
     draw_wing(atlas)
     out = os.path.join(RP, ATLAS_REL)
     os.makedirs(os.path.dirname(out), exist_ok=True)
@@ -131,7 +140,7 @@ LEFT = {"from": [-12, 4, 2.35], "size": [11, 21, 0.05], "pivot": [-1, 25, 2.375]
 
 def geo_faces(mirror):
     big = {"uv": [WW, 0] if mirror else [0, 0], "uv_size": [-WW, WH] if mirror else [WW, WH]}
-    edge = {"uv": [62, 62], "uv_size": [1, 1]}  # transparent corner -> invisible thin sides
+    edge = {"uv": [ATLAS_SIZE - 2, ATLAS_SIZE - 2], "uv_size": [1, 1]}  # transparent corner
     return {"north": dict(big), "south": dict(big), "east": dict(edge),
             "west": dict(edge), "up": dict(edge), "down": dict(edge)}
 
@@ -144,7 +153,7 @@ def geometry():
         "minecraft:geometry": [{
             "description": {
                 "identifier": "geometry." + SID,
-                "texture_width": 64, "texture_height": 64,
+                "texture_width": ATLAS_SIZE, "texture_height": ATLAS_SIZE,
                 "visible_bounds_width": 5, "visible_bounds_height": 3,
                 "visible_bounds_offset": [0, 1.5, 0],
             },
@@ -165,7 +174,7 @@ def bbmodel():
     def bb_faces(mirror):
         u = [WW, 0, 0, WH] if mirror else [0, 0, WW, WH]
         big = {"uv": u, "texture": 0}
-        edge = {"uv": [62, 62, 63, 63], "texture": 0}
+        edge = {"uv": [ATLAS_SIZE - 2, ATLAS_SIZE - 2, ATLAS_SIZE - 1, ATLAS_SIZE - 1], "texture": 0}
         return {"north": dict(big), "south": dict(big), "east": dict(edge),
                 "west": dict(edge), "up": dict(edge), "down": dict(edge)}
 
@@ -206,7 +215,7 @@ def bbmodel():
     texture = {
         "name": SID + "_atlas.png", "relative_path": "../addon/resource_pack/" + ATLAS_REL.replace(os.sep, "/"),
         "folder": "", "namespace": "", "id": "0", "group": "", "scope": 0,
-        "width": 64, "height": 64, "uv_width": 64, "uv_height": 64,
+        "width": ATLAS_SIZE, "height": ATLAS_SIZE, "uv_width": ATLAS_SIZE, "uv_height": ATLAS_SIZE,
         "particle": False, "use_as_default": False, "layers_enabled": False,
         "sync_to_project": "", "file_format": "png", "render_mode": "default",
         "render_sides": "auto", "wrap_mode": "limited", "pbr_channel": "color",
@@ -220,7 +229,7 @@ def bbmodel():
         "variable_placeholders": "", "multi_file_ruleset": "",
         "variable_placeholder_buttons": [], "bedrock_animation_mode": "entity",
         "timeline_setups": [], "unhandled_root_fields": {},
-        "resolution": {"width": 64, "height": 64},
+        "resolution": {"width": ATLAS_SIZE, "height": ATLAS_SIZE},
         "elements": [r, le], "groups": groups, "outliner": outliner,
         "textures": [texture], "animations": [],
     }

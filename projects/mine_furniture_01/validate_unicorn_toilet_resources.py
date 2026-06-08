@@ -1274,7 +1274,7 @@ def validate_elytra(failures):
     animation_path = RESOURCE_PACK / "animations" / f"{sid}.animation.json"
 
     validate_png(RESOURCE_PACK / "textures" / "items" / f"{sid}.png", failures, expected_size=(16, 16))
-    validate_png(RESOURCE_PACK / "textures" / "entity" / sid / f"{sid}.png", failures, expected_size=(64, 64))
+    validate_png(RESOURCE_PACK / "textures" / "entity" / sid / f"{sid}.png", failures, expected_size=(128, 128))
 
     if item_path.is_file():
         components = load_json(item_path).get("minecraft:item", {}).get("components", {})
