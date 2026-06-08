@@ -9,7 +9,7 @@
 		},
 		"components": {
 			"minecraft:display_name": {
-				"value": "천사 날개"
+				"value": "나비 날개"
 			},
 			"minecraft:icon": {
 				"texture": "unicorn_elytra"

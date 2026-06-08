@@ -26,16 +26,19 @@ BP_ITEMS = os.path.join(BASE, "addon", "behavior_pack", "items")
 HERE = os.path.dirname(__file__)
 SID = "unicorn_elytra"
 IDENT = "mine_structure:" + SID
-# angel-wing feather palette (white + soft pastel lavender). Each feather is shaded
-# like the ref 002.png crystal feathers: bright leading highlight grading to a darker
-# trailing edge, sharp pointed tips, crisp dark separations between feathers.
-RIDGE = (255, 255, 255)      # bright leading highlight of each feather
-F_LIGHT = (240, 236, 250)    # near-white body
-F_MID = (206, 196, 234)      # lavender mid
-F_DEEP = (162, 148, 206)     # deeper lavender trailing shadow (more contrast)
-F_EDGE = (126, 110, 176)     # darkest separation / spine
+# pastel BUTTERFLY-wing palette: rounded forewing (pink->lavender) + hindwing
+# (sky->mint), dark veins radiating from the body, a dark edge band with white
+# dots, and an eyespot on each lobe.
+FORE_IN = (255, 192, 226)    # forewing inner (pink)
+FORE_OUT = (202, 156, 236)   # forewing outer (lavender)
+HIND_IN = (178, 222, 250)    # hindwing inner (sky)
+HIND_OUT = (156, 228, 206)   # hindwing outer (mint)
+VEIN = (118, 86, 168)        # dark vein / body
+BAND = (104, 74, 156)        # dark outer edge band
+DOT = (255, 250, 206)        # pale-gold edge dots / eyespot ring
+EYE = (96, 64, 150)          # eyespot centre
 ATLAS_REL = os.path.join("textures", "entity", SID, SID + ".png")
-# higher-res wing: painted into a WWxWH region of a 128x128 atlas (2x the old res)
+# hi-res wing: painted into a WWxWH region of a 128x128 atlas
 ATLAS_SIZE = 128
 WW, WH = 32, 64
 
@@ -56,50 +59,71 @@ def shade(c, amt):
     return tuple(max(0, min(255, v + amt)) for v in c)
 
 
-def angel_edge(ty):
-    """Outer x-limit at vertical fraction ty (0 top .. 1 bottom), scaled to WW. A
-    FAN wing (ref 002.png): narrow at the shoulder, fanning wide, tapering to a
-    point. Well below WW so the silhouette is clearly a wing, not a rectangle."""
-    if ty < 0.72:
-        return 3.0 + 24.0 * (ty / 0.72) ** 0.72        # narrow shoulder -> wide fan
-    u = (ty - 0.72) / 0.28
-    return 27.0 - 24.0 * (u ** 0.75)                    # taper the bottom to a point
+def butterfly_edge(ty):
+    """Outer x-limit at vertical fraction ty (0 top .. 1 bottom), scaled to WW.
+    Two rounded butterfly lobes: a big forewing on top and a smaller hindwing
+    below, with a slight notch between them (and the hindwing tapering to a small
+    tail at the very bottom)."""
+    if ty < 0.55:                                      # forewing lobe (large, rounded)
+        u = ty / 0.55
+        return 3.0 + 26.0 * math.sin(u * math.pi * 0.86) ** 0.9
+    u = (ty - 0.55) / 0.45                             # hindwing lobe (rounded + tail)
+    return 2.0 + 23.0 * math.sin(u * math.pi) ** 0.85
+
+
+def spot(img, cx, cy, r):
+    """Draw an eyespot (pale ring + dark centre) clipped to painted wing pixels."""
+    for yy in range(int(cy - r), int(cy + r + 1)):
+        for xx in range(int(cx - r), int(cx + r + 1)):
+            if not (0 <= xx < WW and 0 <= yy < WH):
+                continue
+            if img.getpixel((xx, yy))[3] == 0:
+                continue
+            d = math.hypot(xx - cx, yy - cy)
+            if d <= r * 0.5:
+                img.putpixel((xx, yy), EYE + (255,))
+            elif d <= r * 0.82:
+                img.putpixel((xx, yy), DOT + (255,))
+            elif d <= r:
+                img.putpixel((xx, yy), BAND + (255,))
 
 
 def draw_wing(img):
-    """Hi-res feathered wing into the WWxWH region (transparent outside). Feathers
-    fan from the shoulder; each feather is shaded like the ref 002.png crystal
-    feathers: a bright leading-edge highlight grading smoothly to a darker trailing
-    edge, with a crisp dark separation between feathers and luminous pointed tips.
-    Spine is the straight inner edge (x=0)."""
-    fcount = 8
+    """Hi-res BUTTERFLY wing into the WWxWH region (transparent outside): rounded
+    forewing + hindwing, pastel base graded inner->outer (pink/lavender on the
+    forewing, sky/mint on the hindwing), dark veins radiating from the body, a dark
+    edge band dotted with pale spots, and an eyespot on each lobe. Body/spine is the
+    straight inner edge (x=0)."""
+    veins = 5
     for y in range(WH):
         ty = y / (WH - 1)
-        redge = angel_edge(ty)
-        seg = (y % 6) / 6.0                             # fine sawtooth feather points (hi-res)
-        redge -= seg * 6.0
+        redge = butterfly_edge(ty)
         redge = max(0.0, min(WW - 1, redge))
         for x in range(WW):
             if x > redge:
                 continue
             tipfrac = x / redge if redge > 0 else 0.0
-            ang = math.atan2(y + 1, x + 1.0)           # fan angle from the shoulder
-            fi = (ang / (math.pi / 2)) * fcount
-            frac = fi - math.floor(fi)                  # 0 = leading edge .. 1 = trailing edge
-            # crystal-feather shading: bright leading highlight -> darker trailing edge
-            if frac < 0.14:
-                col = RIDGE                            # bright leading highlight
-            elif frac > 0.92:
-                col = F_EDGE                           # crisp dark separation line
-            else:
-                col = lerp(F_LIGHT, F_DEEP, (frac - 0.14) / 0.78)
-            if tipfrac > 0.84:                         # luminous pointed tips
-                col = lerp(col, RIDGE, 0.55)
-            elif tipfrac < 0.14:                       # subtle root shading
-                col = lerp(col, F_DEEP, 0.45)
-            if x < 1:                                  # inner spine edge
-                col = F_EDGE
+            if ty < 0.55:                              # forewing colours
+                col = lerp(FORE_IN, FORE_OUT, tipfrac)
+            else:                                      # hindwing colours
+                col = lerp(HIND_IN, HIND_OUT, tipfrac)
+            # veins radiating from the shoulder/body
+            ang = math.atan2(y + 1, x + 1.0)
+            fi = (ang / (math.pi / 2)) * veins
+            frac = fi - math.floor(fi)
+            if frac < 0.07 or frac > 0.93:
+                col = VEIN
+            # dark outer edge band with pale dots
+            if tipfrac > 0.9:
+                col = BAND
+            elif tipfrac > 0.8 and (y % 5 == 0):
+                col = DOT
+            if x < 1:                                  # body / inner edge
+                col = VEIN
             img.putpixel((x, y), col + (255,))
+    # eyespots: one on the forewing, one on the hindwing
+    spot(img, 11, 17, 4.2)
+    spot(img, 12, 46, 3.4)
 
 
 def textures():
@@ -110,23 +134,24 @@ def textures():
     atlas.save(out)
     print("wrote", out)
 
-    # icon: a pair of icy crystal wings flaring up-and-out, jagged tips
+    # icon: a pair of pastel butterfly wings (forewing + hindwing lobes)
     icon = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
     cx = 8
     for y in range(2, 14):
         ty = (y - 2) / 11
-        half = 1 + int(5.5 * math.sin(min(1.0, ty * 1.1) * math.pi * 0.6))
-        if y % 2 == 1:                       # jagged sawtooth outer edge
-            half = max(1, half - 1)
+        if ty < 0.5:                                   # forewing lobe
+            half = 1 + int(5.0 * math.sin((ty / 0.5) * math.pi * 0.85))
+            base = lerp(FORE_IN, FORE_OUT, 0.5)
+        else:                                          # hindwing lobe
+            half = 1 + int(4.5 * math.sin(((ty - 0.5) / 0.5) * math.pi))
+            base = lerp(HIND_IN, HIND_OUT, 0.5)
         for dx in range(1, half + 1):
-            edge = dx >= half - 1
-            ridge = dx <= 1
-            col = F_EDGE if edge else (RIDGE if ridge else F_LIGHT)
+            col = BAND if dx >= half else base
             icon.putpixel((cx - 1 - dx, y), col + (255,))
             icon.putpixel((cx + dx, y), col + (255,))
-    # soft golden halo dot on top
-    icon.putpixel((cx - 1, 1), (255, 236, 150, 255))
-    icon.putpixel((cx, 1), (255, 236, 150, 255))
+    for by in range(2, 14):                            # dark body down the middle
+        icon.putpixel((cx - 1, by), VEIN + (255,))
+        icon.putpixel((cx, by), VEIN + (255,))
     icon_out = os.path.join(RP, "textures", "items", SID + ".png")
     icon.save(icon_out)
     print("wrote", icon_out)
@@ -245,7 +270,7 @@ def item():
         "minecraft:item": {
             "description": {"identifier": IDENT, "menu_category": {"category": "equipment"}},
             "components": {
-                "minecraft:display_name": {"value": "천사 날개"},
+                "minecraft:display_name": {"value": "나비 날개"},
                 "minecraft:icon": {"texture": SID},
                 "minecraft:max_stack_size": 1,
                 "minecraft:wearable": {"slot": "slot.armor.chest"},
