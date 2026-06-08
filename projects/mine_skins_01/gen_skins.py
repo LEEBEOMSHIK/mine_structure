@@ -166,6 +166,11 @@ def draw_head(img, p):
     # pink heart hair-clips on the top of the head, either side of the horn
     heart(img, tx + 2, ty + 3, PINK)
     heart(img, tx + 5, ty + 3, PINK)
+    # hairpins on the bangs (front): a gold star clip + a pink ribbon clip
+    star(img, hx + 1, hy + 1, GOLD)
+    px(img, hx + 1, hy + 1, shade(GOLD, 22))
+    rect(img, hx + 5, hy + 1, 2, 1, PINK)              # ribbon clip
+    px(img, hx + 5, hy + 2, shade(PINK, -22)); px(img, hx + 6, hy + 2, shade(PINK, -22))
 
 
 # ---------------------------------------------------------------- body
