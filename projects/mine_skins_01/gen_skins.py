@@ -1,11 +1,15 @@
-"""Generate 64x64 Bedrock player skins for the pastel-unicorn character set.
+"""Generate 64x64 Bedrock player skins: pastel unicorn one-piece dress.
 
-Reference: ../../game/mine_reference/001.png (pastel unicorn girl: lavender hair,
-rainbow dress, star/heart accents, horn). These are procedural *approximations*
-on the classic 64x64 humanoid UV (4px arms).
+Spec (from reference 001.png, rewritten):
+  - lavender hair + small gold unicorn-horn mark, simple cute face (purple eyes)
+  - white one-piece bodice, small rainbow + cloud motif on the chest, pastel trim
+  - white sleeves with lavender frill cuffs + one yellow star on an arm
+  - pastel-rainbow frill skirt (pink->yellow->mint->blue->lavender, top to bottom)
+    across the lower body and the top of the legs, using the jacket/leg overlay layers
+  - back: a big heart + a vertical rainbow ribbon, skirt frill continues
+  - skin-tone legs, white knee socks with a heart/star, lavender shoes
 
-Outputs PNG skins + a flat front-facing preview (for eyeballing) into skin_pack/.
-manifest.json / skins.json / texts are written here too.
+Outputs PNG skins + front/back/side previews + manifest/skins.json/texts.
 """
 import json
 import os
@@ -15,6 +19,18 @@ from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PACK = os.path.join(HERE, "skin_pack")
+
+# palette (spec)
+WHITE = (255, 248, 255)
+LAV = (205, 180, 246)
+PINK = (247, 167, 200)
+BLUE = (169, 216, 255)
+MINT = (185, 242, 208)
+YEL = (255, 233, 154)
+PURP = (169, 135, 217)     # soft purple shadow
+GOLD = (255, 215, 90)
+SKIN = (255, 220, 200)
+SKIN_SH = (240, 198, 178)
 
 
 def rect(img, x0, y0, w, h, c):
@@ -29,207 +45,277 @@ def px(img, x, y, c):
         img.putpixel((x, y), c)
 
 
-# Classic 64x64 UV face origins (x, y) for 8x8 head / body / 4-wide limbs.
-# Each entry: (x0, y0, width, height) of the FRONT face unless noted.
+# ---- 64x64 UV: base + overlay (hat / jacket / sleeves / pants) ----
 FACES = {
     "head_top": (8, 0, 8, 8), "head_bottom": (16, 0, 8, 8),
     "head_right": (0, 8, 8, 8), "head_front": (8, 8, 8, 8),
     "head_left": (16, 8, 8, 8), "head_back": (24, 8, 8, 8),
     "hat_top": (40, 0, 8, 8), "hat_front": (40, 8, 8, 8),
     "hat_right": (32, 8, 8, 8), "hat_left": (48, 8, 8, 8), "hat_back": (56, 8, 8, 8),
-    "body_front": (20, 20, 8, 12), "body_back": (32, 20, 8, 12),
-    "body_right": (16, 20, 4, 12), "body_left": (28, 20, 4, 12),
     "body_top": (20, 16, 8, 4), "body_bottom": (28, 16, 8, 4),
-    "rarm_front": (44, 20, 4, 12), "rarm_back": (52, 20, 4, 12),
-    "rarm_right": (40, 20, 4, 12), "rarm_left": (48, 20, 4, 12),
-    "rarm_top": (44, 16, 4, 4),
-    "larm_front": (36, 52, 4, 12), "larm_back": (44, 52, 4, 12),
-    "larm_right": (32, 52, 4, 12), "larm_left": (40, 52, 4, 12),
-    "larm_top": (36, 48, 4, 4),
-    "rleg_front": (4, 20, 4, 12), "rleg_back": (12, 20, 4, 12),
-    "rleg_right": (0, 20, 4, 12), "rleg_left": (8, 20, 4, 12),
-    "rleg_top": (4, 16, 4, 4),
-    "lleg_front": (20, 52, 4, 12), "lleg_back": (28, 52, 4, 12),
-    "lleg_right": (16, 52, 4, 12), "lleg_left": (24, 52, 4, 12),
-    "lleg_top": (20, 48, 4, 4),
+    "body_right": (16, 20, 4, 12), "body_front": (20, 20, 8, 12),
+    "body_left": (28, 20, 4, 12), "body_back": (32, 20, 8, 12),
+    "jacket_top": (20, 32, 8, 4), "jacket_bottom": (28, 32, 8, 4),
+    "jacket_right": (16, 36, 4, 12), "jacket_front": (20, 36, 8, 12),
+    "jacket_left": (28, 36, 4, 12), "jacket_back": (32, 36, 8, 12),
+    "rarm_top": (44, 16, 4, 4), "rarm_right": (40, 20, 4, 12),
+    "rarm_front": (44, 20, 4, 12), "rarm_left": (48, 20, 4, 12), "rarm_back": (52, 20, 4, 12),
+    "rarmo_top": (44, 32, 4, 4), "rarmo_right": (40, 36, 4, 12),
+    "rarmo_front": (44, 36, 4, 12), "rarmo_left": (48, 36, 4, 12), "rarmo_back": (52, 36, 4, 12),
+    "larm_top": (36, 48, 4, 4), "larm_right": (32, 52, 4, 12),
+    "larm_front": (36, 52, 4, 12), "larm_left": (40, 52, 4, 12), "larm_back": (44, 52, 4, 12),
+    "larmo_top": (52, 48, 4, 4), "larmo_right": (48, 52, 4, 12),
+    "larmo_front": (52, 52, 4, 12), "larmo_left": (56, 52, 4, 12), "larmo_back": (60, 52, 4, 12),
+    "rleg_top": (4, 16, 4, 4), "rleg_right": (0, 20, 4, 12),
+    "rleg_front": (4, 20, 4, 12), "rleg_left": (8, 20, 4, 12), "rleg_back": (12, 20, 4, 12),
+    "rlego_top": (4, 32, 4, 4), "rlego_right": (0, 36, 4, 12),
+    "rlego_front": (4, 36, 4, 12), "rlego_left": (8, 36, 4, 12), "rlego_back": (12, 36, 4, 12),
+    "lleg_top": (20, 48, 4, 4), "lleg_right": (16, 52, 4, 12),
+    "lleg_front": (20, 52, 4, 12), "lleg_left": (24, 52, 4, 12), "lleg_back": (28, 52, 4, 12),
+    "llego_top": (4, 48, 4, 4), "llego_right": (0, 52, 4, 12),
+    "llego_front": (4, 52, 4, 12), "llego_left": (8, 52, 4, 12), "llego_back": (28, 52, 4, 12),
 }
 
+# pastel rainbow frill, top -> bottom
+SKIRT = [PINK, YEL, MINT, BLUE, LAV]
 
-def fill_face(img, name, c):
+
+def fill(img, name, c):
     x0, y0, w, h = FACES[name]
     rect(img, x0, y0, w, h, c)
 
 
+def shade(c, amt):
+    return tuple(max(0, min(255, v + amt)) for v in c)
+
+
+def heart(img, cx, cy, c):
+    rect(img, cx - 2, cy, 2, 1, c); rect(img, cx + 1, cy, 2, 1, c)
+    rect(img, cx - 2, cy + 1, 5, 1, c)
+    rect(img, cx - 1, cy + 2, 3, 1, c)
+    px(img, cx, cy + 3, c)
+
+
+def star(img, cx, cy, c):
+    px(img, cx, cy - 1, c); px(img, cx, cy + 1, c)
+    px(img, cx - 1, cy, c); px(img, cx + 1, cy, c); px(img, cx, cy, c)
+
+
+def skirt_face(img, name, n=6):
+    """Fill a 4- or 8-wide body/leg face with the rainbow frill, with a soft
+    scalloped shade at the bottom of each colour band for a frill look."""
+    x0, y0, w, h = FACES[name]
+    for i in range(h):
+        c = SKIRT[(i * len(SKIRT)) // h]
+        rect(img, x0, y0 + i, w, 1, c)
+    # subtle frill scallops: darken every other column at band edges
+    for i in range(h):
+        c = SKIRT[(i * len(SKIRT)) // h]
+        if i > 0 and SKIRT[((i - 1) * len(SKIRT)) // h] != c:
+            for xx in range(x0, x0 + w, 2):
+                px(img, xx, y0 + i, shade(c, -22))
+
+
+# ---------------------------------------------------------------- head
 def draw_head(img, p):
-    # hair on top / back / sides, skin on the lower front
     for f in ("head_top", "head_back", "head_right", "head_left"):
-        fill_face(img, f, p["hair"])
+        fill(img, f, p["hair"])
     fx, fy, _, _ = FACES["head_front"]
-    fill_face(img, "head_front", p["skin"])
-    # bangs across the top two rows of the face + side strands
-    rect(img, fx, fy, 8, 2, p["hair"])
-    rect(img, fx, fy + 2, 1, 6, p["hair"])
-    rect(img, fx + 7, fy + 2, 1, 6, p["hair"])
-    px(img, fx + 1, fy + 2, p["hair"]); px(img, fx + 6, fy + 2, p["hair"])
-    # eyes (2x2) with a white highlight + dark top
+    fill(img, "head_front", SKIN)
+    # bangs (3 rows) + side locks (2 cols) -> small cute face
+    rect(img, fx, fy, 8, 3, p["hair"])
+    rect(img, fx, fy + 3, 2, 5, p["hair"]); rect(img, fx + 6, fy + 3, 2, 5, p["hair"])
+    px(img, fx + 2, fy + 3, p["hair"]); px(img, fx + 5, fy + 3, p["hair"])
+    # purple eyes (2 tall) + shine, blush, small smile
     for ex in (fx + 2, fx + 5):
-        rect(img, ex, fy + 4, 1, 3, p["eye"])
-        px(img, ex, fy + 4, p["eye_dk"])
-        px(img, ex, fy + 6, (255, 255, 255))
-    # blush + mouth
-    px(img, fx + 1, fy + 5, p["blush"]); px(img, fx + 6, fy + 5, p["blush"])
-    px(img, fx + 3, fy + 6, p["mouth"]); px(img, fx + 4, fy + 6, p["mouth"])
-    # hat layer: fuller hair + a little horn nub on the forehead
+        rect(img, ex, fy + 4, 1, 2, p["eye"])
+        px(img, ex, fy + 4, shade(p["eye"], -40))
+        px(img, ex, fy + 5, (255, 255, 255))
+    px(img, fx + 2, fy + 6, PINK); px(img, fx + 5, fy + 6, PINK)
+    rect(img, fx + 3, fy + 6, 2, 1, shade(PINK, -30))
+    # hat layer: fuller framing hair + a small gold horn mark on the forehead
     for f in ("hat_top", "hat_back", "hat_right", "hat_left"):
-        fill_face(img, f, p["hair_dk"])
+        fill(img, f, p["hair"])
     hx, hy, _, _ = FACES["hat_front"]
-    rect(img, hx, hy, 8, 2, p["hair_dk"])      # bangs overlay
-    rect(img, hx, hy + 2, 1, 5, p["hair_dk"])
-    rect(img, hx + 7, hy + 2, 1, 5, p["hair_dk"])
-    # horn nub: small gold mark on the hat top, front-centre
+    rect(img, hx, hy, 8, 3, p["hair"])
+    rect(img, hx, hy + 3, 2, 4, p["hair"]); rect(img, hx + 6, hy + 3, 2, 4, p["hair"])
+    # small gold horn: a short triangle on the forehead/hat top, front-centre
+    px(img, hx + 4, hy + 2, GOLD)
     tx, ty, _, _ = FACES["hat_top"]
-    rect(img, tx + 3, ty + 1, 2, 2, p["horn"])
-    px(img, tx + 3, ty + 1, (255, 245, 200))
+    px(img, tx + 4, ty + 6, GOLD); px(img, tx + 4, ty + 5, GOLD)
+    px(img, tx + 4, ty + 4, shade(GOLD, 20))
+
+
+# ---------------------------------------------------------------- body
+def rainbow_arch(img, cx, cy):
+    # tiny rainbow arc (5 wide) over a little cloud, centred at (cx, cy)
+    arc = [PINK, YEL, MINT, BLUE]
+    for k, c in enumerate(arc):
+        px(img, cx - 2 + 0, cy + k, c)        # left leg of arch
+        px(img, cx + 2 - 0, cy + k, c)        # right leg
+    for k, c in enumerate(arc):
+        px(img, cx - 2, cy + k, c); px(img, cx + 2, cy + k, c)
+    rect(img, cx - 1, cy - 1, 3, 1, PINK)     # top of arch
+    px(img, cx - 2, cy, PINK); px(img, cx + 2, cy, PINK)
+    # little cloud under the arch
+    rect(img, cx - 2, cy + 4, 5, 1, WHITE)
+    px(img, cx - 1, cy + 3, WHITE); px(img, cx + 1, cy + 3, WHITE)
 
 
 def draw_body(img, p):
-    # bodice (upper) + rainbow skirt (lower); back/sides follow the dress
-    for f in ("body_front", "body_back"):
+    # base: white bodice on top, rainbow skirt on the lower rows
+    for f in ("body_front", "body_back", "body_right", "body_left"):
         x0, y0, w, h = FACES[f]
-        rect(img, x0, y0, w, 6, p["dress"])           # bodice
-        for i in range(6):                            # skirt stripes
-            rect(img, x0, y0 + 6 + i, w, 1, p["rainbow"][i % len(p["rainbow"])])
-    for f in ("body_right", "body_left"):
-        x0, y0, w, h = FACES[f]
-        rect(img, x0, y0, w, 6, p["dress"])
-        for i in range(6):
-            rect(img, x0, y0 + 6 + i, w, 1, p["rainbow"][i % len(p["rainbow"])])
-    fill_face(img, "body_top", p["dress"])
-    fill_face(img, "body_bottom", p["rainbow"][3])
-    # chest heart + collar trim
+        rect(img, x0, y0, w, 6, WHITE)             # bodice (white)
+        rect(img, x0, y0 + 5, w, 1, p["trim"])     # waist trim
+        for i in range(6):                         # skirt frill (rows 6..11)
+            rect(img, x0, y0 + 6 + i, w, 1, SKIRT[(i * len(SKIRT)) // 6])
+    fill(img, "body_top", WHITE)
+    fill(img, "body_bottom", SKIRT[-1])
     fx, fy, _, _ = FACES["body_front"]
-    px(img, fx + 3, fy + 2, p["heart"]); px(img, fx + 4, fy + 2, p["heart"])
-    rect(img, fx + 2, fy + 3, 4, 1, p["heart"])
-    rect(img, fx + 3, fy + 4, 2, 1, p["heart"])
-    rect(img, fx, fy, 8, 1, p["trim"])                # collar
+    rect(img, fx, fy, 8, 1, p["trim"])             # neckline
+    rainbow_arch(img, fx + 4, fy + 2)              # chest rainbow + cloud
+    # back: collar + big heart + vertical rainbow ribbon
+    bx, by, _, _ = FACES["body_back"]
+    rect(img, bx, by, 8, 1, p["trim"])
+    heart(img, bx + 4, by + 2, PINK)
+    for i in range(6):                             # ribbon tail down the back skirt
+        px(img, bx + 3, by + 5 + i, SKIRT[(i * len(SKIRT)) // 6])
+        px(img, bx + 4, by + 5 + i, shade(SKIRT[(i * len(SKIRT)) // 6], -18))
+    # jacket overlay: a frill ruffle layer at the skirt hem (front/back/sides)
+    for f in ("jacket_front", "jacket_back", "jacket_right", "jacket_left"):
+        x0, y0, w, h = FACES[f]
+        for i in range(4):                         # bottom 4 rows = frill
+            c = SKIRT[min(len(SKIRT) - 1, 1 + (i * len(SKIRT)) // 4)]
+            rect(img, x0, y0 + 8 + i, w, 1, c)
+        for xx in range(x0, x0 + w, 2):            # scalloped hem shading
+            px(img, xx, y0 + 11, shade(SKIRT[-1], -26))
 
 
-def draw_arm(img, prefix, p):
-    # puffed dress sleeve (upper) + skin hand (lower)
-    for side in ("front", "back", "right", "left"):
-        x0, y0, w, h = FACES[prefix + "_" + side]
-        rect(img, x0, y0, w, 8, p["dress"])           # sleeve
-        rect(img, x0, y0 + 8, w, 4, p["skin"])        # hand
-        rect(img, x0, y0 + 7, w, 1, p["trim"])        # cuff
-    fill_face(img, prefix + "_top", p["dress"])
+# ---------------------------------------------------------------- arms
+def draw_arm(img, side, p):
+    pre = "rarm" if side == "r" else "larm"
+    for f in ("front", "back", "right", "left"):
+        x0, y0, w, h = FACES[pre + "_" + f]
+        rect(img, x0, y0, w, 8, WHITE)             # white sleeve
+        rect(img, x0, y0 + 7, w, 1, p["trim"])     # lavender cuff line
+        rect(img, x0, y0 + 8, w, 4, SKIN)          # hand
+    fill(img, pre + "_top", WHITE)
+    # frill cuff via the sleeve overlay (rows 7..9)
+    preo = "rarmo" if side == "r" else "larmo"
+    for f in ("front", "back", "right", "left"):
+        x0, y0, w, h = FACES[preo + "_" + f]
+        rect(img, x0, y0 + 7, w, 1, LAV)
+        for xx in range(x0, x0 + w, 2):
+            px(img, xx, y0 + 8, shade(LAV, -26))
+    # one yellow star on the outer upper sleeve
+    sx, sy, _, _ = FACES[pre + "_front"]
+    star(img, sx + 1, sy + 3, YEL)
 
 
-def draw_leg(img, prefix, p):
-    # rainbow stocking (upper) + shoe (lower)
-    for side in ("front", "back", "right", "left"):
-        x0, y0, w, h = FACES[prefix + "_" + side]
-        for i in range(9):
-            rect(img, x0, y0 + i, w, 1, p["rainbow"][i % len(p["rainbow"])])
-        rect(img, x0, y0 + 9, w, 3, p["shoe"])        # shoe
-        rect(img, x0, y0 + 9, w, 1, p["trim"])        # shoe strap
-    fill_face(img, prefix + "_top", p["rainbow"][0])
+# ---------------------------------------------------------------- legs
+def draw_leg(img, side, p):
+    pre = "rleg" if side == "r" else "lleg"
+    for f in ("front", "back", "right", "left"):
+        x0, y0, w, h = FACES[pre + "_" + f]
+        rect(img, x0, y0, w, 2, SKIRT[-1])         # skirt hem continues onto upper leg
+        rect(img, x0, y0 + 2, w, 4, SKIN)          # bare leg
+        rect(img, x0, y0 + 6, w, 4, WHITE)         # white knee sock
+        rect(img, x0, y0 + 6, w, 1, p["trim"])     # sock cuff
+        rect(img, x0, y0 + 10, w, 2, LAV)          # lavender shoe
+    fill(img, pre + "_top", SKIRT[-1])
+    # heart + star on the front of the sock
+    fx, fy, _, _ = FACES[pre + "_front"]
+    px(img, fx + 1, fy + 7, PINK); px(img, fx + 2, fy + 7, PINK)
+    star(img, fx + 2, fy + 8, YEL)
 
 
-def build_skin(palette):
+def build_skin(p):
     img = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
-    draw_head(img, palette)
-    draw_body(img, palette)
-    draw_arm(img, "rarm", palette)
-    draw_arm(img, "larm", palette)
-    draw_leg(img, "rleg", palette)
-    draw_leg(img, "lleg", palette)
+    draw_head(img, p)
+    draw_body(img, p)
+    draw_arm(img, "r", p)
+    draw_arm(img, "l", p)
+    draw_leg(img, "r", p)
+    draw_leg(img, "l", p)
     return img
 
 
-def front_preview(img, scale=12):
-    """Assemble the FRONT faces into a standing character for eyeballing."""
-    # canvas in 'pixels': head 8 wide, body 8, arms 4 each side
+# ---------------------------------------------------------------- previews
+def preview(img, view, scale=12):
+    """Assemble FRONT/BACK/LEFT/RIGHT body faces into a standing figure."""
     W, H = 16, 32
-    cv = Image.new("RGBA", (W, H), (245, 245, 250, 255))
+    cv = Image.new("RGBA", (W, H), (244, 244, 250, 255))
 
-    def blit(face, dx, dy):
+    def blit(face, dx, dy, mirror=False):
         x0, y0, w, h = FACES[face]
         for yy in range(h):
             for xx in range(w):
                 c = img.getpixel((x0 + xx, y0 + yy))
                 if c[3] > 0:
-                    cv.putpixel((dx + xx, dy + yy), c)
-    blit("head_front", 4, 0)
-    # overlay hat front on top of the head
-    hx, hy, hw, hh = FACES["hat_front"]
-    for yy in range(hh):
-        for xx in range(hw):
-            c = img.getpixel((hx + xx, hy + yy))
-            if c[3] > 0:
-                cv.putpixel((4 + xx, 0 + yy), c)
-    blit("rarm_front", 1, 8)
-    blit("body_front", 4, 8)
-    blit("larm_front", 12, 8)
-    blit("rleg_front", 4, 20)
-    blit("lleg_front", 8, 20)
+                    tx = dx + (w - 1 - xx if mirror else xx)
+                    cv.putpixel((tx, dy + yy), c)
+
+    def blit_pair(base, over, dx, dy, mirror=False):
+        blit(base, dx, dy, mirror)
+        blit(over, dx, dy, mirror)
+
+    if view == "front":
+        blit_pair("head_front", "hat_front", 4, 0)
+        blit_pair("rarm_front", "rarmo_front", 1, 8)
+        blit_pair("body_front", "jacket_front", 4, 8)
+        blit_pair("larm_front", "larmo_front", 12, 8)
+        blit_pair("rleg_front", "rlego_front", 4, 20)
+        blit_pair("lleg_front", "llego_front", 8, 20)
+    elif view == "back":
+        blit_pair("head_back", "hat_back", 4, 0)
+        blit_pair("larm_back", "larmo_back", 1, 8, True)
+        blit_pair("body_back", "jacket_back", 4, 8)
+        blit_pair("rarm_back", "rarmo_back", 12, 8, True)
+        blit_pair("lleg_back", "llego_back", 4, 20, True)
+        blit_pair("rleg_back", "rlego_back", 8, 20, True)
+    else:  # side (right)
+        blit_pair("head_right", "hat_right", 4, 0)
+        blit_pair("body_right", "jacket_right", 6, 8)
+        blit_pair("rarm_right", "rarmo_right", 6, 8)
+        blit_pair("rleg_right", "rlego_right", 6, 20)
     return cv.resize((W * scale, H * scale), Image.NEAREST)
 
 
 PALETTES = {
-    "unicorn_pastel": {
-        "hair": (200, 180, 234), "hair_dk": (176, 152, 214),
-        "skin": (255, 236, 226), "eye": (150, 110, 200), "eye_dk": (110, 76, 160),
-        "blush": (250, 180, 200), "mouth": (235, 140, 165),
-        "dress": (250, 182, 210), "trim": (150, 230, 200), "heart": (235, 90, 130),
-        "shoe": (255, 252, 255), "horn": (255, 224, 130),
-        "rainbow": [(255, 182, 193), (255, 220, 160), (255, 246, 170),
-                    (180, 236, 190), (176, 216, 246), (208, 186, 240)],
-    },
-    "unicorn_pastel_mint": {
-        "hair": (170, 226, 210), "hair_dk": (140, 200, 188),
-        "skin": (255, 236, 226), "eye": (90, 170, 160), "eye_dk": (60, 130, 122),
-        "blush": (250, 180, 200), "mouth": (235, 140, 165),
-        "dress": (176, 216, 246), "trim": (255, 224, 150), "heart": (235, 110, 150),
-        "shoe": (255, 252, 255), "horn": (255, 224, 130),
-        "rainbow": [(208, 186, 240), (176, 216, 246), (180, 236, 190),
-                    (255, 246, 170), (255, 220, 160), (255, 182, 193)],
-    },
+    "unicorn_pastel": {"hair": LAV, "trim": LAV, "eye": (120, 80, 190)},
+    "unicorn_pastel_pink": {"hair": PINK, "trim": MINT, "eye": (150, 90, 170)},
 }
 
 SKIN_TITLES = {
-    "unicorn_pastel": "Pastel Unicorn Girl",
-    "unicorn_pastel_mint": "Mint Unicorn Girl",
+    "unicorn_pastel": "Pastel Unicorn Dress",
+    "unicorn_pastel_pink": "Pink Unicorn Dress",
 }
 
 
 def write_pack():
     os.makedirs(os.path.join(PACK, "texts"), exist_ok=True)
-    for sid, palette in PALETTES.items():
-        skin = build_skin(palette)
+    for sid, p in PALETTES.items():
+        skin = build_skin(p)
         skin.save(os.path.join(PACK, sid + ".png"))
-        front_preview(skin).save(os.path.join(PACK, "preview_" + sid + ".png"))
+        for view in ("front", "back", "side"):
+            preview(skin, view).save(os.path.join(PACK, "preview_%s_%s.png" % (sid, view)))
         print("wrote", sid + ".png")
 
     serialize = "UnicornPastelGirls"
-    skins_json = {
-        "skins": [{"localization_name": sid, "geometry": "geometry.humanoid.custom",
-                   "texture": sid + ".png", "type": "free"} for sid in PALETTES],
-        "serialize_name": serialize, "localization_name": serialize,
-    }
     with open(os.path.join(PACK, "skins.json"), "w", encoding="utf-8") as fh:
-        json.dump(skins_json, fh, ensure_ascii=False, indent=2)
-
-    manifest = {
-        "format_version": 2,
-        "header": {"name": "Unicorn Pastel Girls", "uuid": str(uuid.uuid5(uuid.NAMESPACE_DNS, "mine_skins_01.header")),
-                   "version": [1, 0, 0]},
-        "modules": [{"type": "skin_pack",
-                     "uuid": str(uuid.uuid5(uuid.NAMESPACE_DNS, "mine_skins_01.module")),
-                     "version": [1, 0, 0]}],
-    }
+        json.dump({"skins": [{"localization_name": sid, "geometry": "geometry.humanoid.custom",
+                              "texture": sid + ".png", "type": "free"} for sid in PALETTES],
+                   "serialize_name": serialize, "localization_name": serialize}, fh,
+                  ensure_ascii=False, indent=2)
     with open(os.path.join(PACK, "manifest.json"), "w", encoding="utf-8") as fh:
-        json.dump(manifest, fh, ensure_ascii=False, indent=2)
-
+        json.dump({"format_version": 2,
+                   "header": {"name": "Unicorn Pastel Girls",
+                              "uuid": str(uuid.uuid5(uuid.NAMESPACE_DNS, "mine_skins_01.header")),
+                              "version": [1, 0, 0]},
+                   "modules": [{"type": "skin_pack",
+                                "uuid": str(uuid.uuid5(uuid.NAMESPACE_DNS, "mine_skins_01.module")),
+                                "version": [1, 0, 0]}]}, fh, ensure_ascii=False, indent=2)
     lines = ["skinpack.%s=Unicorn Pastel Girls" % serialize]
     for sid in PALETTES:
         lines.append("skin.%s.%s=%s" % (serialize, sid, SKIN_TITLES[sid]))

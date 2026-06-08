@@ -10,12 +10,18 @@ Minecraft Bedrock **스킨팩**(skin_pack) 프로젝트. 가구 add-on(`mine_fur
 
 | 파일 | 이름 | 설명 |
 |------|------|------|
-| `skin_pack/unicorn_pastel.png` | Pastel Unicorn Girl | 라벤더 머리 + 분홍 드레스 + 무지개 스커트/스타킹 + 하트 |
-| `skin_pack/unicorn_pastel_mint.png` | Mint Unicorn Girl | 민트 머리 + 하늘색 드레스 변형 |
+| `skin_pack/unicorn_pastel.png` | Pastel Unicorn Dress | 라벤더 머리 + 흰 원피스 + 무지개 프릴 스커트 |
+| `skin_pack/unicorn_pastel_pink.png` | Pink Unicorn Dress | 분홍 머리 변형 |
 
-- 얼굴: 큰 보라/청록 눈 + 볼홍조 + 앞머리, hat 레이어에 작은 금색 뿔 자국(평면 — 솟은 뿔은
-  기본 모델 한계로 생략).
-- 몸/팔/다리: 분홍 보디스 + 가슴 하트 + 무지개 스커트, 퍼프 소매 + 손, 무지개 스타킹 + 신발.
+상세 스펙(파스텔 유니콘 원피스):
+- **머리**: 연보라/라벤더 머리(앞머리+옆머리 픽셀), 이마에 **작은 금색 뿔 자국**(평면), 작고 귀여운 얼굴 + 보라 눈.
+- **상의**: 흰 원피스 + 가슴 **작은 무지개 아치 + 구름** 모티브 + 연보라 목/가슴 라인.
+- **소매**: 흰색 + 끝 라벤더 프릴(소매 overlay 돌출) + 팔에 노란 별 1개.
+- **스커트**: 하단 **파스텔 무지개 프릴**(위→아래: 핑크→연노랑→민트→베이비블루→라벤더), 몸통 하단 + 다리 위쪽으로 이어지고 jacket overlay로 프릴 한 겹 돌출.
+- **등**: 분홍 **하트 + 세로 무지개 리본** + 무지개 프릴 유지.
+- **다리**: 피부톤 다리 + 무릎 아래 흰 양말(하트/별) + 라벤더 신발.
+- 색 팔레트: #FFF8FF / #CDB4F6 / #F7A7C8 / #A9D8FF / #B9F2D0 / #FFE99A / #A987D9 / #FFD75A / #FFDCC8.
+- base + overlay 레이어(hat/jacket/소매/바지) 활용. 정면/후면/좌우 미리보기는 `preview_<sid>_{front,back,side}.png`.
 
 ## 구조
 
@@ -27,8 +33,8 @@ projects/mine_skins_01/
    ├─ manifest.json      # format_version 2, type skin_pack
    ├─ skins.json         # geometry.humanoid.custom, type free
    ├─ texts/{en_US,ko_KR}.lang
-   ├─ unicorn_pastel.png / unicorn_pastel_mint.png   (64x64 스킨)
-   └─ preview_*.png      # 정면 합성 미리보기(확인용, 팩에는 미포함)
+   ├─ unicorn_pastel.png / unicorn_pastel_pink.png   (64x64 스킨)
+   └─ preview_<sid>_{front,back,side}.png      # 미리보기(확인용, 팩에는 미포함)
 ```
 
 ## 빌드 / 적용

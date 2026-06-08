@@ -7,9 +7,9 @@
       "type": "free"
     },
     {
-      "localization_name": "unicorn_pastel_mint",
+      "localization_name": "unicorn_pastel_pink",
       "geometry": "geometry.humanoid.custom",
-      "texture": "unicorn_pastel_mint.png",
+      "texture": "unicorn_pastel_pink.png",
       "type": "free"
     }
   ],
