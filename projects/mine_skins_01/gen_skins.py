@@ -139,20 +139,20 @@ def draw_head(img, p):
         hair_shade(img, f, hair)
     fx, fy, _, _ = FACES["head_front"]
     fill(img, "head_front", SKIN)
-    # M-shaped bangs: top hair with the forehead centre peeking out, long side locks
+    # thin M bangs (2 rows) + long side locks framing a small face
     rect(img, fx, fy, 8, 2, hair)
     px(img, fx, fy, dk); px(img, fx + 7, fy, dk)
-    rect(img, fx, fy + 2, 1, 6, hair); rect(img, fx + 7, fy + 2, 1, 6, hair)  # side locks
+    rect(img, fx, fy + 2, 1, 6, hair); rect(img, fx + 7, fy + 2, 1, 6, hair)
     px(img, fx + 1, fy + 2, hair); px(img, fx + 6, fy + 2, hair)
-    px(img, fx + 1, fy + 6, hair); px(img, fx + 6, fy + 6, hair)              # locks reach cheeks
-    # big sparkly eyes (2 wide x 3 tall): dark top, white shine, purple lower
+    px(img, fx + 1, fy + 7, hair); px(img, fx + 6, fy + 7, hair)
+    # BIG sparkly eyes (2 wide x 4 tall): dark lid, two bright shine rows, iris
     for ex in (fx + 1, fx + 5):
-        rect(img, ex, fy + 3, 2, 1, shade(p["eye"], -70))   # dark upper lid
-        rect(img, ex, fy + 4, 2, 1, (255, 255, 255))        # bright shine
-        rect(img, ex, fy + 5, 2, 1, p["eye"])               # iris lower
+        rect(img, ex, fy + 2, 2, 1, shade(p["eye"], -80))   # dark upper lid
+        rect(img, ex, fy + 3, 2, 2, (255, 255, 255))        # large white shine (2 rows)
+        rect(img, ex, fy + 5, 2, 1, p["eye"])               # iris
     # blush + tiny mouth
     px(img, fx + 1, fy + 6, PINK); px(img, fx + 6, fy + 6, PINK)
-    rect(img, fx + 3, fy + 7, 2, 1, shade(PINK, -24))
+    rect(img, fx + 3, fy + 6, 2, 1, shade(PINK, -24))
     # hat layer: fuller framing hair + a bigger gold horn + heart hair clips
     for f in ("hat_top", "hat_back", "hat_right", "hat_left"):
         hair_shade(img, f, hair)
@@ -163,8 +163,9 @@ def draw_head(img, p):
     rect(img, hx + 3, hy, 2, 2, GOLD); px(img, hx + 3, hy, shade(GOLD, 22))
     tx, ty, _, _ = FACES["hat_top"]
     rect(img, tx + 3, ty + 5, 2, 3, GOLD); px(img, tx + 3, ty + 5, shade(GOLD, 24))
-    # heart hair clips on the top, either side of the horn
-    px(img, tx + 1, ty + 6, PINK); px(img, tx + 6, ty + 6, PINK)
+    # pink heart hair-clips on the top of the head, either side of the horn
+    heart(img, tx + 2, ty + 3, PINK)
+    heart(img, tx + 5, ty + 3, PINK)
 
 
 # ---------------------------------------------------------------- body
