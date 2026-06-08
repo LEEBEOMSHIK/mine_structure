@@ -50,18 +50,14 @@ def shade(c, amt):
 
 
 def angel_edge(ty):
-    """Outer x-limit of the wing at vertical fraction ty (0 top .. 1 bottom):
-    narrow rounded shoulder, bulging coverts, max width, then long primary
-    feathers sweeping in. Kept below WW so the curved silhouette reads clearly."""
-    if ty < 0.14:
-        return 6.0 + 4.0 * (ty / 0.14) ** 0.5         # full rounded shoulder (no notch)
-    if ty < 0.42:
-        u = (ty - 0.14) / 0.28
-        return 10.0 + 4.5 * math.sin(u * math.pi * 0.5)  # widen to ~14.5
-    if ty < 0.62:
-        return 14.5                                    # max width (full coverts)
-    u = (ty - 0.62) / 0.38
-    return 14.5 - 12.5 * (u ** 0.8)                     # long primaries taper to ~2
+    """Outer x-limit at vertical fraction ty (0 top .. 1 bottom). A FAN wing (ref
+    002.png): narrow at the shoulder up top, fanning wider toward the bottom, then
+    pulling in to a point. Kept well below WW so the wing silhouette is clearly NOT
+    a rectangle; the per-row sawtooth in draw_wing then cuts the feather points."""
+    if ty < 0.72:
+        return 1.5 + 12.0 * (ty / 0.72) ** 0.7         # narrow shoulder -> wide fan
+    u = (ty - 0.72) / 0.28
+    return 13.5 - 11.5 * (u ** 0.75)                    # taper the bottom to a point
 
 
 def draw_wing(img):
@@ -73,9 +69,8 @@ def draw_wing(img):
     for y in range(WH):
         ty = y / (WH - 1)
         redge = angel_edge(ty)
-        if ty > 0.28:                                  # sharp sawtooth feather points
-            seg = (y % 3) / 3.0
-            redge -= seg * 3.4
+        seg = (y % 3) / 3.0                             # sharp sawtooth along the WHOLE edge
+        redge -= seg * 3.6
         redge = max(0.0, min(WW - 1, redge))
         for x in range(WW):
             if x > redge:
