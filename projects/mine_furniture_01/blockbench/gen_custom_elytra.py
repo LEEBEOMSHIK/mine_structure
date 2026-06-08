@@ -125,8 +125,8 @@ def textures():
 
 # flat wing quads sized like the vanilla elytra (narrow + tall, close to the spine);
 # thin in Z so the two big faces (north/south) show the painted wing.
-RIGHT = {"from": [1, 4, 2.2], "size": [11, 21, 0.3], "pivot": [1, 25, 2.3]}
-LEFT = {"from": [-12, 4, 2.2], "size": [11, 21, 0.3], "pivot": [-1, 25, 2.3]}
+RIGHT = {"from": [1, 4, 2.35], "size": [11, 21, 0.05], "pivot": [1, 25, 2.375]}
+LEFT = {"from": [-12, 4, 2.35], "size": [11, 21, 0.05], "pivot": [-1, 25, 2.375]}
 
 
 def geo_faces(mirror):

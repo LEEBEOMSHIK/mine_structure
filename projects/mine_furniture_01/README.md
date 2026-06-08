@@ -523,10 +523,10 @@ resource pack 측 JSON 연결을 교차검증했다. 결과:
   - 색: 흰색 베이스 + 연한 라벤더 음영(깃털 능선=흰 하이라이트, 경계=라벤더).
   - **형태(참고 `game/mine_reference/002.png`)**: 한 면 실루엣이 사각형이 아니라 **부채형 날개**가 되도록 `angel_edge`를 위(어깨) 좁고 아래로 넓어지다 끝점으로 모이게 바꾸고, **외곽 전체를 날카로운 톱니(sawtooth) 뾰족 깃털 끝**으로 처리. 색은 천사(흰), 형태만 참고 이미지의 부채/뾰족 깃털을 따름.
   - 텍스처: `gen_custom_elytra.py`의 `angel_edge` 실루엣 + `draw_wing`(부채 깃털 능선/경계 + sawtooth 끝). 아이콘: 흰 날개 한 쌍(톱니) + 금색 후광 점. 표시 이름 "천사 날개".
-  - 날개를 약간 키움(11×21). 글라이더/접힘·펴짐(`q.is_gliding`) 구조는 유지.
+  - 날개를 약간 키움(11×21). 평면 두께를 0.3→**0.05**로 줄여 옆에서 앞/뒷면 2면 겹침이 거의 안 보이게(양면 텍스처는 유지 — 앞뒤 모두 날개 보임). 글라이더/접힘·펴짐(`q.is_gliding`) 구조는 유지.
   - Blockbench로 접힘/펴짐(spread) 모두 확인. (참고: 평면 날개라 north/south UV가 같아 mirror는 spine 좌우에 영향 없음 — spine 위치는 인게임 확인 후 필요 시 텍스처 좌우 반전으로 보정.)
 - 검증 PASS. 최신 패키지:
-  - `dist/mine_furniture_01-20260608-100145/mine_furniture_01.mcaddon`
+  - `dist/mine_furniture_01-20260608-125651/mine_furniture_01.mcaddon`
 
 ## 5. 다음 작업 (NEXT)
 
