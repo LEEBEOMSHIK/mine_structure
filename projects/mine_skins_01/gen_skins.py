@@ -121,33 +121,50 @@ def frill(img, name, start, bands):
 
 
 # ---------------------------------------------------------------- head
+def hair_shade(img, name, base):
+    """Fill a head face with hair + a few darker streaks for a shaded look."""
+    x0, y0, w, h = FACES[name]
+    rect(img, x0, y0, w, h, base)
+    dk = shade(base, -34)
+    for yy in range(y0, y0 + h):
+        for xx in range(x0, x0 + w):
+            if (xx + yy) % 4 == 0:
+                px(img, xx, yy, dk)
+
+
 def draw_head(img, p):
+    hair = p["hair"]
+    dk = shade(hair, -34)
     for f in ("head_top", "head_back", "head_right", "head_left"):
-        fill(img, f, p["hair"])
+        hair_shade(img, f, hair)
     fx, fy, _, _ = FACES["head_front"]
     fill(img, "head_front", SKIN)
-    # bangs (3 rows) + side locks (2 cols) -> small cute face
-    rect(img, fx, fy, 8, 3, p["hair"])
-    rect(img, fx, fy + 3, 2, 5, p["hair"]); rect(img, fx + 6, fy + 3, 2, 5, p["hair"])
-    px(img, fx + 2, fy + 3, p["hair"]); px(img, fx + 5, fy + 3, p["hair"])
-    # purple eyes (2 tall) + shine, blush, small smile
-    for ex in (fx + 2, fx + 5):
-        rect(img, ex, fy + 4, 1, 2, p["eye"])
-        px(img, ex, fy + 4, shade(p["eye"], -40))
-        px(img, ex, fy + 5, (255, 255, 255))
-    px(img, fx + 2, fy + 6, PINK); px(img, fx + 5, fy + 6, PINK)
-    rect(img, fx + 3, fy + 6, 2, 1, shade(PINK, -30))
-    # hat layer: fuller framing hair + a small gold horn mark on the forehead
+    # M-shaped bangs: top hair with the forehead centre peeking out, long side locks
+    rect(img, fx, fy, 8, 2, hair)
+    px(img, fx, fy, dk); px(img, fx + 7, fy, dk)
+    rect(img, fx, fy + 2, 1, 6, hair); rect(img, fx + 7, fy + 2, 1, 6, hair)  # side locks
+    px(img, fx + 1, fy + 2, hair); px(img, fx + 6, fy + 2, hair)
+    px(img, fx + 1, fy + 6, hair); px(img, fx + 6, fy + 6, hair)              # locks reach cheeks
+    # big sparkly eyes (2 wide x 3 tall): dark top, white shine, purple lower
+    for ex in (fx + 1, fx + 5):
+        rect(img, ex, fy + 3, 2, 1, shade(p["eye"], -70))   # dark upper lid
+        rect(img, ex, fy + 4, 2, 1, (255, 255, 255))        # bright shine
+        rect(img, ex, fy + 5, 2, 1, p["eye"])               # iris lower
+    # blush + tiny mouth
+    px(img, fx + 1, fy + 6, PINK); px(img, fx + 6, fy + 6, PINK)
+    rect(img, fx + 3, fy + 7, 2, 1, shade(PINK, -24))
+    # hat layer: fuller framing hair + a bigger gold horn + heart hair clips
     for f in ("hat_top", "hat_back", "hat_right", "hat_left"):
-        fill(img, f, p["hair"])
+        hair_shade(img, f, hair)
     hx, hy, _, _ = FACES["hat_front"]
-    rect(img, hx, hy, 8, 3, p["hair"])
-    rect(img, hx, hy + 3, 2, 4, p["hair"]); rect(img, hx + 6, hy + 3, 2, 4, p["hair"])
-    # small gold horn: a short triangle on the forehead/hat top, front-centre
-    px(img, hx + 4, hy + 2, GOLD)
+    rect(img, hx, hy, 8, 2, hair)
+    rect(img, hx, hy + 2, 1, 5, hair); rect(img, hx + 7, hy + 2, 1, 5, hair)
+    # gold horn rising from the forehead (front + top)
+    rect(img, hx + 3, hy, 2, 2, GOLD); px(img, hx + 3, hy, shade(GOLD, 22))
     tx, ty, _, _ = FACES["hat_top"]
-    px(img, tx + 4, ty + 6, GOLD); px(img, tx + 4, ty + 5, GOLD)
-    px(img, tx + 4, ty + 4, shade(GOLD, 20))
+    rect(img, tx + 3, ty + 5, 2, 3, GOLD); px(img, tx + 3, ty + 5, shade(GOLD, 24))
+    # heart hair clips on the top, either side of the horn
+    px(img, tx + 1, ty + 6, PINK); px(img, tx + 6, ty + 6, PINK)
 
 
 # ---------------------------------------------------------------- body
@@ -191,6 +208,12 @@ def draw_body(img, p):
     # jacket overlay: skirt frill tiers (yellow, mint) flaring out at the hem
     for f in ("jacket_front", "jacket_back", "jacket_right", "jacket_left"):
         frill(img, f, 8, [SKIRT[1], SKIRT[2]])
+    # long side hair draping over the shoulders (front + back), with a dark streak
+    dk = shade(p["hair"], -34)
+    for f in ("body_front", "body_back"):
+        x0, y0, w, h = FACES[f]
+        rect(img, x0, y0, 1, 5, p["hair"]); rect(img, x0 + w - 1, y0, 1, 5, p["hair"])
+        px(img, x0, y0 + 2, dk); px(img, x0 + w - 1, y0 + 3, dk)
 
 
 # ---------------------------------------------------------------- arms
