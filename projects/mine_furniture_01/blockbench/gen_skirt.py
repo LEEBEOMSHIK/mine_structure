@@ -26,13 +26,15 @@ ATLAS_REL = os.path.join("textures", "entity", SID, SID + ".png")
 RAINBOW = [(255, 184, 206), (255, 228, 168), (190, 240, 206), (174, 214, 250), (206, 182, 244)]
 CELL = 12  # texture block size per tier
 
-# A-line tiers: (y_from, height, half_width, half_depth, colour_index) -> widens downward
+# A-line tiers: (y_from, height, half_width, half_depth, colour_index) -> widens
+# downward. Sits at the WAIST (player body bottom y=12) and flares down to about the
+# knee (y~6), so it does not drape onto the feet.
 TIERS = [
-    (10.0, 2.0, 4.6, 3.0, 0),   # waist (pink)
-    (8.0, 2.5, 5.6, 3.6, 1),    # yellow
-    (5.5, 2.6, 6.7, 4.2, 2),    # mint
-    (3.0, 2.6, 7.8, 4.8, 3),    # blue
-    (1.0, 2.2, 9.0, 5.4, 4),    # hem (lavender)
+    (11.0, 1.5, 4.6, 3.0, 0),   # waist (pink)
+    (9.8, 1.5, 5.6, 3.6, 1),    # yellow
+    (8.6, 1.5, 6.7, 4.2, 2),    # mint
+    (7.4, 1.5, 7.8, 4.8, 3),    # blue
+    (6.0, 1.8, 9.0, 5.4, 4),    # hem (lavender), ~knee height
 ]
 
 
