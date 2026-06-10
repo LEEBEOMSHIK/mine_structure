@@ -21,5 +21,5 @@ model: sonnet
 - 마인크래프트 스킨은 모델 고정 → **입체 A라인 스커트·솟은 뿔·날개는 텍스처로 불가**. 이건 `mine_furniture_01`의 입는 attachable 의상으로 만든다(furniture-modeler+addon-wiring).
 
 ## 절차
-1. `gen_skins.py` 수정 → 생성 → 얼굴/전신 미리보기 확인(필요하면 blockbench-reviewer).
-2. `.mcpack` 빌드. 문서/커밋은 docs-writer/committer.
+1. `gen_skins.py` 수정 → 생성 → 얼굴/전신 미리보기 확인.
+2. 스킨 작업이 끝나면 **반드시 `quality-check` 스킬을 실행**한다(전신 미리보기 검수 → 수정 redo ≤2회 → `.mcpack` 빌드 → 문서 → 커밋).

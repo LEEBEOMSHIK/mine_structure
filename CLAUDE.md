@@ -41,8 +41,8 @@ projects/<project_id>/
 - 콘텐츠 제작은 단계별 서브에이전트(`.claude/agents/`)를 이어서 수행한다. 표준 흐름:
   - 가구/의상: `furniture-modeler → addon-wiring → validator → blockbench-reviewer →`(문제 시 수정 루프)`→ packager → docs-writer → committer`
   - 스킨: `skin-artist → blockbench-reviewer → packager → docs-writer → committer`
-- 기존 결과물 품질 점검은 `quality-check` 스킬을 쓴다(validator + blockbench-reviewer 중심).
-- **검수는 종(항목)마다 개별**로 하고, 문제가 있으면 제작 에이전트로 돌아가 고친 뒤 재검수한다.
+- **제작(가구/스킨/의상 생성·수정)을 마치면 커밋 전에 반드시 `quality-check` 스킬을 거친다**(검증+종별 시각검수+빌드+문서+커밋이 묶여 있음). 기존 결과물 점검도 같은 스킬을 쓴다.
+- **검수는 종(항목)마다 개별**로 하고, 문제가 있으면 제작 에이전트로 돌아가 고친 뒤 재검수한다. **재수정(redo)은 한 항목당 최대 2회**까지만 하고, 그 후 남는 경미한 문제는 보고만 하고 통과시킨다.
 - 상세는 `docs/agent-guides/agent-workflow.md`를 따른다.
 
 ### 커밋 메시지 — Conventional Commits

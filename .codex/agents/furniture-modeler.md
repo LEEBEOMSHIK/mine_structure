@@ -21,7 +21,7 @@ model: sonnet
 1. 비슷한 기존 `gen_*.py`를 먼저 읽고 패턴을 따른다.
 2. 생성기 작성/수정 → 실행해서 `.geo.json`/`.bbmodel`이 나오는지 확인.
 3. 형태 확인은 직접 하지 말고 **blockbench-reviewer**에 넘긴다(중간 산출물은 `_workspace/`).
-4. 끝나면 만든 파일·sid·bone 구조·mechanic 의도를 한 줄로 요약 보고한다.
+4. 끝나면 만든 파일·sid·bone 구조·mechanic 의도를 한 줄로 요약하고 **addon-wiring**에 넘긴다. 와이어링까지 끝나면 제작 파이프라인은 `quality-check` 스킬로 마무리된다.
 
 ## 금지
 - behavior/resource pack JSON, `main.js`, `validate`/`KIDS` 수정 금지(다른 에이전트 영역).

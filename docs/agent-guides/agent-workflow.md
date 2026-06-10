@@ -17,24 +17,24 @@
 
 ## 표준 파이프라인
 
+**제작(modeler/wiring/skin-artist)을 마치면 커밋 전에 반드시 `quality-check` 스킬을 거친다.** 검증+종별 시각검수+수정 루프+빌드/문서/커밋이 그 스킬에 묶여 있다. 수정 루프는 한 항목당 **최대 2회 redo**까지만 하고, 그 후 남는 경미한 문제는 보고만 하고 통과시킨다.
+
 ### A. 신규 가구/의상 (mine_furniture_01)
 ```
-furniture-modeler → addon-wiring → validator → blockbench-reviewer
-        → (문제 있으면 modeler/wiring로 돌아가 수정 후 validator·reviewer 재실행)
-        → packager → docs-writer → committer
+furniture-modeler → addon-wiring → [quality-check 스킬]
+   = validator → blockbench-reviewer(종별) → (수정 ≤2회) → packager → docs-writer → committer
 ```
 
 ### B. 스킨 (mine_skins_01)
 ```
-skin-artist → blockbench-reviewer(전신 미리보기) → (수정 루프)
-        → packager(skinpack) → docs-writer → committer
+skin-artist → [quality-check 스킬]
+   = validator → blockbench-reviewer(전신 미리보기) → (수정 ≤2회) → packager → docs-writer → committer
 ```
 
-### C. 품질 점검(기존 결과물) — `quality-check` 스킬
+### C. 품질 점검(기존 결과물) — `quality-check` 스킬 단독 실행
 ```
 validator → blockbench-reviewer(종별) → 판정 체크리스트
-        → (문제 → modeler/wiring/skin-artist 수정 → 재검수)
-        → packager → docs-writer → committer
+        → (문제 → modeler/wiring/skin-artist 수정, redo ≤2회) → packager → docs-writer → committer
 ```
 
 ## 단계 간 인계 규칙

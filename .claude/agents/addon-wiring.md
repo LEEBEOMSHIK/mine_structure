@@ -24,7 +24,7 @@ model: sonnet
 2. mechanic을 정해 와이어링한다.
 3. `validate_unicorn_toilet_resources.py`의 `KIDS`(또는 WEARABLES/TOOLS 등)에 sid+mechanic을 등록한다.
 4. `node --check scripts/main.js`로 JS 문법을 확인한다.
-5. 검증/빌드는 **validator**·**packager**에 넘긴다. 끝나면 mechanic·등록 내용을 보고한다.
+5. 와이어링이 끝나면(제작 파이프라인의 마지막 단계) **반드시 `quality-check` 스킬을 실행**해 검증→종별 시각검수→(수정 redo ≤2회)→빌드→문서→커밋까지 마친다. mechanic·등록 내용을 보고한다.
 
 ## 금지
 - 모델 geometry/텍스처 수정 금지(furniture-modeler 영역).
