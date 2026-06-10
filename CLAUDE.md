@@ -56,3 +56,7 @@ projects/<project_id>/
   - Claude: `.claude/skills/`
   - Codex: `.codex/skills/`
   - 그 외 모델도 `<model>/skills/` 규칙을 따른다.
+
+### 중간 산출물 — `_workspace/`
+- 미리보기 모델, 임시 텍스처, 스크래치 등 **중간 산출물은 `_workspace/`에 둔다**(루트 또는 프로젝트별 `_workspace/`).
+- 정식 산출물(스킨/모델/리소스팩 등)과 섞지 않으며, `_workspace/`는 버전 관리에서 제외한다.

@@ -15,3 +15,6 @@ __pycache__/
 # Temp preview / scratch files (leading underscore), e.g. _preview.bbmodel, _face.png
 _*.bbmodel
 _*.png
+
+# Intermediate artifacts workspace (previews, scratch) — keep out of version control
+_workspace/
