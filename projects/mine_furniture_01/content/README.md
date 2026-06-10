@@ -61,5 +61,6 @@
 | `mine_structure:unicorn_horn_headband` | wearable | 입는 코스튬(뿔 머리띠), in-game test 대기(실험) | `wearables/unicorn_costume.md` |
 | `mine_structure:unicorn_elytra` | wearable glider | 나비 날개(커스텀 글라이더, 바닐라 별개, 활공+접힘/펴짐), in-game test 대기(실험) | `wearables/unicorn_costume.md` |
 | `mine_structure:unicorn_rainbow_skirt` | wearable | 입체 A라인 무지개 프릴 스커트(다리 슬롯, 허리 좁고 아래로 넓어짐), in-game test 대기(실험) | `wearables/unicorn_costume.md` |
+| `mine_structure:unicorn_coffee_table` 외 7종 | furniture entity | 홈데코 8종(커피테이블/러그/벽시계/액자/화분/플로어램프/서랍장/협탁), in-game test 대기 | `furniture/unicorn_home_decor.md` |
 
 새 콘텐츠를 추가할 때는 이 표에 ID, 분류, 상태, 상세 문서 경로를 먼저 등록한다.

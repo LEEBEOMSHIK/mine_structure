@@ -65,6 +65,14 @@ KIDS = {
     "unicorn_dollhouse": {"mechanic": "variant_light"},
     "unicorn_toy_box": {"mechanic": "script_store"},
     "unicorn_easel": {"mechanic": "variant_light"},
+    "unicorn_coffee_table": {"mechanic": "static"},
+    "unicorn_rug": {"mechanic": "static"},
+    "unicorn_wall_clock": {"mechanic": "static"},
+    "unicorn_picture_frame": {"mechanic": "static"},
+    "unicorn_potted_plant": {"mechanic": "static"},
+    "unicorn_floor_lamp": {"mechanic": "variant_light"},
+    "unicorn_dresser": {"mechanic": "script_store"},
+    "unicorn_nightstand": {"mechanic": "static"},
 }
 
 FOODS = {
@@ -1023,6 +1031,9 @@ def validate_kids(sid, config, failures):
                      "minecraft:behavior.random_stroll"):
             if comp not in components:
                 failures.append(f"{sid} (wander) is missing {comp}")
+
+    elif mechanic == "static":
+        pass  # decorative-only entity; file/identifier checks above are sufficient
 
     elif mechanic == "rideable_simple":
         rideable = components.get("minecraft:rideable")

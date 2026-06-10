@@ -1,0 +1,21 @@
+{
+  "identifier": "mine_structure:unicorn_picture_frame",
+  "content_type": "furniture_entity",
+  "mechanic": "static",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_picture_frame.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_picture_frame.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_picture_frame.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_picture_frame/unicorn_picture_frame_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_picture_frame.render_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_picture_frame.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}

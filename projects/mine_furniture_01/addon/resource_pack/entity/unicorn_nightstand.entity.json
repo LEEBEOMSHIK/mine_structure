@@ -1,0 +1,20 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_nightstand",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_nightstand/unicorn_nightstand_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_nightstand"
+      },
+      "render_controllers": [
+        "controller.render.unicorn_nightstand"
+      ]
+    }
+  }
+}

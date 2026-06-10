@@ -1,0 +1,20 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_picture_frame",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_picture_frame/unicorn_picture_frame_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_picture_frame"
+      },
+      "render_controllers": [
+        "controller.render.unicorn_picture_frame"
+      ]
+    }
+  }
+}

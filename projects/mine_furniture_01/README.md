@@ -550,6 +550,14 @@ resource pack 측 JSON 연결을 교차검증했다. 결과:
 - 최신 패키지: `dist/mine_furniture_01-20260608-213919/mine_furniture_01.mcaddon`
 - ⚠️ armor-slot attachable + 커스텀 geometry는 버전 의존 — 인게임 검증 필요.
 
+## 4.36 홈데코 8종 추가 (~80종 목표 배치 1) (2026-06-10)
+
+- 신규 가구 ~40종(→총 ~80종) 로드맵의 **1차 배치 8종**: 커피테이블·러그·벽시계·액자·화분·플로어램프·서랍장·협탁.
+  - 정적 6종(`static` mechanic 신규 — `script_entity(sid,"static",..)`, validate에 `static` 분기 추가), 플로어램프(`variant_light`), 서랍장(`script_store`, `main.js` `DRESSER_ID` 18칸).
+  - 생성기 `blockbench/gen_home_decor.py` 신규. `KIDS` 등록, 검증 PASS. Blockbench로 확인(화분/플로어램프 등).
+- 최신 패키지: `dist/mine_furniture_01-20260610-094610/mine_furniture_01.mcaddon`
+- 다음 배치 예정: 주방/카페, 정원/야외, 파티/장식, 놀이, 펫/기타.
+
 ## 5. 다음 작업 (NEXT)
 
 - ~~1. Blockbench MCP 연결 및 tool 확인~~ — 완료 (2026-05-31).

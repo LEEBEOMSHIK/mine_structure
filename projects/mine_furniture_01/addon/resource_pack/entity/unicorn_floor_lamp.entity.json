@@ -1,0 +1,30 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_floor_lamp",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_floor_lamp/unicorn_floor_lamp_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_floor_lamp"
+      },
+      "animations": {
+        "on": "animation.unicorn_floor_lamp.on",
+        "off": "animation.unicorn_floor_lamp.off",
+        "light_ctrl": "controller.animation.unicorn_floor_lamp.light"
+      },
+      "scripts": {
+        "animate": [
+          "light_ctrl"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.unicorn_floor_lamp"
+      ]
+    }
+  }
+}
