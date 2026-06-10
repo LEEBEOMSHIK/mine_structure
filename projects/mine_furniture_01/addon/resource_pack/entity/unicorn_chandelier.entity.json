@@ -1,0 +1,30 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_chandelier",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_chandelier/unicorn_chandelier_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_chandelier"
+      },
+      "animations": {
+        "on": "animation.unicorn_chandelier.on",
+        "off": "animation.unicorn_chandelier.off",
+        "light_ctrl": "controller.animation.unicorn_chandelier.light"
+      },
+      "scripts": {
+        "animate": [
+          "light_ctrl"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.unicorn_chandelier"
+      ]
+    }
+  }
+}

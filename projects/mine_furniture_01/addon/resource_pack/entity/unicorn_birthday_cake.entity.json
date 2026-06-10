@@ -1,0 +1,30 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_birthday_cake",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_birthday_cake/unicorn_birthday_cake_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_birthday_cake"
+      },
+      "animations": {
+        "on": "animation.unicorn_birthday_cake.on",
+        "off": "animation.unicorn_birthday_cake.off",
+        "light_ctrl": "controller.animation.unicorn_birthday_cake.light"
+      },
+      "scripts": {
+        "animate": [
+          "light_ctrl"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.unicorn_birthday_cake"
+      ]
+    }
+  }
+}

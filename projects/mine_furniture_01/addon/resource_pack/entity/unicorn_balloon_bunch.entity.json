@@ -1,0 +1,20 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_balloon_bunch",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_balloon_bunch/unicorn_balloon_bunch_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_balloon_bunch"
+      },
+      "render_controllers": [
+        "controller.render.unicorn_balloon_bunch"
+      ]
+    }
+  }
+}

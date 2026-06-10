@@ -64,5 +64,6 @@
 | `mine_structure:unicorn_coffee_table` 외 7종 | furniture entity | 홈데코 8종(커피테이블/러그/벽시계/액자/화분/플로어램프/서랍장/협탁), in-game test 대기 | `furniture/unicorn_home_decor.md` |
 | `mine_structure:unicorn_fountain` 외 7종 | furniture entity | 정원/야외 8종(분수대/우편함/새장/벤치/파라솔테이블/모닥불/텐트/정원아치), in-game test 대기 | `furniture/unicorn_garden.md` |
 | `mine_structure:unicorn_coffee_machine` 외 7종 | furniture entity | 주방/카페 8종(커피머신/믹서기/케이크스탠드/컵케이크타워/정수기/식기건조대/제빵오븐/카페바), in-game test 대기 | `furniture/unicorn_kitchen_cafe.md` |
+| `mine_structure:unicorn_birthday_cake` 외 5종 | furniture entity | 파티/장식 6종(생일케이크/풍선다발/가랜드/샹들리에/벽촛대/스탠드랜턴), in-game test 대기 | `furniture/unicorn_party.md` |
 
 새 콘텐츠를 추가할 때는 이 표에 ID, 분류, 상태, 상세 문서 경로를 먼저 등록한다.

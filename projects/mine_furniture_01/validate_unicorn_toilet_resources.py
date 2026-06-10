@@ -89,6 +89,12 @@ KIDS = {
     "unicorn_dish_rack": {"mechanic": "static"},
     "unicorn_bakery_oven": {"mechanic": "script_give"},
     "unicorn_cafe_bar": {"mechanic": "static"},
+    "unicorn_birthday_cake": {"mechanic": "variant_light"},
+    "unicorn_balloon_bunch": {"mechanic": "static"},
+    "unicorn_garland": {"mechanic": "static"},
+    "unicorn_chandelier": {"mechanic": "variant_light"},
+    "unicorn_wall_sconce": {"mechanic": "variant_light"},
+    "unicorn_standing_lantern": {"mechanic": "variant_light"},
 }
 
 FOODS = {

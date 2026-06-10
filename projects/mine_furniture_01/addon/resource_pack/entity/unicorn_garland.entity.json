@@ -1,0 +1,20 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_garland",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_garland/unicorn_garland_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_garland"
+      },
+      "render_controllers": [
+        "controller.render.unicorn_garland"
+      ]
+    }
+  }
+}

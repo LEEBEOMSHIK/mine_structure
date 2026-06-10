@@ -1,0 +1,23 @@
+{
+  "identifier": "mine_structure:unicorn_birthday_cake",
+  "content_type": "furniture_entity",
+  "mechanic": "variant_light",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_birthday_cake.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_birthday_cake.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_birthday_cake.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_birthday_cake/unicorn_birthday_cake_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_birthday_cake.render_controllers.json",
+    "animation": "../../addon/resource_pack/animations/unicorn_birthday_cake.animation.json",
+    "animation_controller": "../../addon/resource_pack/animation_controllers/unicorn_birthday_cake.animation_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_birthday_cake.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}

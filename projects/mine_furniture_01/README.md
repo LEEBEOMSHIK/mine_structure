@@ -576,6 +576,15 @@ resource pack 측 JSON 연결을 교차검증했다. 결과:
 - 최신 패키지: `dist/mine_furniture_01-20260610-103918/mine_furniture_01.mcaddon`
 - 누적 ~64종. 남은 배치: 파티/장식·놀이·펫.
 
+## 4.39 파티/장식 6종 추가 (배치 4, 종별 확인) (2026-06-10)
+
+- 4차 배치 6종: 생일케이크·풍선다발·가랜드·샹들리에·벽촛대·스탠드랜턴.
+  - variant_light 4(케이크 촛불/샹들리에/벽촛대/랜턴 등 glow 토글), static 2(풍선/가랜드).
+  - **6종 전부 Blockbench 렌더로 개별 확인**(에이전트 워크플로 적용).
+  - 생성기 `blockbench/gen_party.py` 신규. `KIDS` 등록, 검증 PASS.
+- 최신 패키지: `dist/mine_furniture_01-20260610-151802/mine_furniture_01.mcaddon`
+- 누적 ~70종. 남은 배치: 놀이·펫/기타.
+
 ## 5. 다음 작업 (NEXT)
 
 - ~~1. Blockbench MCP 연결 및 tool 확인~~ — 완료 (2026-05-31).

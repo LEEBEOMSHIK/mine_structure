@@ -1,0 +1,30 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_wall_sconce",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_wall_sconce/unicorn_wall_sconce_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_wall_sconce"
+      },
+      "animations": {
+        "on": "animation.unicorn_wall_sconce.on",
+        "off": "animation.unicorn_wall_sconce.off",
+        "light_ctrl": "controller.animation.unicorn_wall_sconce.light"
+      },
+      "scripts": {
+        "animate": [
+          "light_ctrl"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.unicorn_wall_sconce"
+      ]
+    }
+  }
+}
