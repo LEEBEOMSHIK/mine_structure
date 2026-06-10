@@ -30,3 +30,25 @@ projects/<project_id>/
 - Minecraft Bedrock 관련 작업에서는 resource pack, behavior pack, geometry, animation, texture, sound의 책임을 문서와 폴더에서 분리합니다.
 - 기존 문서에 기록된 좌표, UV, 애니메이션, Blockbench/MCP 주의사항을 임의로 무시하지 않습니다.
 - 변경 후에는 `rg --files` 또는 동등한 명령으로 구조를 확인하고, 관련 문서 링크가 새 경로와 맞는지 점검합니다.
+
+## 작업 규칙
+
+### 커밋 메시지 — Conventional Commits
+- 형식은 `type(scope): subject` 를 따릅니다. (예: `feat(furniture): 주방/카페 8종 추가`)
+- `type`: `feat`(기능 추가), `fix`(버그/오류 수정), `docs`(문서), `chore`(설정/잡무), `refactor`(리팩터링), `polish`(외형·품질 다듬기), `test`(검증) 등.
+- `scope`: 작업 영역(프로젝트·모듈)을 소문자로 적습니다. 예: `furniture`, `skins`, `wings`, `skirt`, `repo`.
+- `subject`: 한 줄 요약(한국어 가능, 끝에 마침표 없이).
+- 본문·푸터는 기존 규칙을 유지합니다(필요 시 설명 + `Co-Authored-By`).
+
+### 에이전트 정의 — AI 모델별 폴더
+- 에이전트(agent) 정의는 각 AI 모델별 폴더에 둡니다.
+  - Claude: `.claude/agents/`
+  - Codex: `.codex/agents/`
+  - 그 외 모델도 `<model>/agents/` 규칙을 따릅니다.
+- 같은 역할의 에이전트라도 모델별 폴더에 각각 정의(또는 링크)합니다.
+
+### 스킬 정의 — AI 모델별 폴더
+- 스킬(skill) 정의는 각 AI 모델별 폴더에 둡니다.
+  - Claude: `.claude/skills/`
+  - Codex: `.codex/skills/`
+  - 그 외 모델도 `<model>/skills/` 규칙을 따릅니다.

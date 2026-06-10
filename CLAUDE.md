@@ -34,3 +34,25 @@ projects/<project_id>/
 - 프로젝트별 문서는 해당 프로젝트만의 상태, 스펙, 다음 작업을 담는다.
 - Bedrock add-on 산출물은 가능하면 프로젝트 내부에서 `resource_pack/`, `behavior_pack/`, `blockbench/`, `docs/`처럼 목적별로 분리한다.
 - 기존 산출물을 새로 만들기보다 현재 파일과 문서를 기준으로 이어서 작업한다.
+
+## 작업 규칙
+
+### 커밋 메시지 — Conventional Commits
+- 형식은 `type(scope): subject` 를 따른다. (예: `feat(furniture): 주방/카페 8종 추가`)
+- `type`: `feat`(기능 추가), `fix`(버그/오류 수정), `docs`(문서), `chore`(설정/잡무), `refactor`(리팩터링), `polish`(외형·품질 다듬기), `test`(검증) 등.
+- `scope`: 작업 영역(프로젝트·모듈)을 소문자로. 예: `furniture`, `skins`, `wings`, `skirt`, `repo`.
+- `subject`: 한 줄 요약(한국어 가능, 끝에 마침표 없이).
+- 본문·푸터는 기존 규칙을 유지한다(필요 시 설명 + `Co-Authored-By`).
+
+### 에이전트 정의 — AI 모델별 폴더
+- 에이전트(agent) 정의는 각 AI 모델별 폴더에 둔다.
+  - Claude: `.claude/agents/`
+  - Codex: `.codex/agents/`
+  - 그 외 모델도 `<model>/agents/` 규칙을 따른다.
+- 같은 역할의 에이전트라도 모델별 폴더에 각각 정의(또는 링크)한다.
+
+### 스킬 정의 — AI 모델별 폴더
+- 스킬(skill) 정의는 각 AI 모델별 폴더에 둔다.
+  - Claude: `.claude/skills/`
+  - Codex: `.codex/skills/`
+  - 그 외 모델도 `<model>/skills/` 규칙을 따른다.
