@@ -562,7 +562,7 @@ resource pack 측 JSON 연결을 교차검증했다. 결과:
 
 - 2차 배치 8종: 분수대·우편함·새장·벤치·파라솔테이블·모닥불·캠핑텐트·정원아치.
   - variant_light 2(분수 물/모닥불 불꽃 glow 토글), rideable 2(벤치 2인/텐트 1인), static 4.
-  - 텐트는 회전 큐브 대신 **계단식 패널 ∧ A프레임**(+입구+깃발)으로 안정 제작.
+  - 텐트는 회전 경사면으로 매끄러운 ∧ A프레임(+입구+깃발) 제작(계단식에서 개선).
   - 생성기 `blockbench/gen_garden.py` 신규. `KIDS` 등록, 검증 PASS. Blockbench로 분수/텐트 확인.
 - 최신 패키지: `dist/mine_furniture_01-20260610-095738/mine_furniture_01.mcaddon`
 - 누적 ~56종. 남은 배치: 주방/카페·파티·놀이·펫.

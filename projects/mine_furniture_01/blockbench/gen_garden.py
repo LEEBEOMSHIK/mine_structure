@@ -8,6 +8,8 @@ campfire, camping tent, garden arch. Pastel unicorn theme.
 Reuses gen_kids_furniture (Builder/make_atlas/assemble), gen_room_furniture
 (variant_light_wiring/rideable_wiring/write), gen_living_furniture (script_entity).
 """
+import math
+
 from gen_kids_furniture import Builder, assemble, make_atlas
 from gen_room_furniture import variant_light_wiring, rideable_wiring
 from gen_living_furniture import script_entity
@@ -155,20 +157,23 @@ def build_tent():
              ("flag", None, "horn")]
     rel, src, cm = make_atlas(sid, specs, 7107)
     b = Builder(cm)
-    # A-frame (∧) built as stepped panels (no rotation): two sloped sides that
-    # narrow toward the ridge, a stepped triangular back wall, an open front.
-    steps = [(0.0, 7.0), (2.6, 5.2), (5.2, 3.4), (7.8, 1.6)]
-    for i, (y, xo) in enumerate(steps):
-        b.add("body", "roof_l%d" % i, [-xo - 2, y, -8], [2, 2.7, 16], "tent")
-        b.add("body", "roof_r%d" % i, [xo, y, -8], [2, 2.7, 16], "tent2")
-        b.add("body", "back%d" % i, [-xo - 2, y, 7], [(xo + 2) * 2, 2.7, 1], "tent")
-    b.add("body", "ridge", [-1, 10.4, -8], [2, 1.6, 16], "pole")
-    b.add("body", "back_top", [-1, 10.4, 7], [2, 1.6, 1], "tent")
-    # front doorway posts + flag at the ridge
-    b.add("body", "door_l", [-3, 0, -8.3], [0.9, 8, 0.9], "door")
-    b.add("body", "door_r", [2.1, 0, -8.3], [0.9, 8, 0.9], "door")
-    b.add("body", "pole", [-0.4, 11, -8.2], [0.8, 4, 0.8], "pole")
-    b.add("body", "flag", [0.4, 12, -8.2], [3, 2, 0.4], "flag")
+    # smooth A-frame: two flat roof panels rotated from the ridge down to the floor
+    H, W, t, D = 13.0, 8.0, 1.3, 16.0          # ridge height, half base, thickness, depth
+    L = math.hypot(W, H)                        # slope length
+    ang = math.degrees(math.atan2(H, W))        # slope angle from horizontal
+    b.add("body", "roof_l", [-L, H - t, -8], [L, t, D], "tent",
+          rotation=[0, 0, ang], pivot=[0, H, 0])
+    b.add("body", "roof_r", [0, H - t, -8], [L, t, D], "tent2",
+          rotation=[0, 0, -ang], pivot=[0, H, 0])
+    b.add("body", "ridge", [-1, H - 1, -8], [2, 2, D], "pole")
+    # stepped triangular BACK wall filling the gable (closes the rear)
+    for i, (y, hw) in enumerate(((0, 7.3), (2.4, 5.7), (4.8, 4.1), (7.2, 2.5), (9.6, 1.0))):
+        b.add("body", "back%d" % i, [-hw, y, 6.6], [hw * 2, 2.5, 0.8], "tent2")
+    # front: doorway posts (open entrance) + flag at the ridge
+    b.add("body", "door_l", [-3, 0, -8.2], [0.9, 8, 0.9], "door")
+    b.add("body", "door_r", [2.1, 0, -8.2], [0.9, 8, 0.9], "door")
+    b.add("body", "pole", [-0.4, H, -8.2], [0.8, 4, 0.8], "pole")
+    b.add("body", "flag", [0.4, H + 1, -8.2], [3, 2, 0.4], "flag")
     assemble(sid, b, [{"name": sid, "parent": None, "pivot": [0, 0, 0]},
                       {"name": "body", "parent": sid, "pivot": [0, 0, 0]}], rel, src)
     rideable_wiring(sid, [{"position": [0, 0.2, 0.5], "lock_rider_rotation": 0}], 1.6, 1.6)
