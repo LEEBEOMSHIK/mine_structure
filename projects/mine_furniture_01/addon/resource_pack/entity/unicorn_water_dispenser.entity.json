@@ -1,0 +1,30 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_water_dispenser",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_water_dispenser/unicorn_water_dispenser_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_water_dispenser"
+      },
+      "animations": {
+        "on": "animation.unicorn_water_dispenser.on",
+        "off": "animation.unicorn_water_dispenser.off",
+        "light_ctrl": "controller.animation.unicorn_water_dispenser.light"
+      },
+      "scripts": {
+        "animate": [
+          "light_ctrl"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.unicorn_water_dispenser"
+      ]
+    }
+  }
+}

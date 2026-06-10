@@ -1,0 +1,20 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_cupcake_tower",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_cupcake_tower/unicorn_cupcake_tower_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_cupcake_tower"
+      },
+      "render_controllers": [
+        "controller.render.unicorn_cupcake_tower"
+      ]
+    }
+  }
+}

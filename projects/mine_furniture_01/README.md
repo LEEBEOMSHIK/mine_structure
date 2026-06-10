@@ -567,6 +567,15 @@ resource pack 측 JSON 연결을 교차검증했다. 결과:
 - 최신 패키지: `dist/mine_furniture_01-20260610-095738/mine_furniture_01.mcaddon`
 - 누적 ~56종. 남은 배치: 주방/카페·파티·놀이·펫.
 
+## 4.38 주방/카페 8종 추가 (배치 3, 종별 확인) (2026-06-10)
+
+- 3차 배치 8종: 커피머신·믹서기·케이크스탠드·컵케이크타워·정수기·식기건조대·제빵오븐·카페바.
+  - script_give 2(커피머신→무지개음료, 오븐→쿠키, `main.js` giveItem), variant_light 2(믹서기/정수기), static 4.
+  - **8종 전부 Blockbench 렌더로 개별 확인**(사용자 요청 — 텐트 케이스 재발 방지). 커피머신/오븐은 디스플레이/창에 귀여운 얼굴.
+  - 생성기 `blockbench/gen_kitchen_cafe.py` 신규. `KIDS` 등록, 검증 PASS.
+- 최신 패키지: `dist/mine_furniture_01-20260610-103918/mine_furniture_01.mcaddon`
+- 누적 ~64종. 남은 배치: 파티/장식·놀이·펫.
+
 ## 5. 다음 작업 (NEXT)
 
 - ~~1. Blockbench MCP 연결 및 tool 확인~~ — 완료 (2026-05-31).

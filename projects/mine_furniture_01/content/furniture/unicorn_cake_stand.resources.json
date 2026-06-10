@@ -1,0 +1,21 @@
+{
+  "identifier": "mine_structure:unicorn_cake_stand",
+  "content_type": "furniture_entity",
+  "mechanic": "static",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_cake_stand.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_cake_stand.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_cake_stand.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_cake_stand/unicorn_cake_stand_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_cake_stand.render_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_cake_stand.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}

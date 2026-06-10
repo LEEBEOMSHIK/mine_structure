@@ -13,6 +13,8 @@ const ICE_CREAM_TREATS = [
   "minecraft:honey_bottle",
 ];
 const TOASTER_ID = "mine_structure:unicorn_toaster";
+const COFFEE_MACHINE_ID = "mine_structure:unicorn_coffee_machine";
+const BAKERY_OVEN_ID = "mine_structure:unicorn_bakery_oven";
 const BOOKSHELF_ID = "mine_structure:unicorn_bookshelf";
 const BOOKSHELF_PROPERTY = "bookshelf_items";
 const WARDROBE_ID = "mine_structure:unicorn_wardrobe";
@@ -432,6 +434,18 @@ world.afterEvents.playerInteractWithEntity.subscribe((event) => {
   if (target.typeId === TOASTER_ID) {
     system.run(() => {
       giveItem(event.player, target, new ItemStack("minecraft:bread", 1), "random.pop");
+    });
+  }
+
+  if (target.typeId === COFFEE_MACHINE_ID) {
+    system.run(() => {
+      giveItem(event.player, target, new ItemStack("mine_structure:unicorn_rainbow_drink", 1), "random.pop");
+    });
+  }
+
+  if (target.typeId === BAKERY_OVEN_ID) {
+    system.run(() => {
+      giveItem(event.player, target, new ItemStack("mine_structure:unicorn_cookie", 1), "random.pop");
     });
   }
 

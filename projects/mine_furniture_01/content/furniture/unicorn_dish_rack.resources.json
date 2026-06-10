@@ -1,0 +1,21 @@
+{
+  "identifier": "mine_structure:unicorn_dish_rack",
+  "content_type": "furniture_entity",
+  "mechanic": "static",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_dish_rack.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_dish_rack.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_dish_rack.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_dish_rack/unicorn_dish_rack_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_dish_rack.render_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_dish_rack.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}
