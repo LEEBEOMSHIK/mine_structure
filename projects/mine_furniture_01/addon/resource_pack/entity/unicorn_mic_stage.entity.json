@@ -1,0 +1,30 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_mic_stage",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_mic_stage/unicorn_mic_stage_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_mic_stage"
+      },
+      "animations": {
+        "on": "animation.unicorn_mic_stage.on",
+        "off": "animation.unicorn_mic_stage.off",
+        "light_ctrl": "controller.animation.unicorn_mic_stage.light"
+      },
+      "scripts": {
+        "animate": [
+          "light_ctrl"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.unicorn_mic_stage"
+      ]
+    }
+  }
+}

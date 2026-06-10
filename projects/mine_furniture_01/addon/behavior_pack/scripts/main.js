@@ -25,6 +25,8 @@ const DRESSER_ID = "mine_structure:unicorn_dresser";
 const DRESSER_PROPERTY = "dresser_items";
 const PIANO_ID = "mine_structure:unicorn_piano";
 const PIANO_PITCHES = [0.6, 0.7, 0.8, 0.95, 1.1, 1.25, 1.5, 1.8];
+const JUKEBOX_ID = "mine_structure:unicorn_jukebox";
+const JUKEBOX_MELODY = [1.0, 1.122, 1.26, 1.335, 1.498, 1.335, 1.26, 1.122];
 const TRANSFORM_WAND_ID = "mine_structure:unicorn_transform_wand";
 const TRANSFORM_ANIMALS = [
   "minecraft:pig", "minecraft:cow", "minecraft:sheep", "minecraft:chicken",
@@ -483,6 +485,22 @@ world.afterEvents.playerInteractWithEntity.subscribe((event) => {
         const loc = target.location;
         target.dimension.spawnParticle("minecraft:note_particle", { x: loc.x, y: loc.y + 1.4, z: loc.z });
       } catch (error) { /* cosmetic */ }
+    });
+  }
+
+  if (target.typeId === JUKEBOX_ID) {
+    system.run(() => {
+      const loc = target.location;
+      JUKEBOX_MELODY.forEach((pitch, i) => {
+        system.runTimeout(() => {
+          try {
+            target.dimension.playSound("note.harp", loc, { pitch });
+          } catch (error) { /* cosmetic */ }
+          try {
+            target.dimension.spawnParticle("minecraft:note_particle", { x: loc.x, y: loc.y + 1.6, z: loc.z });
+          } catch (error) { /* cosmetic */ }
+        }, i * 8);
+      });
     });
   }
 

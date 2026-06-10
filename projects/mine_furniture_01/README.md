@@ -600,6 +600,18 @@ resource pack 측 JSON 연결을 교차검증했다. 결과:
 - 최신 패키지: `dist/mine_furniture_01-20260610-155328/mine_furniture_01.mcaddon`
 - 누적 ~76종. 남은 배치: 펫/기타.
 
+## 4.41 음악/공연 4종 추가 (배치 6, quality-check) (2026-06-10)
+
+- 6차 배치 4종(기존 `unicorn_piano`와 합주 코너): 드럼 세트·기타 스탠드·주크박스·마이크 무대.
+  - mechanic: `unicorn_jukebox` script_play(우클릭 시 8음 멜로디 `note.harp` + 노트 파티클, main.js `JUKEBOX_ID`/`JUKEBOX_MELODY` + `system.runTimeout` 시퀀스), `unicorn_mic_stage` variant_light(무대 스포트라이트 glow 토글), `unicorn_drums`/`unicorn_guitar` static.
+  - 생성기 `blockbench/gen_music.py` 신규. `KIDS` 등록, 검증 PASS, `node --check` 통과.
+  - **quality-check 워크플로** — 4종 Blockbench 개별 검수, redo(≤2회):
+    - 드럼: 거대 평면 심벌→작은 틸트 심벌+하이햇, 스네어 전면 노출+드럼스틱(1회).
+    - 마이크무대: 거대 불투명 빔→조명 트러스+소형 글로우 스포트라이트, 마이크 헤드 가슴높이로(2회).
+    - 기타·주크박스: redo 0회.
+- 최신 패키지: `dist/mine_furniture_01-20260610-165623/mine_furniture_01.mcaddon`
+- 누적 ~80종 🎉 (~80종 목표 달성). 인게임 검증 대기.
+
 ## 5. 다음 작업 (NEXT)
 
 - ~~1. Blockbench MCP 연결 및 tool 확인~~ — 완료 (2026-05-31).

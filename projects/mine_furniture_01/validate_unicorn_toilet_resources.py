@@ -101,6 +101,10 @@ KIDS = {
     "unicorn_ballpit": {"mechanic": "static"},
     "unicorn_junglegym": {"mechanic": "static"},
     "unicorn_clock_tower": {"mechanic": "variant_spin"},
+    "unicorn_drums": {"mechanic": "static"},
+    "unicorn_guitar": {"mechanic": "static"},
+    "unicorn_jukebox": {"mechanic": "script_play"},
+    "unicorn_mic_stage": {"mechanic": "variant_light"},
 }
 
 FOODS = {

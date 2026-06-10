@@ -1,0 +1,20 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_drums",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_drums/unicorn_drums_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_drums"
+      },
+      "render_controllers": [
+        "controller.render.unicorn_drums"
+      ]
+    }
+  }
+}

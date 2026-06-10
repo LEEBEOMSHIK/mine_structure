@@ -1,0 +1,23 @@
+{
+  "identifier": "mine_structure:unicorn_mic_stage",
+  "content_type": "furniture_entity",
+  "mechanic": "variant_light",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_mic_stage.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_mic_stage.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_mic_stage.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_mic_stage/unicorn_mic_stage_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_mic_stage.render_controllers.json",
+    "animation": "../../addon/resource_pack/animations/unicorn_mic_stage.animation.json",
+    "animation_controller": "../../addon/resource_pack/animation_controllers/unicorn_mic_stage.animation_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_mic_stage.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}

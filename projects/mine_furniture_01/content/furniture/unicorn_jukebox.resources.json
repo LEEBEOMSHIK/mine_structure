@@ -1,0 +1,21 @@
+{
+  "identifier": "mine_structure:unicorn_jukebox",
+  "content_type": "furniture_entity",
+  "mechanic": "script_play",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_jukebox.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_jukebox.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_jukebox.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_jukebox/unicorn_jukebox_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_jukebox.render_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_jukebox.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}
