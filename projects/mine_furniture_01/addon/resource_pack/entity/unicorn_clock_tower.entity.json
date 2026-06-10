@@ -1,0 +1,30 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_clock_tower",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_clock_tower/unicorn_clock_tower_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_clock_tower"
+      },
+      "animations": {
+        "on": "animation.unicorn_clock_tower.on",
+        "off": "animation.unicorn_clock_tower.off",
+        "light_ctrl": "controller.animation.unicorn_clock_tower.light"
+      },
+      "scripts": {
+        "animate": [
+          "light_ctrl"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.unicorn_clock_tower"
+      ]
+    }
+  }
+}

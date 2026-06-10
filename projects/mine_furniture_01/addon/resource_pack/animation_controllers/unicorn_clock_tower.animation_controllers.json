@@ -1,0 +1,30 @@
+{
+  "format_version": "1.10.0",
+  "animation_controllers": {
+    "controller.animation.unicorn_clock_tower.light": {
+      "initial_state": "off",
+      "states": {
+        "off": {
+          "animations": [
+            "off"
+          ],
+          "transitions": [
+            {
+              "on": "q.variant == 1"
+            }
+          ]
+        },
+        "on": {
+          "animations": [
+            "on"
+          ],
+          "transitions": [
+            {
+              "off": "q.variant == 0"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

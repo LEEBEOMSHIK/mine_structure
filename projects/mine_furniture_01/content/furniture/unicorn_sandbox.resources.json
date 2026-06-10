@@ -1,0 +1,21 @@
+{
+  "identifier": "mine_structure:unicorn_sandbox",
+  "content_type": "furniture_entity",
+  "mechanic": "static",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_sandbox.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_sandbox.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_sandbox.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_sandbox/unicorn_sandbox_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_sandbox.render_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_sandbox.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}

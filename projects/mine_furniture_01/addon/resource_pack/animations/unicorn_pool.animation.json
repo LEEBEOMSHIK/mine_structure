@@ -1,0 +1,38 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.unicorn_pool.off": {
+      "loop": "hold_on_last_frame",
+      "animation_length": 0.05,
+      "bones": {
+        "glow": {
+          "scale": [
+            1,
+            0,
+            1
+          ]
+        }
+      }
+    },
+    "animation.unicorn_pool.on": {
+      "loop": "hold_on_last_frame",
+      "animation_length": 1.6,
+      "bones": {
+        "glow": {
+          "scale": {
+            "0.0": [
+              1,
+              0,
+              1
+            ],
+            "1.6": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      }
+    }
+  }
+}

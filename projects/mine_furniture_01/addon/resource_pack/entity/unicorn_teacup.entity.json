@@ -1,0 +1,30 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_teacup",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_teacup/unicorn_teacup_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_teacup"
+      },
+      "animations": {
+        "on": "animation.unicorn_teacup.on",
+        "off": "animation.unicorn_teacup.off",
+        "light_ctrl": "controller.animation.unicorn_teacup.light"
+      },
+      "scripts": {
+        "animate": [
+          "light_ctrl"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.unicorn_teacup"
+      ]
+    }
+  }
+}

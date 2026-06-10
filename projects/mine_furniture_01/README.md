@@ -585,6 +585,21 @@ resource pack 측 JSON 연결을 교차검증했다. 결과:
 - 최신 패키지: `dist/mine_furniture_01-20260610-151802/mine_furniture_01.mcaddon`
 - 누적 ~70종. 남은 배치: 놀이·펫/기타.
 
+## 4.40 놀이 6종 추가 (배치 5, 종별 확인 + quality-check) (2026-06-10)
+
+- 5차 배치 6종: 수영장·모래놀이터·회전컵·볼풀·정글짐·시계탑.
+  - mechanic: `unicorn_pool` variant_fill(물 채우기 glow), `unicorn_teacup` variant_spin(컵 Y축 회전 — 로컬 `spin_y_wiring`), `unicorn_clock_tower` variant_spin(시계바늘 Z축), `unicorn_sandbox`/`unicorn_ballpit`/`unicorn_junglegym` static.
+  - 생성기 `blockbench/gen_kids_play.py` 신규(기존 `gen_playground.py`=그네/미끄럼틀/시소와 별개). `KIDS` 등록, 검증 PASS.
+  - **quality-check 스킬 워크플로 적용** — 6종 전부 Blockbench 렌더로 개별 확인. 수정 루프(한 항목당 ≤2회 redo):
+    - 수영장: 코핑을 통판→프레임으로(물 노출), 물색 진하게+수면 함몰(2회). 풀 모양으로 읽힘.
+    - 볼풀: 패드 통판→프레임(공 노출, 1회).
+    - 정글짐: 분리돼 떠있던 미끄럼틀을 데크 모서리에 붙여 지면까지 경사(1회).
+    - 시계탑: 샤프트에 파묻힌 시계판을 앞으로 돌출+계단식 뾰족 지붕, 흰 다이얼을 핑크 림 앞으로(2회).
+    - 모래놀이터·회전컵: redo 0회.
+  - ⚠️ 작업 메모: Blockbench MCP `loadModelFile`이 **스테일 탭을 재사용**해 옛 모델을 보여줄 수 있음 → 로드 전 `ModelProject.all` 닫고 다시 로드(큐브 수로 검증).
+- 최신 패키지: `dist/mine_furniture_01-20260610-155328/mine_furniture_01.mcaddon`
+- 누적 ~76종. 남은 배치: 펫/기타.
+
 ## 5. 다음 작업 (NEXT)
 
 - ~~1. Blockbench MCP 연결 및 tool 확인~~ — 완료 (2026-05-31).

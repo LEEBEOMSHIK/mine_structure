@@ -1,0 +1,23 @@
+{
+  "identifier": "mine_structure:unicorn_teacup",
+  "content_type": "furniture_entity",
+  "mechanic": "variant_spin",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_teacup.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_teacup.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_teacup.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_teacup/unicorn_teacup_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_teacup.render_controllers.json",
+    "animation": "../../addon/resource_pack/animations/unicorn_teacup.animation.json",
+    "animation_controller": "../../addon/resource_pack/animation_controllers/unicorn_teacup.animation_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_teacup.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}

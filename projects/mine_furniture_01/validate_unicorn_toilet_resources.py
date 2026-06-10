@@ -95,6 +95,12 @@ KIDS = {
     "unicorn_chandelier": {"mechanic": "variant_light"},
     "unicorn_wall_sconce": {"mechanic": "variant_light"},
     "unicorn_standing_lantern": {"mechanic": "variant_light"},
+    "unicorn_pool": {"mechanic": "variant_fill"},
+    "unicorn_sandbox": {"mechanic": "static"},
+    "unicorn_teacup": {"mechanic": "variant_spin"},
+    "unicorn_ballpit": {"mechanic": "static"},
+    "unicorn_junglegym": {"mechanic": "static"},
+    "unicorn_clock_tower": {"mechanic": "variant_spin"},
 }
 
 FOODS = {
