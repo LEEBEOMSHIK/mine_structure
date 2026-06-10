@@ -1,0 +1,30 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mine_structure:unicorn_campfire",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/unicorn_campfire/unicorn_campfire_atlas"
+      },
+      "geometry": {
+        "default": "geometry.unicorn_campfire"
+      },
+      "animations": {
+        "on": "animation.unicorn_campfire.on",
+        "off": "animation.unicorn_campfire.off",
+        "light_ctrl": "controller.animation.unicorn_campfire.light"
+      },
+      "scripts": {
+        "animate": [
+          "light_ctrl"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.unicorn_campfire"
+      ]
+    }
+  }
+}

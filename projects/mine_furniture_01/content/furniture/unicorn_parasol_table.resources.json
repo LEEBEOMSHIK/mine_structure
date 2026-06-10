@@ -1,0 +1,21 @@
+{
+  "identifier": "mine_structure:unicorn_parasol_table",
+  "content_type": "furniture_entity",
+  "mechanic": "static",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_parasol_table.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_parasol_table.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_parasol_table.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_parasol_table/unicorn_parasol_table_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_parasol_table.render_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_parasol_table.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}

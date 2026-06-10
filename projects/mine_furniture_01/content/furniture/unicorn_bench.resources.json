@@ -1,0 +1,21 @@
+{
+  "identifier": "mine_structure:unicorn_bench",
+  "content_type": "furniture_entity",
+  "mechanic": "rideable_simple",
+  "behavior_pack": {
+    "entity": "../../addon/behavior_pack/entities/unicorn_bench.entity.json"
+  },
+  "resource_pack": {
+    "client_entity": "../../addon/resource_pack/entity/unicorn_bench.entity.json",
+    "geometry": "../../addon/resource_pack/models/entity/unicorn_bench.geo.json",
+    "texture": "../../addon/resource_pack/textures/entity/unicorn_bench/unicorn_bench_atlas.png",
+    "render_controller": "../../addon/resource_pack/render_controllers/unicorn_bench.render_controllers.json"
+  },
+  "blockbench_source": "../../blockbench/unicorn_bench.bbmodel",
+  "status": {
+    "json_links_ready": true,
+    "geometry_exported": true,
+    "texture_exported": true,
+    "in_game_tested": false
+  }
+}

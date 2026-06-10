@@ -73,6 +73,14 @@ KIDS = {
     "unicorn_floor_lamp": {"mechanic": "variant_light"},
     "unicorn_dresser": {"mechanic": "script_store"},
     "unicorn_nightstand": {"mechanic": "static"},
+    "unicorn_fountain": {"mechanic": "variant_light"},
+    "unicorn_mailbox": {"mechanic": "static"},
+    "unicorn_birdcage": {"mechanic": "static"},
+    "unicorn_bench": {"mechanic": "rideable_simple"},
+    "unicorn_parasol_table": {"mechanic": "static"},
+    "unicorn_campfire": {"mechanic": "variant_light"},
+    "unicorn_tent": {"mechanic": "rideable_simple"},
+    "unicorn_garden_arch": {"mechanic": "static"},
 }
 
 FOODS = {
