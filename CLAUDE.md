@@ -37,6 +37,14 @@ projects/<project_id>/
 
 ## 작업 규칙
 
+### 콘텐츠 작업 워크플로 — 서브에이전트 파이프라인
+- 콘텐츠 제작은 단계별 서브에이전트(`.claude/agents/`)를 이어서 수행한다. 표준 흐름:
+  - 가구/의상: `furniture-modeler → addon-wiring → validator → blockbench-reviewer →`(문제 시 수정 루프)`→ packager → docs-writer → committer`
+  - 스킨: `skin-artist → blockbench-reviewer → packager → docs-writer → committer`
+- 기존 결과물 품질 점검은 `quality-check` 스킬을 쓴다(validator + blockbench-reviewer 중심).
+- **검수는 종(항목)마다 개별**로 하고, 문제가 있으면 제작 에이전트로 돌아가 고친 뒤 재검수한다.
+- 상세는 `docs/agent-guides/agent-workflow.md`를 따른다.
+
 ### 커밋 메시지 — Conventional Commits
 - 형식은 `type(scope): subject` 를 따른다. (예: `feat(furniture): 주방/카페 8종 추가`)
 - `type`: `feat`(기능 추가), `fix`(버그/오류 수정), `docs`(문서), `chore`(설정/잡무), `refactor`(리팩터링), `polish`(외형·품질 다듬기), `test`(검증) 등.

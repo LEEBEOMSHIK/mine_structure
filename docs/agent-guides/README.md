@@ -8,6 +8,7 @@
 2. `principles.md` — 모델링과 품질 기준의 핵심 원칙
 3. `blockbench-mcp-rules.md` — Blockbench/MCP 작업 시 반드시 지킬 주의점
 4. `blockbench-mcp-setup.md` — Codex/Claude에서 Blockbench MCP를 등록하고 export하는 절차
+5. `agent-workflow.md` — 서브에이전트 카탈로그와 콘텐츠 제작 파이프라인(제작→검수→마무리)
 
 ## 적용 범위
 
